@@ -32,7 +32,7 @@ This PowerShell script automates the process of updating third-party software in
 ### 1. Setup
 
 - **Winget Installation**: Ensure that `winget` is installed on your system. You can get it from the [Microsoft Store](https://aka.ms/getwinget).
-- **Script Setup**: Save the PowerShell script to a desired location on your machine.
+- **Script Setup**: Save the PowerShell script to a desired location on your machine. [patch_software_windows.ps1](./patch_software_windows.ps1)
 
 ### 2. Running the Script
 
@@ -40,7 +40,7 @@ This PowerShell script automates the process of updating third-party software in
 2. Run the script using the following example command:
 
    ```powershell
-    powershell -NoProfile -ExecutionPolicy Bypass -File "C:\tools\patching\winget_upgrade.ps1"
+    powershell -NoProfile -ExecutionPolicy Bypass -File "C:\tools\patching\patch_software_windows.ps1"
    ```
 
 ### 3. Script Parameters

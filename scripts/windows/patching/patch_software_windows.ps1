@@ -1,4 +1,6 @@
-$wingetversion = "1.23.1911.0"
+$wingetVersion = "1.23.1911.0"
+$cpuArchitecture = "x64"
+$wingetReleaseFolder = "8wekyb3d8bbwe"
 $logPath = "C:\tools\patching\logs\"
 $logFilename = "winget-$(Get-Date -f yyyy-MM-dd).log"
 $fullLogPathAndFile = "$logPath$logFilename"
@@ -15,7 +17,7 @@ Start-Transcript -Path $fullLogPathAndFile -Append
 Set-ExecutionPolicy Bypass -Scope Process -Force
 
 # Construct the winget.exe path based on the specified version
-$wingetPath = "C:\Program Files\WindowsApps\Microsoft.DesktopAppInstaller_${wingetversion}_x64__8wekyb3d8bbwe\winget.exe"
+$wingetPath = "C:\Program Files\WindowsApps\Microsoft.DesktopAppInstaller_${wingetVersion}_${cpuArchitecture}__${wingetReleaseFolder}\winget.exe"
 
 # Check if winget executable exists
 if (-not (Test-Path $wingetPath)) {
