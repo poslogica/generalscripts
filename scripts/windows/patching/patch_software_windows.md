@@ -1,5 +1,5 @@
 
-# Winget Software Update Script
+# Patch Software Script
 
 ## Overview
 This PowerShell script automates the process of updating third-party software installed on a Windows computer using `winget`. It logs all update actions and handles errors gracefully. This script is intended for environments where keeping software up to date is critical.
