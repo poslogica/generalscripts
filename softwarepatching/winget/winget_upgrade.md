@@ -37,7 +37,7 @@ This PowerShell script automates the process of updating third-party software in
 ### 2. Running the Script
 
 1. Open PowerShell **as Administrator**.
-2. Run the script using the following command:
+2. Run the script using the following example command:
 
    ```powershell
     powershell -NoProfile -ExecutionPolicy Bypass -File "C:\tools\patching\winget_upgrade.ps1"
