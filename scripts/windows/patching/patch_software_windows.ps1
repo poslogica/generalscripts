@@ -19,11 +19,11 @@ Set-ExecutionPolicy Bypass -Scope Process -Force
 $wingetPath = "winget.exe"
 
 # Check if winget executable exists
-if (-not (Test-Path $wingetPath)) {
-    Write-Host "Error: winget executable not found at $wingetPath" -ForegroundColor Red
-    Stop-Transcript
-    Exit
-}
+# if (-not (Test-Path $wingetPath)) {
+#     Write-Host "Error: winget executable not found at $wingetPath" -ForegroundColor Red
+#     Stop-Transcript
+#     Exit
+# }
 
 Write-Host "winget executable found at $wingetPath"
 
