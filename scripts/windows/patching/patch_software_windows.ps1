@@ -16,7 +16,7 @@ Start-Transcript -Path $fullLogPathAndFile -Append
 Set-ExecutionPolicy Bypass -Scope Process -Force
 
 # Construct the winget.exe path based on the specified version
-$wingetPath = "C:\Program Files\WindowsApps\Microsoft.DesktopAppInstaller_${wingetVersion}_${wingetReleaseFolder}\winget.exe"
+$wingetPath = "winget.exe"
 
 # Check if winget executable exists
 if (-not (Test-Path $wingetPath)) {
