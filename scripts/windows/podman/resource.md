@@ -9,7 +9,7 @@ The `podman resource` command allows you to manage and inspect system resources 
 - **Description**: Displays the available CPUs, memory, and storage for containers and pods.
 - **Usage**:
   ```powershell
-  podman resource list
+  podman machine ls
   ```
 - **Output**:
   - Information about available system resources.
