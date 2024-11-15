@@ -9,7 +9,7 @@ The `podman resource` command allows you to manage and inspect system resources 
 - **Description**: Displays the available CPUs, memory, and storage for containers and pods.
 - **Usage**:
   ```powershell
-  podman resource list
+  podman machine ls
   ```
 - **Output**:
   - Information about available system resources.
@@ -38,27 +38,23 @@ The `podman resource` command allows you to manage and inspect system resources 
 
 ### Example 1: List Available Resources
 ```powershell
-podman resource list
+podman machine ls
 ```
 
 ### Example 2: Configure Resource Limits
 #### Stop the Machine and Adjust Resources:
 ```powershell
 podman machine stop
-podman resource set --cpus=8 --memory=8GB --storage=40GB
+podman resource set --cpus=8 --memory=8192 --disk-size=40
 podman machine start
 ```
 
 #### Initialize Machine with Custom Resources:
 ```powershell
-podman machine init --cpus=8 --memory=8GB --disk-size=40GB
+podman machine init --cpus=8 --memory=8192 --disk-size=40
 podman machine start
 ```
 
-### Example 3: Query Resource Usage
-```powershell
-podman resource query
-```
 
 ## Notes
 - Use these commands to optimize system resource usage and prevent overcommitment.
