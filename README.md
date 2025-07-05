@@ -27,11 +27,13 @@ Before using these scripts, make sure you have the following tools installed:
 To get started with these automation scripts:
 
 1. Clone this repository to your local machine:
+
    ```bash
    git clone https://bitbucket.org/your-username/your-repository-name.git
    ```
-   
+
 2. Navigate to the directory:
+
    ```bash
    cd your-repository-name
    ```
@@ -40,28 +42,34 @@ To get started with these automation scripts:
 
 ## Usage
 
-1. Review the specific usage instructions provided in the comments section of each script.
-   
+1. Review the specific usage instructions provided in the comments section of each script.  
 2. Make sure to give the appropriate permissions to execute the scripts:
+
    ```bash
    chmod +x script-name.sh
    ```
-   
+
 3. Execute the script based on its type:
    - **For Python scripts:**
+
      ```bash
      python3 script-name.py
      ```
+
    - **For Bash scripts:**
+
      ```bash
      ./script-name.sh
      ```
+
    - **For PowerShell scripts (on Windows):**
+
      ```powershell
      ./script-name.ps1
      ```
 
 4. Many scripts are configurable via command-line arguments. Run the script with the `--help` flag to see the available options:
+
    ```bash
    python3 script-name.py --help
    ```
@@ -73,7 +81,6 @@ Below is a list of some common scripts included in this repository:
 1. **Windows Third-Party Software Patching Script [patch_software_windows](./scripts/windows/patching/patch_software_windows.md)**  
    Automates the process of updating third-party software on computers running the Windows operating system
 
-
 For detailed documentation on each script, please refer to the respective script files in the `/scripts` directory.
 
 ## Contributing
@@ -82,13 +89,17 @@ We welcome contributions to enhance the functionality and scope of these scripts
 
 1. Fork the repository.
 2. Create a new branch:
+
    ```bash
    git checkout -b feature-branch-name
    ```
+
 3. Make your changes and commit:
+
    ```bash
    git commit -m "Description of changes"
    ```
+
 4. Push to your fork and submit a pull request.
 
 ## License
