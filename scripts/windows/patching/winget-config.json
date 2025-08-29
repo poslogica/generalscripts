@@ -1,0 +1,8 @@
+{
+  "ExcludeIds": [
+    "Anaconda.Anaconda3"
+  ],
+  "ExcludeNames": [
+    "Anaconda3 *"
+  ]
+}
