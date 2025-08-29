@@ -1,15 +1,20 @@
-# -----------------------
-# Windows junk
-# -----------------------
+# ====================================================
+# WINDOWS JUNK
+# ====================================================
 Thumbs.db
 ehthumbs.db
 Desktop.ini
 $RECYCLE.BIN/
 *.lnk
 
-# -----------------------
-# PowerShell environment
-# -----------------------
+# ====================================================
+# POWERSHELL FILES (GitHub PowerShell template)
+# ====================================================
+# Ignore PowerShell history
+PSReadLine/*
+*.history
+
+# Ignore temporary PS files
 *.ps1xml
 *.psc1
 *.psm1
@@ -18,13 +23,17 @@ $RECYCLE.BIN/
 *.ps1.orig
 *.ps1.bak
 
-# Local PowerShell history
-PSReadLine/*
-*.history
+# Ignore generated help / output
+*.dll-Help.xml
+*.xml-help.xml
 
-# -----------------------
+# Ignore local PowerShell module analysis cache
+*.pscache
+
+# ====================================================
+# REPO-SPECIFIC FILES
+# ====================================================
 # Logs & diagnostics
-# -----------------------
 *.log
 *.log.*
 logs/
@@ -37,25 +46,21 @@ winget-upgrade-raw-*.txt
 winget-upgrade-sanitized.json
 winget-list-upgrade-raw.json.txt
 
-# -----------------------
-# Config overrides
-# -----------------------
-# Keep the default winget-config.json (example) in git,
-# but ignore local overrides if you rename/copy it.
+# Config overrides (keep default winget-config.json tracked)
 winget-config.local.json
 
-# -----------------------
-# Build/output artifacts
-# -----------------------
+# ====================================================
+# ARCHIVES / BUILDS
+# ====================================================
 *.zip
 *.7z
 *.tar
 *.gz
 *.rar
 
-# -----------------------
-# IDE/Editor stuff
-# -----------------------
+# ====================================================
+# IDE / EDITOR
+# ====================================================
 .vscode/
 .idea/
 *.suo
@@ -63,7 +68,14 @@ winget-config.local.json
 *.userosscache
 *.sln.docstates
 
-# -----------------------
-# OS-specific
-# -----------------------
+# Visual Studio Code workspace settings
+*.code-workspace
+
+# JetBrains Rider, IntelliJ, WebStorm
+*.iml
+out/
+
+# ====================================================
+# OS-SPECIFIC
+# ====================================================
 .DS_Store

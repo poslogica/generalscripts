@@ -1,14 +1,20 @@
-# Basic upgrade (user scope)
-.\Update-ThirdPartyWithWinget.ps1
-
-# Exclude by Id and Name, run as machine scope (recommended: elevated shell)
-#.\Update-ThirdPartyWithWinget.ps1 -ExcludeIds "Google.Chrome","Adobe.*" -ExcludeNames "NVIDIA *" -Scope machine
-.\Update-ThirdPartyWithWinget.ps1
+#Run normally (updates all, respects config file)
 powershell.exe -ExecutionPolicy Bypass -File .\Update-ThirdPartyWithWinget.ps1
 
+#Run with diagnostic logging
+#Saves raw winget outputs (JSON/table) next to the script for troubleshooting.
+powershell.exe -ExecutionPolicy Bypass -File .\Update-ThirdPartyWithWinget.ps1 -Diagnostics
 
-# Dry-run with logging
-.\Update-ThirdPartyWithWinget.ps1 -WhatIf -LogPath "$env:ProgramData\winget-upgrades.log"
+#Include unknown versions
+#Updates packages even if their installed version is unknown:
+powershell.exe -ExecutionPolicy Bypass -File .\Update-ThirdPartyWithWinget.ps1 -IncludeUnknown
 
-# Stop on first error
-.\Update-ThirdPartyWithWinget.ps1 -StopOnError
+#Save logs to a custom file
+powershell.exe -ExecutionPolicy Bypass -File .\Update-ThirdPartyWithWinget.ps1 -LogPath "C:\Logs\winget-upgrade.log"
+
+#Force machine-scope installs (requires admin)
+Start-Process powershell.exe -Verb RunAs -ArgumentList '-ExecutionPolicy Bypass -File .\Update-ThirdPartyWithWinget.ps1 -Scope machine'
+
+#Test mode (no actual installs)
+#Use -WhatIf to simulate updates:
+powershell.exe -ExecutionPolicy Bypass -File .\Update-ThirdPartyWithWinget.ps1 -WhatIf

@@ -1,41 +1,21 @@
 <#
 .SYNOPSIS
-  Upgrade 3rd-party software with winget, using an external JSON config for exclusions.
-  Robust across noisy winget output (JSON first, table fallback). PS 5.1 compatible.
+  Upgrade 3rd-party software with winget, driven by an external JSON config.
+  Robust across noisy winget output (JSON first, sanitized JSON, table fallback). PS 5.1 compatible.
 
-.DESCRIPTION
-  Reads exclusions from a JSON config file with:
-    {
-      "ExcludeIds":   [ "Google.Chrome", "Adobe.*" ],
-      "ExcludeNames": [ "NVIDIA *" ]
-    }
-  Then discovers upgradable apps and upgrades anything not excluded.
-
-.PARAMETER ConfigPath
-  Optional path to JSON config. Default: "<script folder>\winget-config.json"
-
-.PARAMETER LogPath
-  Optional file path to append logs.
-
-.PARAMETER Scope
-  user | machine. Default: user. "machine" usually requires elevation.
-
-.PARAMETER IncludeUnknown
-  Consider packages with unknown versions (passes --include-unknown on discovery/upgrade).
-
-.PARAMETER WhatIf
-  Preview actions without making changes.
-
-.PARAMETER StopOnError
-  Stop on first package failure (default is continue).
-
-.PARAMETER Diagnostics
-  Saves raw/sanitized winget outputs next to the script for troubleshooting.
+.CONFIG (winget-config.json example)
+{
+  "IncludeOnlyIds":   [ "Git.Git", "Google.Chrome" ],
+  "IncludeOnlyNames": [ "Git", "Google Chrome" ],
+  "ExcludeIds":       [ "Anaconda.*", "Adobe.*" ],
+  "ExcludeNames":     [ "Anaconda3 *", "NVIDIA *" ],
+  "ExcludeSources":   [ "msstore" ]
+}
 
 .EXAMPLES
   .\Update-ThirdPartyWithWinget.ps1
-  .\Update-ThirdPartyWithWinget.ps1 -ConfigPath 'C:\cfg\winget-config.json' -LogPath 'C:\Logs\winget-upgrades.log'
-  .\Update-ThirdPartyWithWinget.ps1 -Scope machine -IncludeUnknown -WhatIf
+  .\Update-ThirdPartyWithWinget.ps1 -IncludeUnknown -Diagnostics
+  .\Update-ThirdPartyWithWinget.ps1 -LogPath "C:\Logs\winget-upgrades.log"
 #>
 
 [CmdletBinding(SupportsShouldProcess = $true)]
@@ -43,7 +23,7 @@ param(
     [string]$ConfigPath,
     [string]$LogPath,
     [ValidateSet('user','machine')]
-    [string]$Scope = 'user',
+    [string]$Scope,                  # NOTE: no default; we won't pass --scope unless specified
     [switch]$IncludeUnknown,
     [switch]$StopOnError,
     [switch]$Diagnostics
@@ -78,9 +58,14 @@ function FirstNotNullOrEmpty {
 }
 
 function MatchesAny {
-    param([string]$Text, [string[]]$Patterns)
+    param(
+        [Parameter(Mandatory)][string]$Text,
+        [string[]]$Patterns
+    )
     if (-not $Text -or -not $Patterns) { return $false }
-    foreach ($p in $Patterns) { if ($Text -like $p) { return $true } }
+    foreach ($p in $Patterns) {
+        if ($Text -like $p) { return $true }  # -like is case-insensitive
+    }
     return $false
 }
 
@@ -92,7 +77,7 @@ function Test-Admin {
     } catch { return $false }
 }
 
-# Extract the first JSON object/array substring from noisy text
+# Extract first JSON object/array from noisy text
 function Get-FirstJsonChunk {
     param([string]$Text)
     if ([string]::IsNullOrWhiteSpace($Text)) { return $null }
@@ -145,7 +130,10 @@ function Parse-WingetUpgradeTable {
     for ($j=$startIndex; $j -lt $Lines.Count; $j++) {
         $line = $Lines[$j]
         if ([string]::IsNullOrWhiteSpace($line)) { continue }
-        if ($line -match '^\s*No packages have available updates') { break }
+
+        # Stop when footnote/summary appears
+        if ($line -match 'package\(s\)\s+have version numbers') { break }
+        if ($line -match 'No packages have available updates') { break }
 
         $name      = Slice $line $idxName      $idxId
         $id        = Slice $line $idxId        $idxVersion
@@ -153,7 +141,9 @@ function Parse-WingetUpgradeTable {
         $available = Slice $line $idxAvailable $idxSource
         $source    = Slice $line $idxSource    ($line.Length)
 
-        if (-not $id) { continue }
+        # Basic sanity: id should look like an identifier (no spaces)
+        if (-not $id -or $id -match '\s') { continue }
+
         if ($version -eq '-')   { $version = $null }
         if ($available -eq '-') { $available = $null }
 
@@ -179,11 +169,7 @@ function Get-WingetUpgrades {
     $argsList = @('list','--upgrade-available','--accept-source-agreements','--disable-interactivity','--output','json')
     $rawList  = & winget @argsList 2>&1
     $rawListText = ($rawList | Out-String)
-
-    if ($DiagPath) {
-        $p0 = Join-Path $DiagPath 'winget-list-upgrade-raw.json.txt'
-        $rawListText | Out-File -LiteralPath $p0 -Encoding UTF8
-    }
+    if ($DiagPath) { $rawListText | Out-File -LiteralPath (Join-Path $DiagPath 'winget-list-upgrade-raw.json.txt') -Encoding UTF8 }
 
     try {
         $parsed = $rawListText | ConvertFrom-Json
@@ -196,10 +182,7 @@ function Get-WingetUpgrades {
 
     $raw = & winget @argsUpgJson 2>&1
     $rawText = ($raw | Out-String)
-    if ($DiagPath) {
-        $p1 = Join-Path $DiagPath 'winget-upgrade-raw-json.txt'
-        $rawText | Out-File -LiteralPath $p1 -Encoding UTF8
-    }
+    if ($DiagPath) { $rawText | Out-File -LiteralPath (Join-Path $DiagPath 'winget-upgrade-raw-json.txt') -Encoding UTF8 }
 
     try {
         $parsed = $rawText | ConvertFrom-Json
@@ -208,10 +191,7 @@ function Get-WingetUpgrades {
 
     $json = Get-FirstJsonChunk -Text $rawText
     if ($json) {
-        if ($DiagPath) {
-            $p2 = Join-Path $DiagPath 'winget-upgrade-sanitized.json'
-            $json | Out-File -LiteralPath $p2 -Encoding UTF8
-        }
+        if ($DiagPath) { $json | Out-File -LiteralPath (Join-Path $DiagPath 'winget-upgrade-sanitized.json') -Encoding UTF8 }
         try {
             $parsed = $json | ConvertFrom-Json
             if ($parsed) { return $parsed }
@@ -224,10 +204,7 @@ function Get-WingetUpgrades {
 
     $rawTbl  = & winget @argsUpgTbl 2>&1
     $tblText = ($rawTbl | Out-String)
-    if ($DiagPath) {
-        $p3 = Join-Path $DiagPath 'winget-upgrade-raw-table.txt'
-        $tblText | Out-File -LiteralPath $p3 -Encoding UTF8
-    }
+    if ($DiagPath) { $tblText | Out-File -LiteralPath (Join-Path $DiagPath 'winget-upgrade-raw-table.txt') -Encoding UTF8 }
 
     $lines = $tblText -split '\r?\n'
     $parsedTable = Parse-WingetUpgradeTable -Lines $lines
@@ -237,22 +214,18 @@ function Get-WingetUpgrades {
 }
 
 # ---------------- Bootstrap ----------------
-# Resolve script directory ($PSScriptRoot may be empty in some contexts)
 $ScriptDir = if ($PSScriptRoot) { $PSScriptRoot }
 elseif ($MyInvocation.MyCommand.Path) { Split-Path -LiteralPath $MyInvocation.MyCommand.Path -Parent }
 else { (Get-Location).Path }
 
-# Default config path if not provided
 if ([string]::IsNullOrWhiteSpace($ConfigPath)) {
     $ConfigPath = Join-Path -Path $ScriptDir -ChildPath 'winget-config.json'
 }
 
-# Improve odds of clean UTF-8 text (some hosts need this)
 try {
     $global:OutputEncoding = [Console]::OutputEncoding = New-Object System.Text.UTF8Encoding($false)
 } catch { }
 
-# Pre-flight checks
 if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
     Write-Log "winget is not installed or not in PATH. Install 'App Installer' from Microsoft Store." 'ERROR'
     exit 1
@@ -262,13 +235,16 @@ if ($Scope -eq 'machine' -and -not (Test-Admin)) {
     Write-Log "Machine scope requested, but shell is not elevated. Some upgrades may fail." 'WARN'
 }
 
-# Load/create config
+# ---------------- Load/create config ----------------
 if (-not (Test-Path -LiteralPath $ConfigPath)) {
     Write-Log "Config not found at ${ConfigPath}. Creating a sample config..." 'WARN'
     @"
 {
-  "ExcludeIds":   [ "Google.Chrome", "Adobe.*" ],
-  "ExcludeNames": [ "NVIDIA *" ]
+  "IncludeOnlyIds":   [],
+  "IncludeOnlyNames": [],
+  "ExcludeIds":       [ "Anaconda.*" ],
+  "ExcludeNames":     [ "Anaconda3 *" ],
+  "ExcludeSources":   [ "msstore" ]
 }
 "@ | Set-Content -LiteralPath $ConfigPath -Encoding UTF8
     Write-Log "Edit ${ConfigPath} and re-run the script." 'INFO'
@@ -282,10 +258,17 @@ try {
     exit 1
 }
 
-[string[]]$ExcludeIds   = @()
-[string[]]$ExcludeNames = @()
-if ($config.PSObject.Properties.Name -contains 'ExcludeIds')   { $ExcludeIds   = @($config.ExcludeIds)   | Where-Object { $_ } }
-if ($config.PSObject.Properties.Name -contains 'ExcludeNames') { $ExcludeNames = @($config.ExcludeNames) | Where-Object { $_ } }
+[string[]]$IncludeOnlyIds    = @()
+[string[]]$IncludeOnlyNames  = @()
+[string[]]$ExcludeIds        = @()
+[string[]]$ExcludeNames      = @()
+[string[]]$ExcludeSources    = @()
+
+if ($config.PSObject.Properties.Name -contains 'IncludeOnlyIds')    { $IncludeOnlyIds    = @($config.IncludeOnlyIds)    | Where-Object { $_ } }
+if ($config.PSObject.Properties.Name -contains 'IncludeOnlyNames')  { $IncludeOnlyNames  = @($config.IncludeOnlyNames)  | Where-Object { $_ } }
+if ($config.PSObject.Properties.Name -contains 'ExcludeIds')        { $ExcludeIds        = @($config.ExcludeIds)        | Where-Object { $_ } }
+if ($config.PSObject.Properties.Name -contains 'ExcludeNames')      { $ExcludeNames      = @($config.ExcludeNames)      | Where-Object { $_ } }
+if ($config.PSObject.Properties.Name -contains 'ExcludeSources')    { $ExcludeSources    = @($config.ExcludeSources)    | Where-Object { $_ } }
 
 # ---------------- Discover ----------------
 Write-Log "Querying upgradable packages..."
@@ -295,7 +278,7 @@ try {
     $data = Get-WingetUpgrades -IncludeUnknown:$IncludeUnknown -DiagPath $diagPath
 } catch {
     Write-Log $_.Exception.Message 'ERROR'
-    if ($Diagnostics) { Write-Log "Diagnostics saved to: $ScriptDir (files starting with winget-*)" 'INFO' }
+    if ($Diagnostics) { Write-Log ("Diagnostics saved to: {0} (files starting with winget-*)" -f $ScriptDir) 'INFO' }
     exit 1
 }
 
@@ -317,13 +300,38 @@ if (-not $packages -or $packages.Count -eq 0) {
 }
 
 # ---------------- Filter ----------------
+$whitelistActive = ($IncludeOnlyIds.Count -gt 0 -or $IncludeOnlyNames.Count -gt 0)
+
 $toUpgrade = foreach ($pkg in $packages) {
-    $id   = FirstNotNullOrEmpty $pkg.Id $pkg.PackageIdentifier ($pkg.Package.Id)
-    $name = FirstNotNullOrEmpty $pkg.Name $pkg.PackageName     ($pkg.Package.Name)
+    $id     = FirstNotNullOrEmpty $pkg.Id $pkg.PackageIdentifier ($pkg.Package.Id)
+    $name   = FirstNotNullOrEmpty $pkg.Name $pkg.PackageName     ($pkg.Package.Name)
+    $source = FirstNotNullOrEmpty $pkg.Source $pkg.Repository
+    $pinned = FirstNotNullOrEmpty $pkg.IsPinned
+
     if (-not $id -and -not $name) { continue }
 
-    if (MatchesAny -Text $id -Patterns $ExcludeIds -or MatchesAny -Text $name -Patterns $ExcludeNames) {
-        Write-Log "Skipping $name ($id)" 'INFO'
+    # Whitelist gate (only these); wildcards allowed
+    if ($whitelistActive) {
+        $inWhite = ($IncludeOnlyIds -and (MatchesAny -Text $id -Patterns $IncludeOnlyIds)) -or
+                   ($IncludeOnlyNames -and (MatchesAny -Text $name -Patterns $IncludeOnlyNames))
+        if (-not $inWhite) { continue }
+    }
+
+    # Skip pinned, if field present
+    if ($pinned -eq $true) {
+        Write-Log "Skipping pinned: $name ($id)" 'INFO'
+        continue
+    }
+
+    # Source exclusions (exact match)
+    if ($ExcludeSources -and $source -and ($ExcludeSources -contains $source)) {
+        Write-Log "Skipping by source '$source': $name ($id)" 'INFO'
+        continue
+    }
+
+    # Standard exclusions (wildcards)
+    if ( (MatchesAny -Text $id -Patterns $ExcludeIds) -or (MatchesAny -Text $name -Patterns $ExcludeNames) ) {
+        Write-Log "Skipping by pattern: $name ($id)" 'INFO'
         continue
     }
 
@@ -332,55 +340,81 @@ $toUpgrade = foreach ($pkg in $packages) {
         Name      = $name
         Version   = FirstNotNullOrEmpty $pkg.Version $pkg.Installed $pkg.InstalledVersion
         Available = FirstNotNullOrEmpty $pkg.Available $pkg.AvailableVersion
-        Source    = FirstNotNullOrEmpty $pkg.Source $pkg.Repository
+        Source    = $source
     }
 }
 
 if (-not $toUpgrade -or $toUpgrade.Count -eq 0) {
-    Write-Log "All upgradable packages are excluded. Nothing to update." 'INFO'
+    if ($whitelistActive) {
+        Write-Log "No packages matched the whitelist. Nothing to update." 'INFO'
+    } else {
+        Write-Log "All upgradable packages are excluded. Nothing to update." 'INFO'
+    }
     exit 0
 }
 
-Write-Log "Packages queued for upgrade ($($toUpgrade.Count)):" 'INFO'
-$toUpgrade | ForEach-Object { Write-Log " - $($_.Name) [$($_.Id)] $($_.Version) -> $($_.Available)" 'INFO' }
+Write-Log ("Packages queued for upgrade ({0}):" -f $toUpgrade.Count) 'INFO'
+$toUpgrade | ForEach-Object { Write-Log (" - {0} [{1}] {2} -> {3} (src: {4})" -f $_.Name,$_.Id,$_.Version,$_.Available,$_.Source) 'INFO' }
 
-# ---------------- Upgrade ----------------
+# ---------------- Upgrade (smart scope fallback) ----------------
 $fail = @()
-foreach ($pkg in $toUpgrade) {
-    $args = @(
-        'upgrade','--id', $pkg.Id,
-        '--accept-source-agreements','--accept-package-agreements',
-        '--silent','--disable-interactivity'
-    )
-    if ($Scope) { $args += @('--scope', $Scope) }
-    if ($IncludeUnknown) { $args += '--include-unknown' }
 
+function Invoke-WingetUpgrade {
+    param(
+        [Parameter(Mandatory)]$Pkg,
+        [string]$ScopeTry  # '', 'user', or 'machine'
+    )
+    $args = @(
+        'upgrade','--id', $Pkg.Id,
+        '--accept-source-agreements','--accept-package-agreements',
+        '--silent','--disable-interactivity','--exact'
+    )
+    if ($IncludeUnknown) { $args += '--include-unknown' }
+    if ($ScopeTry) { $args += @('--scope', $ScopeTry) }
+
+    $p = Start-Process -FilePath (Get-Command winget).Source -ArgumentList $args -PassThru -Wait -NoNewWindow
+    return $p.ExitCode
+}
+
+foreach ($pkg in $toUpgrade) {
     $label = "$($pkg.Name) [$($pkg.Id)]"
-    if ($PSCmdlet.ShouldProcess($label, "Upgrade to $($pkg.Available)")) {
-        Write-Log "Upgrading $label ..." 'INFO'
-        try {
-            $p = Start-Process -FilePath (Get-Command winget).Source -ArgumentList $args -PassThru -Wait -NoNewWindow
-            if ($p.ExitCode -ne 0) {
-                $msg = "Failed ($($p.ExitCode)): $label"
-                Write-Log $msg 'ERROR'
-                $fail += $label
-                if ($StopOnError) { break }
-            } else {
-                Write-Log "Success: $label" 'INFO'
-            }
-        } catch {
-            Write-Log "Error upgrading $label : $($_.Exception.Message)" 'ERROR'
-            $fail += $label
-            if ($StopOnError) { break }
-        }
-    } else {
+    if (-not $PSCmdlet.ShouldProcess($label, "Upgrade to $($pkg.Available)")) {
         Write-Log "WhatIf: would upgrade $label" 'INFO'
+        continue
+    }
+
+    Write-Log "Upgrading $label ..." 'INFO'
+
+    # Try 1: no scope (let winget figure it out)
+    $exit = Invoke-WingetUpgrade -Pkg $pkg -ScopeTry ''
+
+    # Common “not found”/scope mismatch codes: -1978335212, sometimes 259
+    if ($exit -eq -1978335212 -or $exit -eq 259) {
+        if ($Scope) {
+            Write-Log ("Retrying with --scope {0}: {1}" -f $Scope, $label) 'DEBUG'
+            $exit = Invoke-WingetUpgrade -Pkg $pkg -ScopeTry $Scope
+        } else {
+            Write-Log ("Retrying with --scope {0}: {1}" -f 'machine', $label) 'DEBUG'
+            $exit = Invoke-WingetUpgrade -Pkg $pkg -ScopeTry 'machine'
+            if ($exit -eq -1978335212 -or $exit -eq 259) {
+                Write-Log ("Retrying with --scope {0}: {1}" -f 'user', $label) 'DEBUG'
+                $exit = Invoke-WingetUpgrade -Pkg $pkg -ScopeTry 'user'
+            }
+        }
+    }
+
+    if ($exit -ne 0) {
+        Write-Log ("Failed ({0}): {1}" -f $exit, $label) 'ERROR'
+        $fail += $label
+        if ($StopOnError) { break }
+    } else {
+        Write-Log "Success: $label" 'INFO'
     }
 }
 
 if ($fail.Count -gt 0) {
-    Write-Log "Completed with failures ($($fail.Count))." 'WARN'
-    if ($Diagnostics) { Write-Log "See diagnostics in $ScriptDir if needed." 'INFO' }
+    Write-Log ("Completed with failures ({0})." -f $fail.Count) 'WARN'
+    if ($Diagnostics) { Write-Log ("See diagnostics in {0} if needed." -f $ScriptDir) 'INFO' }
     exit 2
 } else {
     Write-Log "All selected packages upgraded successfully." 'INFO'
