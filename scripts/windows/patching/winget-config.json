@@ -1,0 +1,8 @@
+{
+  "IncludeOnlyIds":   [],
+  "IncludeOnlyNames": [],
+
+  "ExcludeIds":       [ "Anaconda.*" ],
+  "ExcludeNames":     [ "Anaconda3 *" ],
+  "ExcludeSources":   []
+}

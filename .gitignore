@@ -1,0 +1,81 @@
+# ====================================================
+# WINDOWS JUNK
+# ====================================================
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# ====================================================
+# POWERSHELL FILES (GitHub PowerShell template)
+# ====================================================
+# Ignore PowerShell history
+PSReadLine/*
+*.history
+
+# Ignore temporary PS files
+*.ps1xml
+*.psc1
+*.psm1
+*.psd1
+*.ps1~
+*.ps1.orig
+*.ps1.bak
+
+# Ignore generated help / output
+*.dll-Help.xml
+*.xml-help.xml
+
+# Ignore local PowerShell module analysis cache
+*.pscache
+
+# ====================================================
+# REPO-SPECIFIC FILES
+# ====================================================
+# Logs & diagnostics
+*.log
+*.log.*
+logs/
+Logs/
+*.tmp
+*.bak
+*.old
+*.swp
+winget-upgrade-raw-*.txt
+winget-upgrade-sanitized.json
+winget-list-upgrade-raw.json.txt
+
+# Config overrides (keep default winget-config.json tracked)
+winget-config.local.json
+
+# ====================================================
+# ARCHIVES / BUILDS
+# ====================================================
+*.zip
+*.7z
+*.tar
+*.gz
+*.rar
+
+# ====================================================
+# IDE / EDITOR
+# ====================================================
+.vscode/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Visual Studio Code workspace settings
+*.code-workspace
+
+# JetBrains Rider, IntelliJ, WebStorm
+*.iml
+out/
+
+# ====================================================
+# OS-SPECIFIC
+# ====================================================
+.DS_Store
