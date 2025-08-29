@@ -1,0 +1,69 @@
+# -----------------------
+# Windows junk
+# -----------------------
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# -----------------------
+# PowerShell environment
+# -----------------------
+*.ps1xml
+*.psc1
+*.psm1
+*.psd1
+*.ps1~
+*.ps1.orig
+*.ps1.bak
+
+# Local PowerShell history
+PSReadLine/*
+*.history
+
+# -----------------------
+# Logs & diagnostics
+# -----------------------
+*.log
+*.log.*
+logs/
+Logs/
+*.tmp
+*.bak
+*.old
+*.swp
+winget-upgrade-raw-*.txt
+winget-upgrade-sanitized.json
+winget-list-upgrade-raw.json.txt
+
+# -----------------------
+# Config overrides
+# -----------------------
+# Keep the default winget-config.json (example) in git,
+# but ignore local overrides if you rename/copy it.
+winget-config.local.json
+
+# -----------------------
+# Build/output artifacts
+# -----------------------
+*.zip
+*.7z
+*.tar
+*.gz
+*.rar
+
+# -----------------------
+# IDE/Editor stuff
+# -----------------------
+.vscode/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# -----------------------
+# OS-specific
+# -----------------------
+.DS_Store
