@@ -71,7 +71,9 @@ jobs:
           
           $versionFile = './installer/VERSION'
           $versionContent = Get-Content -Path $versionFile -Raw
-          $versionMatch = $versionContent | Select-String -Pattern '^\d+\.\d+\.\d+' -AllMatches
+          
+          # Extract version - match any line that contains a version number
+          $versionMatch = $versionContent | Select-String -Pattern '^\d+\.\d+\.\d+$' -MultiLine
           $currentVersion = if ($versionMatch.Matches) { $versionMatch.Matches[0].Value } else { '1.0.0' }
           
           # Parse version components
@@ -87,15 +89,28 @@ jobs:
           Write-Host "Version incremented: $currentVersion → $newVersion" -ForegroundColor Green
           
           # Update VERSION file with new version
-          $updatedContent = $versionContent -replace "^\d+\.\d+\.\d+", $newVersion
-          Set-Content -Path $versionFile -Value $updatedContent -NoNewline
+          $updatedContent = $versionContent -replace "^\d+\.\d+\.\d+$", $newVersion -join [Environment]::NewLine
+          Set-Content -Path $versionFile -Value $updatedContent
           
-          # Commit and push version update
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add $versionFile
-          git commit -m "chore: Increment version to $newVersion after successful build"
-          git push origin HEAD:${{ github.ref }}
+          # Check if file was actually modified
+          $gitStatus = & git status --short
+          if ($gitStatus -match $versionFile) {
+            Write-Host "✓ VERSION file modified successfully" -ForegroundColor Green
+            
+            # Commit and push version update
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add $versionFile
+            git commit -m "chore: Increment version to $newVersion after successful build"
+            
+            # Pull before push to avoid conflicts
+            git pull --rebase origin main
+            git push origin main
+            
+            Write-Host "✓ Version committed and pushed" -ForegroundColor Green
+          } else {
+            Write-Host "⚠ VERSION file not modified (no changes detected)" -ForegroundColor Yellow
+          }
 
       - name: Publish Installer Artifact
         uses: actions/upload-artifact@v4
