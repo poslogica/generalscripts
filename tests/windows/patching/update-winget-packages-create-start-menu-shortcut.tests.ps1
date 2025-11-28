@@ -1,9 +1,42 @@
+<#
+.SYNOPSIS
+    Pester test suite for update-winget-packages-create-start-menu-shortcut.ps1 script
+
+.DESCRIPTION
+    Comprehensive tests validating the Start Menu shortcut creation script.
+    Tests verify COM object usage, shortcut path configuration, PowerShell invocation setup,
+    icon configuration, and cross-platform compatibility.
+    
+.TESTS
+    - Script Syntax and Structure: Validates PowerShell syntax and COM object usage
+    - Start Menu Shortcut Path Configuration: Tests ProgramData and shortcut naming
+    - PowerShell Executable Configuration: Verifies System32 path to powershell.exe
+    - Target Script Reference: Checks Update-WingetPackages.ps1 reference
+    - Shortcut Object Creation: Tests WScript.Shell shortcut object setup
+    - Shortcut Arguments Configuration: Validates execution policy and file parameters
+    - Shortcut Icon Configuration: Tests shell32.dll icon reference (index 167)
+    - Shortcut Persistence: Verifies Save() method is called
+    - Output and Logging: Checks confirmation messages
+    - Script Location and Organization: Confirms script location and references
+    - Start Menu Path Structure: Tests system-wide vs user-specific paths
+    - PowerShell Invocation Configuration: Validates full path usage
+    - COM Object Usage: Tests WScript.Shell object creation
+    - Robustness and Portability: Tests environment variables and cross-version compatibility
+    - Shortcut Functionality: Validates executable, icon, and working directory settings
+#>
+
+# ===== SETUP =====
+# Initialize script paths and directory references for all tests
 BeforeAll {
     $scriptPath = Join-Path -Path $PSScriptRoot -ChildPath '..\..\..\scripts\windows\patching\update-winget-packages-create-start-menu-shortcut.ps1'
     $scriptDir = Split-Path -Path $scriptPath -Parent
 }
 
+# ===== TEST SUITE =====
 Describe "update-winget-packages-create-start-menu-shortcut Script Tests" {
+    
+    # ----- Script Syntax and Structure Tests -----
+    # Validates basic PowerShell syntax, COM object creation, and documentation
     Context "Script Syntax and Structure" {
         It "Should have valid PowerShell syntax" {
             $content = Get-Content -Path $scriptPath -Raw
@@ -22,6 +55,8 @@ Describe "update-winget-packages-create-start-menu-shortcut Script Tests" {
         }
     }
 
+    # ----- Start Menu Shortcut Path Configuration Tests -----
+    # Tests ProgramData environment variable, shortcut naming, and .lnk file extension
     Context "Start Menu Shortcut Path Configuration" {
         It "Should reference Start Menu Programs directory" {
             $content = Get-Content -Path $scriptPath -Raw
@@ -49,6 +84,8 @@ Describe "update-winget-packages-create-start-menu-shortcut Script Tests" {
         }
     }
 
+    # ----- PowerShell Executable Configuration Tests -----
+    # Tests System32 path to powershell.exe and environment variable usage
     Context "PowerShell Executable Configuration" {
         It "Should reference Windows PowerShell 5.1" {
             $content = Get-Content -Path $scriptPath -Raw
@@ -66,6 +103,8 @@ Describe "update-winget-packages-create-start-menu-shortcut Script Tests" {
         }
     }
 
+    # ----- Target Script Reference Tests -----
+    # Verifies Update-WingetPackages.ps1 reference and PSScriptRoot usage
     Context "Target Script Reference" {
         It "Should reference Update-WingetPackages.ps1" {
             $content = Get-Content -Path $scriptPath -Raw
@@ -83,6 +122,8 @@ Describe "update-winget-packages-create-start-menu-shortcut Script Tests" {
         }
     }
 
+    # ----- Shortcut Object Creation Tests -----
+    # Tests WScript.Shell CreateShortcut method and property assignments
     Context "Shortcut Object Creation" {
         It "Should create WScript shortcut object" {
             $content = Get-Content -Path $scriptPath -Raw
@@ -110,6 +151,8 @@ Describe "update-winget-packages-create-start-menu-shortcut Script Tests" {
         }
     }
 
+    # ----- Shortcut Arguments Configuration Tests -----
+    # Validates -NoProfile, -ExecutionPolicy Bypass, -File, and path quoting
     Context "Shortcut Arguments Configuration" {
         It "Should use -NoProfile argument" {
             $content = Get-Content -Path $scriptPath -Raw
@@ -132,6 +175,8 @@ Describe "update-winget-packages-create-start-menu-shortcut Script Tests" {
         }
     }
 
+    # ----- Shortcut Icon Configuration Tests -----
+    # Tests shell32.dll reference and icon index 167 (package/box icon)
     Context "Shortcut Icon Configuration" {
         It "Should set IconLocation property" {
             $content = Get-Content -Path $scriptPath -Raw
@@ -149,6 +194,8 @@ Describe "update-winget-packages-create-start-menu-shortcut Script Tests" {
         }
     }
 
+    # ----- Shortcut Persistence Tests -----
+    # Verifies shortcut is saved to disk using Save() method
     Context "Shortcut Persistence" {
         It "Should save shortcut to disk" {
             $content = Get-Content -Path $scriptPath -Raw
@@ -156,6 +203,8 @@ Describe "update-winget-packages-create-start-menu-shortcut Script Tests" {
         }
     }
 
+    # ----- Output and Logging Tests -----
+    # Tests Write-Output confirmation messages including shortcut path
     Context "Output and Logging" {
         It "Should output confirmation message" {
             $content = Get-Content -Path $scriptPath -Raw
@@ -169,6 +218,8 @@ Describe "update-winget-packages-create-start-menu-shortcut Script Tests" {
         }
     }
 
+    # ----- Script Location and Organization Tests -----
+    # Confirms script exists in patching directory and references other scripts
     Context "Script Location and Organization" {
         It "Script location should be predictable" {
             Test-Path -LiteralPath $scriptPath | Should -Be $true
@@ -186,6 +237,8 @@ Describe "update-winget-packages-create-start-menu-shortcut Script Tests" {
         }
     }
 
+    # ----- Start Menu Path Structure Tests -----
+    # Tests Programs directory reference and system-wide (ProgramData) vs user-specific (APPDATA)
     Context "Start Menu Path Structure" {
         It "Should create shortcut in Programs directory" {
             $content = Get-Content -Path $scriptPath -Raw
@@ -200,6 +253,8 @@ Describe "update-winget-packages-create-start-menu-shortcut Script Tests" {
         }
     }
 
+    # ----- PowerShell Invocation Configuration Tests -----
+    # Tests full path to powershell.exe and not relying on PATH environment variable
     Context "PowerShell Invocation Configuration" {
         It "Should use full path to powershell.exe" {
             $content = Get-Content -Path $scriptPath -Raw
@@ -219,6 +274,8 @@ Describe "update-winget-packages-create-start-menu-shortcut Script Tests" {
         }
     }
 
+    # ----- COM Object Usage Tests -----
+    # Tests WScript.Shell COM object creation and shortcut creation methods
     Context "COM Object Usage" {
         It "Should create WScript.Shell COM object correctly" {
             $content = Get-Content -Path $scriptPath -Raw
@@ -233,6 +290,8 @@ Describe "update-winget-packages-create-start-menu-shortcut Script Tests" {
         }
     }
 
+    # ----- Robustness and Portability Tests -----
+    # Tests environment variable usage, cross-version compatibility, and dynamic path handling
     Context "Robustness and Portability" {
         It "Should use environment variables for system paths" {
             $content = Get-Content -Path $scriptPath -Raw
