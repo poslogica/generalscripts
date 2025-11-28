@@ -47,7 +47,7 @@ Describe "get-duplicate-files-with-progress Script Tests" {
         It "Should handle invalid path gracefully" {
             # Script should handle invalid path gracefully without throwing
             # Run in separate process to isolate error streams completely
-            $result = & powershell.exe -NoProfile -Command "& '$scriptPath' -Path 'C:\NonExistent\InvalidPath\12345' 2>&1 | Out-Null; exit `$LASTEXITCODE"
+            $result = & pwsh.exe -NoProfile -Command "& '$scriptPath' -Path 'C:\NonExistent\InvalidPath\12345' 2>&1 | Out-Null; exit `$LASTEXITCODE"
             # Exit code 1 indicates graceful error handling (not a crash)
             $LASTEXITCODE | Should -Be 1
         }
