@@ -50,6 +50,7 @@ winget-list-upgrade-raw.json.txt
 duplicate_files_with_progress.txt
 *_results.txt
 *_output.txt
+TestResults.xml
 
 # Config overrides (keep default winget-config.json tracked)
 winget-config.local.json
