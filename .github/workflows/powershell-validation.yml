@@ -86,3 +86,11 @@ jobs:
           } else {
             Write-Host "No test files found in tests/ directory (*.tests.ps1)"
           }
+
+      - name: Publish Test Results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-results
+          path: ${{ runner.temp }}/TEST-Results.xml
+          retention-days: 30
