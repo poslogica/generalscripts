@@ -5,11 +5,13 @@ on:
     branches: [ main, develop ]
     paths:
       - 'scripts/**/*.ps1'
+      - 'tests/**/*.ps1'
       - '.github/workflows/powershell-validation.yml'
   pull_request:
     branches: [ main, develop ]
     paths:
       - 'scripts/**/*.ps1'
+      - 'tests/**/*.ps1'
 
 jobs:
   validate:
@@ -59,8 +61,8 @@ jobs:
             Install-Module -Name Pester -Force -Scope CurrentUser
           }
           
-          # Find and run all test files
-          $testFiles = Get-ChildItem -Path . -Include "*.tests.ps1" -Recurse
+          # Find and run all test files in tests/ directory
+          $testFiles = Get-ChildItem -Path './tests' -Include "*.tests.ps1" -Recurse
           
           if ($testFiles) {
             Write-Host "Found $($testFiles.Count) test file(s)"
@@ -70,5 +72,5 @@ jobs:
             }
             Write-Host "✓ All Pester tests completed"
           } else {
-            Write-Host "No test files found (*.tests.ps1)"
+            Write-Host "No test files found in tests/ directory (*.tests.ps1)"
           }
