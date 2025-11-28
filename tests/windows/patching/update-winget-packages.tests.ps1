@@ -1,8 +1,33 @@
+<#
+.SYNOPSIS
+    Comprehensive Pester test suite for update-winget-packages.ps1
+
+.DESCRIPTION
+    This test file validates the update-winget-packages.ps1 script which orchestrates winget package updates.
+    The script wraps the Update-ThirdPartyWithWinget.ps1 script, adding support for elevation, logging, and
+    parameter forwarding. Tests validate script syntax, parameters, structure, logic, argument handling,
+    and file system operations.
+
+.TESTS
+    This test suite contains 30 test cases organized into 5 test contexts:
+    - Script Syntax and Structure: Validates PowerShell syntax and required parameters (3 tests)
+    - Parameter Validation: Tests all parameter types and defaults (5 tests)
+    - Script Structure and Logic: Verifies core functionality and logic blocks (7 tests)
+    - Edge Cases: Tests special scenarios like WhatIf, argument forwarding, and exit codes (6 tests)
+    - File System Operations: Validates file paths and script organization (3 tests)
+    - Argument Forwarding: Tests parameter forwarding and log path construction (6 tests)
+
+.SETUP
+    Sets up the path to the script under test relative to the test file location
+#>
+
 BeforeAll {
-    $scriptPath = Join-Path -Path $PSScriptRoot -ChildPath '..\..\..\scripts\windows\patching\update-winget-packages.ps1'
+    $scriptPath = Join-Path -Path $PSScriptRoot -ChildPath '..\..\..\.\scripts\windows\patching\update-winget-packages.ps1'
 }
 
 Describe "update-winget-packages Script Tests" {
+    # ----- Script Syntax and Structure Tests -----
+    # Tests basic PowerShell syntax validity and presence of required parameters
     Context "Script Syntax and Structure" {
         It "Should have valid PowerShell syntax" {
             $content = Get-Content -Path $scriptPath -Raw
@@ -23,6 +48,8 @@ Describe "update-winget-packages Script Tests" {
         }
     }
 
+    # ----- Parameter Validation Tests -----
+    # Tests all script parameters: -Scope (user/machine), -WhatIf, -IncludeUnknown, and -Diagnostics
     Context "Parameter Validation" {
         It "Should accept valid -Scope parameter (user)" {
             # Test that the script accepts -Scope user parameter without execution errors
@@ -64,6 +91,8 @@ Describe "update-winget-packages Script Tests" {
         }
     }
 
+    # ----- Script Structure and Logic Tests -----
+    # Tests core logic: admin checks, elevation, logging directory creation, and parameter forwarding
     Context "Script Structure and Logic" {
         It "Should verify main script exists check" {
             $content = Get-Content -Path $scriptPath -Raw
@@ -107,6 +136,8 @@ Describe "update-winget-packages Script Tests" {
         }
     }
 
+    # ----- Edge Cases Tests -----
+    # Tests special scenarios: WhatIf handling, extra arguments after --, parameter detection, exit codes
     Context "Edge Cases" {
         It "Should handle WhatIf flag correctly" {
             $content = Get-Content -Path $scriptPath -Raw
@@ -143,6 +174,8 @@ Describe "update-winget-packages Script Tests" {
         }
     }
 
+    # ----- File System Operations Tests -----
+    # Tests file system paths, script organization, and dependencies on other scripts
     Context "File System Operations" {
         It "Script location should be predictable" {
             Test-Path -LiteralPath $scriptPath | Should -Be $true
@@ -159,6 +192,8 @@ Describe "update-winget-packages Script Tests" {
         }
     }
 
+    # ----- Argument Forwarding Tests -----
+    # Tests PowerShell execution policy, profile settings, argument quoting, and log path construction
     Context "Argument Forwarding" {
         It "Should preserve -NoProfile in argument list" {
             $content = Get-Content -Path $scriptPath -Raw
