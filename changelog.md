@@ -2,6 +2,16 @@
 
 ## 2025-11-28
 
+- [`3f325f1`](https://github.com/poslogica/generalscripts/commit/3f325f172a0e95523d77195854eb19f2978604ea) **docs: Add system requirements notes to Update-ThirdPartyWithWinget - Windows 10/11 or Windows Server 2019+ - Winget must be installed - PowerShell 5.1+ required**
+  *by poslogica*
+- [`08e86a0`](https://github.com/poslogica/generalscripts/commit/08e86a01405014cd89e2af7a0610cb21a37d17fb) **ci: Rename version step to reflect GitHub Releases as primary source**
+  *by poslogica*
+- [`3031fe3`](https://github.com/poslogica/generalscripts/commit/3031fe3302a44368dd1d386f346dba712c95c642) **ci: Switch to native GitHub tag-based versioning - Version now derived from latest GitHub release tag - Uses gh release list API for single source of truth - Automatically increments patch version - Starts at v0.0.1 if no releases exist - VERSION file updated for reference only (not used for versioning) - Eliminates race conditions from VERSION file commits**
+  *by poslogica*
+- [`9b3ec90`](https://github.com/poslogica/generalscripts/commit/9b3ec9048cf9510e96891232668d9eb342d43363) **fix: Fetch remote tags before checking, gracefully handle existing tags/releases**
+  *by poslogica*
+- [`4cf5339`](https://github.com/poslogica/generalscripts/commit/4cf533992616d43e423a598ca0be796095180972) **chore: update change logs [skip ci]**
+  *by github-actions[bot]*
 - [`d2cdc49`](https://github.com/poslogica/generalscripts/commit/d2cdc495356d1d079c0a1820fa5449a870045ec6) **docs: Add Windows and Winget requirements to update-winget-packages.ps1 notes**
   *by poslogica*
 - [`c7356fa`](https://github.com/poslogica/generalscripts/commit/c7356fa564c9dd395e903503e11d955ad4166270) **chore: Bump version to 1.0.1 for next release**
