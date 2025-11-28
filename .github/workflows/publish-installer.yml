@@ -58,6 +58,39 @@ jobs:
             exit 1
           }
 
+      - name: Increment Version
+        shell: pwsh
+        run: |
+          Write-Host "Incrementing version for next build..." -ForegroundColor Cyan
+          
+          $versionFile = './installer/VERSION'
+          $versionContent = Get-Content -Path $versionFile -Raw
+          $versionMatch = $versionContent | Select-String -Pattern '^\d+\.\d+\.\d+' -AllMatches
+          $currentVersion = if ($versionMatch.Matches) { $versionMatch.Matches[0].Value } else { '1.0.0' }
+          
+          # Parse version components
+          $parts = $currentVersion -split '\.'
+          [int]$major = $parts[0]
+          [int]$minor = $parts[1]
+          [int]$patch = $parts[2]
+          
+          # Increment patch version
+          $patch++
+          $newVersion = "$major.$minor.$patch"
+          
+          Write-Host "Version incremented: $currentVersion → $newVersion" -ForegroundColor Green
+          
+          # Update VERSION file with new version
+          $updatedContent = $versionContent -replace "^\d+\.\d+\.\d+", $newVersion
+          Set-Content -Path $versionFile -Value $updatedContent -NoNewline
+          
+          # Commit and push version update
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add $versionFile
+          git commit -m "chore: Increment version to $newVersion after successful build"
+          git push
+
       - name: Publish Installer Artifact
         uses: actions/upload-artifact@v4
         with:
