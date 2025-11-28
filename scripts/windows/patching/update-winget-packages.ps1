@@ -6,6 +6,8 @@ Examples:
   .\Update-WingetPackages.ps1
   .\Update-WingetPackages.ps1 -Scope user -WhatIf
   .\Update-WingetPackages.ps1 -Scope machine -- -StopOnError
+Notes:
+- Requires administrator privileges for machine scope (auto-elevates)
 #>
 
 param(
