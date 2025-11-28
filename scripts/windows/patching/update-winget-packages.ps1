@@ -8,6 +8,8 @@ Examples:
   .\Update-WingetPackages.ps1 -Scope machine -- -StopOnError
 Notes:
 - Requires administrator privileges for machine scope (auto-elevates)
+- Windows 10/11 or Windows Server 2019+
+- Winget must be installed and available
 #>
 
 param(
