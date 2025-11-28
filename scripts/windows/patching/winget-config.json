@@ -2,7 +2,7 @@
   "IncludeOnlyIds":   [],
   "IncludeOnlyNames": [],
 
-  "ExcludeIds":       [ "Anaconda.*" ],
-  "ExcludeNames":     [ "Anaconda3 *" ],
+  "ExcludeIds":       [ "Anaconda.*", "Mega.MEGASync" ],
+  "ExcludeNames":     [ "Anaconda3*", "MEGASync" ],
   "ExcludeSources":   []
 }
