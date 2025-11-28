@@ -1,6 +1,8 @@
 Change Logs - 2025-11-28
 ==================================================
 2025-11-28
+- docs: Add note about administrator privileges requirement to Update-WingetPackages.ps1 (by poslogica)
+- chore: update change logs [skip ci] (by github-actions[bot])
 - fix: Only create output file when duplicates are found (by poslogica)
 - chore: Remove obsolete patch-software-windows tests and fix duplicate file script output format (by poslogica)
 - only trigger on push (by poslogica)
