@@ -1,3 +1,32 @@
+<#
+.SYNOPSIS
+    Comprehensive Pester test suite for get-duplicate-files-with-progress.ps1
+
+.DESCRIPTION
+    This test file validates the get-duplicate-files-with-progress.ps1 script which identifies duplicate files
+    in a directory tree using SHA256 hashing. The script supports recursive scanning, handles various file types,
+    and generates a formatted output file listing duplicate file groups organized by their content hash.
+
+.TESTS
+    This test suite contains 32 test cases organized into 11 test contexts:
+    - Script Syntax and Structure: Validates PowerShell syntax and help documentation (3 tests)
+    - Path Parameter Validation: Tests path handling and defaults (4 tests)
+    - Empty Directory Handling: Tests behavior with empty directories (2 tests)
+    - Duplicate Detection: Tests duplicate identification and hashing (3 tests)
+    - Recursive Directory Scanning: Tests nested directory traversal (2 tests)
+    - Output File Generation: Tests output file creation and formatting (3 tests)
+    - File Handling: Tests different file types and encodings (2 tests)
+    - Error Handling: Tests error scenarios and exit codes (2 tests)
+    - Performance: Tests performance with multiple files (1 test)
+    - Edge Cases - File Sizes: Tests zero-byte, large, and mixed-size files (3 tests)
+    - Edge Cases - Special Characters and Encoding: Tests Unicode and special characters (3 tests)
+    - Edge Cases - Output File Behavior: Tests output file handling and formatting (2 tests)
+    - Edge Cases - File Permissions and State: Tests file extensions and hash formats (2 tests)
+
+.SETUP
+    Sets up the path to the script under test and output file location relative to the test file
+#>
+
 # Test file for get-duplicate-files-with-progress.ps1
 # Located in tests/ directory to keep tests separate from distribution
 # Pester 5.x syntax for GitHub Actions compatibility
@@ -10,6 +39,8 @@ BeforeAll {
 
 Describe "get-duplicate-files-with-progress Script Tests" {
     
+    # ----- Script Syntax and Structure Tests -----
+    # Tests basic PowerShell syntax validity, required parameters, and help documentation
     Context "Script Syntax and Structure" {
         
         It "Should have valid PowerShell syntax" {
@@ -33,6 +64,8 @@ Describe "get-duplicate-files-with-progress Script Tests" {
         }
     }
 
+    # ----- Path Parameter Validation Tests -----
+    # Tests path parameter handling including defaults, invalid paths, and special characters
     Context "Path Parameter Validation" {
         
         It "Should accept a valid directory path" {
@@ -58,6 +91,8 @@ Describe "get-duplicate-files-with-progress Script Tests" {
         }
     }
 
+    # ----- Empty Directory Handling Tests -----
+    # Tests script behavior when processing directories with no files or unique files only
     Context "Empty Directory Handling" {
         
         It "Should handle directory with no files" {
@@ -72,6 +107,8 @@ Describe "get-duplicate-files-with-progress Script Tests" {
         }
     }
 
+    # ----- Duplicate Detection Tests -----
+    # Tests duplicate identification by SHA256 hash, multiple duplicate groups, and output format
     Context "Duplicate Detection" {
         
         It "Should identify duplicate files by hash" {
@@ -118,6 +155,8 @@ Describe "get-duplicate-files-with-progress Script Tests" {
         }
     }
 
+    # ----- Recursive Directory Scanning Tests -----
+    # Tests recursive directory traversal including subdirectories and deeply nested structures
     Context "Recursive Directory Scanning" {
         
         It "Should scan subdirectories recursively" {
@@ -150,6 +189,8 @@ Describe "get-duplicate-files-with-progress Script Tests" {
         }
     }
 
+    # ----- Output File Generation Tests -----
+    # Tests output file creation, formatting, and content including hash information and file paths
     Context "Output File Generation" {
         
         It "Should create output file when duplicates found" {
@@ -188,6 +229,8 @@ Describe "get-duplicate-files-with-progress Script Tests" {
         }
     }
 
+    # ----- File Handling Tests -----
+    # Tests handling of various file types including different extensions and binary files
     Context "File Handling" {
         
         It "Should handle files with different extensions" {
@@ -216,6 +259,8 @@ Describe "get-duplicate-files-with-progress Script Tests" {
         }
     }
 
+    # ----- Error Handling Tests -----
+    # Tests error scenarios, graceful error handling, and success exit codes
     Context "Error Handling" {
         
         It "Should continue processing without stopping" {
@@ -234,6 +279,8 @@ Describe "get-duplicate-files-with-progress Script Tests" {
         }
     }
 
+    # ----- Performance Tests -----
+    # Tests script performance on directories with multiple files
     Context "Performance" {
         
         It "Should complete within reasonable time for small directory" {
@@ -251,6 +298,8 @@ Describe "get-duplicate-files-with-progress Script Tests" {
         }
     }
 
+    # ----- Edge Cases - File Sizes Tests -----
+    # Tests handling of zero-byte files, large files (5MB+), and mixed file sizes
     Context "Edge Cases - File Sizes" {
         
         It "Should handle zero-byte files" {
@@ -295,6 +344,8 @@ Describe "get-duplicate-files-with-progress Script Tests" {
         }
     }
 
+    # ----- Edge Cases - Special Characters and Encoding Tests -----
+    # Tests Unicode filenames, special characters in filenames, and Unicode content
     Context "Edge Cases - Special Characters and Encoding" {
         
         It "Should handle filenames with Unicode characters" {
@@ -335,6 +386,8 @@ Describe "get-duplicate-files-with-progress Script Tests" {
         }
     }
 
+    # ----- Edge Cases - Output File Behavior Tests -----
+    # Tests output file overwriting, formatting consistency, and proper content organization
     Context "Edge Cases - Output File Behavior" {
         
         It "Should overwrite previous output file" {
@@ -372,6 +425,8 @@ Describe "get-duplicate-files-with-progress Script Tests" {
         }
     }
 
+    # ----- Edge Cases - File Permissions and State Tests -----
+    # Tests duplicate detection with different file extensions and SHA256 hash format validation
     Context "Edge Cases - File Permissions and State" {
         
         It "Should handle identical content but different file extensions" {
