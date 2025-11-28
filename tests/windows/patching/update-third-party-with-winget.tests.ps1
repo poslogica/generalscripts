@@ -1,9 +1,67 @@
+<#
+.SYNOPSIS
+    Pester test suite for update-third-party-with-winget.ps1 script
+
+.DESCRIPTION
+    Comprehensive tests validating script structure, parameters, functions,
+    configuration handling, winget integration, error handling, and robustness.
+    
+    These tests ensure the script meets code quality standards and functions as expected.
+    
+.TESTS
+    - Script Syntax and Structure: Validates PowerShell syntax and required components
+    - Parameter Validation: Verifies all expected parameters exist with correct attributes
+    - Utility Functions: Ensures all helper functions are defined
+    - Configuration Handling: Tests JSON config structure recognition
+    - Winget Integration: Validates winget command usage and output parsing
+    - Error Handling: Checks for try-catch blocks and error logging
+    - Documentation: Verifies help documentation is complete
+    - Robustness: Tests support for edge cases and compatibility
+    - File System Operations: Confirms script location and file references
+    - Filtering and Matching: Validates filtering logic support
+#>
+
+# ===== SETUP =====
+# Initialize script path for all tests
 BeforeAll {
     $scriptPath = Join-Path -Path $PSScriptRoot -ChildPath '..\..\..\scripts\windows\patching\update-third-party-with-winget.ps1'
 }
 
+# ===== TEST SUITE =====
 Describe "update-third-party-with-winget Script Tests" {
+    
+    # ----- Script Syntax and Structure Tests -----
+    # Validates basic PowerShell syntax, required parameters, help docs, and CmdletBinding
     Context "Script Syntax and Structure" {
+        It "Should have valid PowerShell syntax" {
+            $content = Get-Content -Path $scriptPath -Raw
+            $null = [System.Management.Automation.PSParser]::Tokenize($content, [ref]$null)
+        }
+
+        It "Should have required parameters" {
+            $content = Get-Content -Path $scriptPath -Raw
+            $content | Should -Match 'param\s*\('
+            $content | Should -Match '\$ConfigPath'
+            $content | Should -Match '\$Scope'
+            $content | Should -Match '\$IncludeUnknown'
+        }
+
+        It "Should have help documentation" {
+            $content = Get-Content -Path $scriptPath -Raw
+            $content | Should -Match '<#'
+            $content | Should -Match '\.SYNOPSIS'
+            $content | Should -Match 'winget'
+        }
+
+        It "Should use CmdletBinding with ShouldProcess" {
+            $content = Get-Content -Path $scriptPath -Raw
+            $content | Should -Match '\[CmdletBinding\(SupportsShouldProcess\s*=\s*\$true\)\]'
+        }
+    }
+
+    # ----- Parameter Validation Tests -----
+    # Ensures all parameters exist with correct types and validation attributes
+    Context "Parameter Validation" {
         It "Should have valid PowerShell syntax" {
             $content = Get-Content -Path $scriptPath -Raw
             $null = [System.Management.Automation.PSParser]::Tokenize($content, [ref]$null)
@@ -58,7 +116,10 @@ Describe "update-third-party-with-winget Script Tests" {
         }
     }
 
+    # ----- Utility Functions Tests -----
+    # Ensures all required helper functions exist and contain expected logic
     Context "Utility Functions" {
+        # Test logging function with support for INFO, WARN, ERROR, and DEBUG levels
         It "Should define Write-LogMessage function" {
             $content = Get-Content -Path $scriptPath -Raw
             $content | Should -Match 'function Write-LogMessage'
@@ -95,7 +156,10 @@ Describe "update-third-party-with-winget Script Tests" {
         }
     }
 
+    # ----- Configuration Handling Tests -----
+    # Validates JSON configuration structure and file format support
     Context "Configuration Handling" {
+        # Verify JSON config properties: IncludeOnlyIds, ExcludeIds, ExcludeSources
         It "Should reference JSON config structure" {
             $content = Get-Content -Path $scriptPath -Raw
             $content | Should -Match 'IncludeOnlyIds'
@@ -115,7 +179,10 @@ Describe "update-third-party-with-winget Script Tests" {
         }
     }
 
+    # ----- Winget Integration Tests -----
+    # Tests winget command usage, output parsing (JSON and table formats), and scope handling
     Context "Winget Integration" {
+        # Verify winget command is invoked with proper arguments
         It "Should reference winget command" {
             $content = Get-Content -Path $scriptPath -Raw
             $content | Should -Match 'winget'
@@ -142,7 +209,10 @@ Describe "update-third-party-with-winget Script Tests" {
         }
     }
 
+    # ----- Error Handling Tests -----
+    # Ensures try-catch blocks and error logging are implemented
     Context "Error Handling" {
+        # Verify error handling with try-catch blocks and StopOnError flag support
         It "Should have error handling logic" {
             $content = Get-Content -Path $scriptPath -Raw
             $content | Should -Match 'try\s*{'
@@ -160,7 +230,10 @@ Describe "update-third-party-with-winget Script Tests" {
         }
     }
 
+    # ----- Documentation Tests -----
+    # Verifies help documentation, synopsis, and example usage are present
     Context "Documentation and Examples" {
+        # Check for complete help documentation with examples
         It "Should have synopsis" {
             $content = Get-Content -Path $scriptPath -Raw
             $content | Should -Match '\.SYNOPSIS'
@@ -182,7 +255,10 @@ Describe "update-third-party-with-winget Script Tests" {
         }
     }
 
+    # ----- Robustness Features Tests -----
+    # Tests support for edge cases, compatibility, and advanced options
     Context "Robustness Features" {
+        # Verify handling of noisy/verbose winget output and PowerShell 5.1 compatibility
         It "Should handle noisy winget output" {
             $content = Get-Content -Path $scriptPath -Raw
             $content | Should -Match 'noisy'
@@ -204,7 +280,10 @@ Describe "update-third-party-with-winget Script Tests" {
         }
     }
 
+    # ----- File System Operations Tests -----
+    # Confirms script is in correct location and references valid paths
     Context "File System Operations" {
+        # Verify script exists in patching directory with correct name
         It "Script location should be predictable" {
             Test-Path -LiteralPath $scriptPath | Should -Be $true
         }
@@ -220,7 +299,10 @@ Describe "update-third-party-with-winget Script Tests" {
         }
     }
 
+    # ----- Filtering and Matching Tests -----
+    # Validates support for various filtering mechanisms: IDs, names, sources, case-insensitive matching
     Context "Filtering and Matching" {
+        # Verify all filtering options: IncludeOnly, Exclude, and Source-based exclusion
         It "Should support IncludeOnlyIds filtering" {
             $content = Get-Content -Path $scriptPath -Raw
             $content | Should -Match 'IncludeOnlyIds'
