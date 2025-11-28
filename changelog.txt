@@ -1,6 +1,8 @@
 Change Logs - 2025-11-28
 ==================================================
 2025-11-28
+- docs: Add comprehensive comments to get-duplicate-files-with-progress.tests.ps1 (by poslogica)
+- chore: update change logs [skip ci] (by github-actions[bot])
 - ci: Add automatic version increment step to publish-installer workflow (by poslogica)
 - chore: update change logs [skip ci] (by github-actions[bot])
 - docs: Add comprehensive comments to update-winget-packages.tests.ps1 (by poslogica)

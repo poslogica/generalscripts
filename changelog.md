@@ -2,6 +2,10 @@
 
 ## 2025-11-28
 
+- [`3511670`](https://github.com/poslogica/generalscripts/commit/3511670e4c44727549e24e6e9f34d74af16bf490) **docs: Add comprehensive comments to get-duplicate-files-with-progress.tests.ps1**
+  *by poslogica*
+- [`492d093`](https://github.com/poslogica/generalscripts/commit/492d09338f4d669d2d4b860845bbd3f5cd300355) **chore: update change logs [skip ci]**
+  *by github-actions[bot]*
 - [`a181e11`](https://github.com/poslogica/generalscripts/commit/a181e11578692d5942a2e128d66bfb2ef23c945f) **ci: Add automatic version increment step to publish-installer workflow**
   *by poslogica*
 - [`e9b2409`](https://github.com/poslogica/generalscripts/commit/e9b240926b82c85af42af36f8e517f14c63b3c4f) **chore: update change logs [skip ci]**
