@@ -1,10 +1,12 @@
 # Test file for get-duplicate-files-with-progress.ps1
 # Located in tests/ directory to keep tests separate from distribution
-# Compatible with both Pester 3.4.0 and Pester 5.x
+# Pester 5.x syntax for GitHub Actions compatibility
 
-$scriptPath = Join-Path -Path $PSScriptRoot -ChildPath "..\..\..\scripts\windows\file\get-duplicate-files-with-progress.ps1"
-$scriptDir = Split-Path -Parent $scriptPath
-$outputFile = Join-Path -Path $scriptDir -ChildPath "duplicate_files_with_progress.txt"
+BeforeAll {
+    $scriptPath = Join-Path -Path $PSScriptRoot -ChildPath "..\..\..\scripts\windows\file\get-duplicate-files-with-progress.ps1"
+    $scriptDir = Split-Path -Parent $scriptPath
+    $outputFile = Join-Path -Path $scriptDir -ChildPath "duplicate_files_with_progress.txt"
+}
 
 Describe "get-duplicate-files-with-progress Script Tests" {
     
@@ -19,15 +21,15 @@ Describe "get-duplicate-files-with-progress Script Tests" {
 
         It "Should have required parameters" {
             $content = Get-Content $scriptPath -Raw
-            $content | Should Match "param\s*\("
+            $content | Should -Match "param\s*\("
         }
 
         It "Should have help documentation" {
             $content = Get-Content $scriptPath -Raw
-            $content | Should Match "\.SYNOPSIS"
-            $content | Should Match "\.DESCRIPTION"
-            $content | Should Match "\.PARAMETER"
-            $content | Should Match "\.EXAMPLE"
+            $content | Should -Match "\.SYNOPSIS"
+            $content | Should -Match "\.DESCRIPTION"
+            $content | Should -Match "\.PARAMETER"
+            $content | Should -Match "\.EXAMPLE"
         }
     }
 
@@ -35,22 +37,20 @@ Describe "get-duplicate-files-with-progress Script Tests" {
         
         It "Should accept a valid directory path" {
             $testDir = New-Item -Path (Join-Path $TestDrive "ValidDir") -ItemType Directory -Force
-            { & $scriptPath -Path $testDir.FullName } | Should Not Throw
+            { & $scriptPath -Path $testDir.FullName } | Should -Not -Throw
         }
 
         It "Should default to current directory when no path specified" {
-            { & $scriptPath } | Should Not Throw
+            { & $scriptPath } | Should -Not -Throw
         }
 
         It "Should handle invalid path gracefully" {
-            # The script validates the path and displays an error but doesn't throw
             & $scriptPath -Path "C:\NonExistent\InvalidPath\12345" -ErrorAction SilentlyContinue
-            # Should complete without crashing
         }
 
         It "Should handle path with special characters" {
             $specialDir = New-Item -Path (Join-Path $TestDrive "Test Dir [Special]") -ItemType Directory -Force
-            { & $scriptPath -Path $specialDir.FullName } | Should Not Throw
+            { & $scriptPath -Path $specialDir.FullName } | Should -Not -Throw
         }
     }
 
@@ -58,14 +58,13 @@ Describe "get-duplicate-files-with-progress Script Tests" {
         
         It "Should handle directory with no files" {
             $emptyDir = New-Item -Path (Join-Path $TestDrive "EmptyDir") -ItemType Directory -Force
-            # Script outputs warning message to console but returns null to pipeline
-            { & $scriptPath -Path $emptyDir.FullName } | Should Not Throw
+            { & $scriptPath -Path $emptyDir.FullName } | Should -Not -Throw
         }
 
         It "Should not create output file for empty directory" {
             $emptyDir = New-Item -Path (Join-Path $TestDrive "EmptyDir2") -ItemType Directory -Force
             & $scriptPath -Path $emptyDir.FullName | Out-Null
-            Test-Path -Path $outputFile | Should Be $false
+            Test-Path -Path $outputFile | Should -Be $false
         }
     }
 
@@ -79,11 +78,11 @@ Describe "get-duplicate-files-with-progress Script Tests" {
             
             & $scriptPath -Path $testDir.FullName | Out-Null
             
-            Test-Path -Path $outputFile | Should Be $true
+            Test-Path -Path $outputFile | Should -Be $true
             $content = Get-Content -Path $outputFile -Raw
-            $content | Should Match "Duplicates for hash"
-            $content | Should Match "file1.txt"
-            $content | Should Match "file2.txt"
+            $content | Should -Match "Duplicates for hash"
+            $content | Should -Match "file1.txt"
+            $content | Should -Match "file2.txt"
         }
 
         It "Should not report unique files as duplicates" {
@@ -94,7 +93,7 @@ Describe "get-duplicate-files-with-progress Script Tests" {
             
             & $scriptPath -Path $testDir.FullName | Out-Null
             
-            Test-Path -Path $outputFile | Should Be $false
+            Test-Path -Path $outputFile | Should -Be $false
         }
 
         It "Should handle multiple duplicate groups" {
@@ -108,11 +107,10 @@ Describe "get-duplicate-files-with-progress Script Tests" {
             
             & $scriptPath -Path $testDir.FullName | Out-Null
             
-            # Both groups should be found and reported
-            Test-Path -Path $outputFile | Should Be $true
+            Test-Path -Path $outputFile | Should -Be $true
             $content = Get-Content -Path $outputFile -Raw
-            $content | Should Match "a1.txt"
-            $content | Should Match "b1.txt"
+            $content | Should -Match "a1.txt"
+            $content | Should -Match "b1.txt"
         }
     }
 
@@ -128,8 +126,8 @@ Describe "get-duplicate-files-with-progress Script Tests" {
             & $scriptPath -Path $testDir.FullName | Out-Null
             
             $content = Get-Content -Path $outputFile -Raw
-            $content | Should Match "file1.txt"
-            $content | Should Match "file2.txt"
+            $content | Should -Match "file1.txt"
+            $content | Should -Match "file2.txt"
         }
 
         It "Should handle deeply nested directories" {
@@ -143,8 +141,8 @@ Describe "get-duplicate-files-with-progress Script Tests" {
             & $scriptPath -Path $testDir.FullName | Out-Null
             
             $content = Get-Content -Path $outputFile -Raw
-            $content | Should Match "root.txt"
-            $content | Should Match "deep.txt"
+            $content | Should -Match "root.txt"
+            $content | Should -Match "deep.txt"
         }
     }
 
@@ -157,7 +155,7 @@ Describe "get-duplicate-files-with-progress Script Tests" {
             
             & $scriptPath -Path $testDir.FullName | Out-Null
             
-            Test-Path -Path $outputFile | Should Be $true
+            Test-Path -Path $outputFile | Should -Be $true
         }
 
         It "Should contain hash information in output" {
@@ -168,7 +166,7 @@ Describe "get-duplicate-files-with-progress Script Tests" {
             & $scriptPath -Path $testDir.FullName | Out-Null
             
             $content = Get-Content -Path $outputFile -Raw
-            $content | Should Match "Duplicates for hash: [A-F0-9]{64}"
+            $content | Should -Match "Duplicates for hash: [A-F0-9]{64}"
         }
 
         It "Should list duplicate file paths" {
@@ -180,10 +178,9 @@ Describe "get-duplicate-files-with-progress Script Tests" {
             & $scriptPath -Path $testDir.FullName | Out-Null
             
             $content = Get-Content -Path $outputFile -Raw
-            # All three files should be listed in the output
-            $content | Should Match "dup1.txt"
-            $content | Should Match "dup2.txt"
-            $content | Should Match "dup3.txt"
+            $content | Should -Match "dup1.txt"
+            $content | Should -Match "dup2.txt"
+            $content | Should -Match "dup3.txt"
         }
     }
 
@@ -198,8 +195,8 @@ Describe "get-duplicate-files-with-progress Script Tests" {
             & $scriptPath -Path $testDir.FullName | Out-Null
             
             $content = Get-Content -Path $outputFile -Raw
-            $content | Should Match "\.txt"
-            $content | Should Match "\.dat"
+            $content | Should -Match "\.txt"
+            $content | Should -Match "\.dat"
         }
 
         It "Should handle binary files" {
@@ -211,7 +208,7 @@ Describe "get-duplicate-files-with-progress Script Tests" {
             
             & $scriptPath -Path $testDir.FullName | Out-Null
             
-            Test-Path -Path $outputFile | Should Be $true
+            Test-Path -Path $outputFile | Should -Be $true
         }
     }
 
@@ -223,13 +220,13 @@ Describe "get-duplicate-files-with-progress Script Tests" {
             "Content" | Out-File -Path (Join-Path $testDir "readable1.txt") -Encoding UTF8
             "Content" | Out-File -Path (Join-Path $testDir "readable2.txt") -Encoding UTF8
             
-            { & $scriptPath -Path $testDir.FullName } | Should Not Throw
+            { & $scriptPath -Path $testDir.FullName } | Should -Not -Throw
         }
 
         It "Should exit with success code" {
             $testDir = New-Item -Path (Join-Path $TestDrive "ExitCodeTest") -ItemType Directory -Force
             & $scriptPath -Path $testDir.FullName
-            $LASTEXITCODE | Should Be 0
+            $LASTEXITCODE | Should -Be 0
         }
     }
 
@@ -246,7 +243,7 @@ Describe "get-duplicate-files-with-progress Script Tests" {
             & $scriptPath -Path $testDir.FullName | Out-Null
             $stopwatch.Stop()
             
-            $stopwatch.ElapsedMilliseconds | Should BeLessThan 30000
+            $stopwatch.ElapsedMilliseconds | Should -BeLessThan 30000
         }
     }
 
@@ -255,46 +252,42 @@ Describe "get-duplicate-files-with-progress Script Tests" {
         It "Should handle zero-byte files" {
             $testDir = New-Item -Path (Join-Path $TestDrive "ZeroByteTest") -ItemType Directory -Force
             
-            # Create zero-byte files
             New-Item -Path (Join-Path $testDir "empty1.txt") -ItemType File -Force | Out-Null
             New-Item -Path (Join-Path $testDir "empty2.txt") -ItemType File -Force | Out-Null
             
             & $scriptPath -Path $testDir.FullName | Out-Null
             
-            # Both zero-byte files should have same hash
-            Test-Path -Path $outputFile | Should Be $true
+            Test-Path -Path $outputFile | Should -Be $true
             $content = Get-Content -Path $outputFile -Raw
-            $content | Should Match "empty1.txt"
-            $content | Should Match "empty2.txt"
+            $content | Should -Match "empty1.txt"
+            $content | Should -Match "empty2.txt"
         }
 
         It "Should handle large files (5MB+)" {
             $testDir = New-Item -Path (Join-Path $TestDrive "LargeFileTest") -ItemType Directory -Force
             
-            # Create 5MB files with identical content
-            $largeContent = [string]('X' * 5242880)  # 5MB of 'X' characters
+            $largeContent = [string]('X' * 5242880)
             $largeContent | Out-File -Path (Join-Path $testDir "large1.bin") -Encoding UTF8 -NoNewline
             $largeContent | Out-File -Path (Join-Path $testDir "large2.bin") -Encoding UTF8 -NoNewline
             
-            { & $scriptPath -Path $testDir.FullName } | Should Not Throw
+            { & $scriptPath -Path $testDir.FullName } | Should -Not -Throw
             
-            Test-Path -Path $outputFile | Should Be $true
+            Test-Path -Path $outputFile | Should -Be $true
         }
 
         It "Should handle mix of file sizes" {
             $testDir = New-Item -Path (Join-Path $TestDrive "MixedSizeTest") -ItemType Directory -Force
             
-            # Create files of varying sizes with duplicate content
             "Duplicate content" | Out-File -Path (Join-Path $testDir "small1.txt") -Encoding UTF8
             "Duplicate content" | Out-File -Path (Join-Path $testDir "small2.txt") -Encoding UTF8
             
-            $mediumContent = [string]('M' * 1000000)  # 1MB
+            $mediumContent = [string]('M' * 1000000)
             $mediumContent | Out-File -Path (Join-Path $testDir "medium1.bin") -Encoding UTF8 -NoNewline
             $mediumContent | Out-File -Path (Join-Path $testDir "medium2.bin") -Encoding UTF8 -NoNewline
             
             & $scriptPath -Path $testDir.FullName | Out-Null
             
-            Test-Path -Path $outputFile | Should Be $true
+            Test-Path -Path $outputFile | Should -Be $true
         }
     }
 
@@ -308,7 +301,7 @@ Describe "get-duplicate-files-with-progress Script Tests" {
             
             & $scriptPath -Path $testDir.FullName | Out-Null
             
-            Test-Path -Path $outputFile | Should Be $true
+            Test-Path -Path $outputFile | Should -Be $true
         }
 
         It "Should handle files with spaces and special chars in names" {
@@ -320,22 +313,21 @@ Describe "get-duplicate-files-with-progress Script Tests" {
             & $scriptPath -Path $testDir.FullName | Out-Null
             
             $content = Get-Content -Path $outputFile -Raw
-            $content | Should Match "file 1.txt"
-            $content | Should Match "file 2.txt"
+            $content | Should -Match "file 1.txt"
+            $content | Should -Match "file 2.txt"
         }
 
         It "Should detect duplicates with Unicode content" {
             $testDir = New-Item -Path (Join-Path $TestDrive "UnicodeContentTest") -ItemType Directory -Force
             
-            # Create files with Unicode content
             "Привет мир 🌍" | Out-File -Path (Join-Path $testDir "unicode1.txt") -Encoding UTF8
             "Привет мир 🌍" | Out-File -Path (Join-Path $testDir "unicode2.txt") -Encoding UTF8
             
             & $scriptPath -Path $testDir.FullName | Out-Null
             
-            Test-Path -Path $outputFile | Should Be $true
+            Test-Path -Path $outputFile | Should -Be $true
             $content = Get-Content -Path $outputFile -Raw
-            $content | Should Match "unicode1.txt"
+            $content | Should -Match "unicode1.txt"
         }
     }
 
@@ -344,23 +336,21 @@ Describe "get-duplicate-files-with-progress Script Tests" {
         It "Should overwrite previous output file" {
             $testDir = New-Item -Path (Join-Path $TestDrive "OverwriteTest") -ItemType Directory -Force
             
-            # First run
             "Content1" | Out-File -Path (Join-Path $testDir "file1.txt") -Encoding UTF8
             "Content1" | Out-File -Path (Join-Path $testDir "file2.txt") -Encoding UTF8
             & $scriptPath -Path $testDir.FullName | Out-Null
             
             $firstRun = Get-Content -Path $outputFile -Raw
-            $firstRun | Should Match "file1.txt"
+            $firstRun | Should -Match "file1.txt"
             
-            # Second run with different duplicates
             Remove-Item (Join-Path $testDir "*") -Force
             "Content2" | Out-File -Path (Join-Path $testDir "fileA.txt") -Encoding UTF8
             "Content2" | Out-File -Path (Join-Path $testDir "fileB.txt") -Encoding UTF8
             & $scriptPath -Path $testDir.FullName | Out-Null
             
             $secondRun = Get-Content -Path $outputFile -Raw
-            $secondRun | Should Match "fileA.txt"
-            $secondRun | Should Not Match "file1.txt"  # Old content should be gone
+            $secondRun | Should -Match "fileA.txt"
+            $secondRun | Should -Not -Match "file1.txt"
         }
 
         It "Should verify output file contains proper formatting" {
@@ -372,11 +362,9 @@ Describe "get-duplicate-files-with-progress Script Tests" {
             & $scriptPath -Path $testDir.FullName | Out-Null
             
             $content = Get-Content -Path $outputFile -Raw
-            # Should have header line with "===" markers
-            $content | Should Match "=== Duplicates for hash:"
-            # Should have file paths listed
-            $content | Should Match "dup1.txt"
-            $content | Should Match "dup2.txt"
+            $content | Should -Match "=== Duplicates for hash:"
+            $content | Should -Match "dup1.txt"
+            $content | Should -Match "dup2.txt"
         }
     }
 
@@ -385,7 +373,6 @@ Describe "get-duplicate-files-with-progress Script Tests" {
         It "Should handle identical content but different file extensions" {
             $testDir = New-Item -Path (Join-Path $TestDrive "ExtensionDupTest") -ItemType Directory -Force
             
-            # Same content, different extensions - should be detected as duplicates
             "Identical data" | Out-File -Path (Join-Path $testDir "document.txt") -Encoding UTF8
             "Identical data" | Out-File -Path (Join-Path $testDir "document.bak") -Encoding UTF8
             "Identical data" | Out-File -Path (Join-Path $testDir "document.tmp") -Encoding UTF8
@@ -393,10 +380,9 @@ Describe "get-duplicate-files-with-progress Script Tests" {
             & $scriptPath -Path $testDir.FullName | Out-Null
             
             $content = Get-Content -Path $outputFile -Raw
-            # All three should be detected as same hash
-            $content | Should Match "document.txt"
-            $content | Should Match "document.bak"
-            $content | Should Match "document.tmp"
+            $content | Should -Match "document.txt"
+            $content | Should -Match "document.bak"
+            $content | Should -Match "document.tmp"
         }
 
         It "Should verify SHA256 hash format in output" {
@@ -408,8 +394,7 @@ Describe "get-duplicate-files-with-progress Script Tests" {
             & $scriptPath -Path $testDir.FullName | Out-Null
             
             $content = Get-Content -Path $outputFile -Raw
-            # SHA256 hash is 64 hexadecimal characters
-            $content | Should Match "Duplicates for hash: [A-F0-9]{64}"
+            $content | Should -Match "Duplicates for hash: [A-F0-9]{64}"
         }
     }
 }
