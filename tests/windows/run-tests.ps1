@@ -38,6 +38,7 @@ $scriptDir = if ($PSScriptRoot) { $PSScriptRoot } else { (Get-Location).Path }
 $testsPath = Split-Path -Path $scriptDir -Parent  # Go up to tests/ directory
 $repoRoot = Split-Path -Path $testsPath -Parent   # Go up to repository root
 $scriptsPath = Join-Path -Path $repoRoot -ChildPath 'scripts'
+$installerPath = Join-Path -Path $repoRoot -ChildPath 'installer'
 
 # Verify we're in the tests directory by checking for test files
 $testFiles = @(Get-ChildItem -Path $testsPath -Filter '*.tests.ps1' -Recurse)
@@ -46,8 +47,10 @@ if ($testFiles.Count -eq 0) {
     exit 1
 }
 
-# Get production scripts for coverage analysis
-$productionScripts = @(Get-ChildItem -Path $scriptsPath -Filter '*.ps1' -Recurse | Where-Object { $_.Name -notlike '*.tests.ps1' })
+# Get production scripts for coverage analysis (scripts + installer)
+$productionScripts = @()
+$productionScripts += @(Get-ChildItem -Path $scriptsPath -Filter '*.ps1' -Recurse | Where-Object { $_.Name -notlike '*.tests.ps1' })
+$productionScripts += @(Get-ChildItem -Path $installerPath -Filter '*.ps1' -Recurse | Where-Object { $_.Name -notlike '*.tests.ps1' })
 if ($productionScripts.Count -eq 0) {
     Write-Warning "No production scripts found in: $scriptsPath"
 }

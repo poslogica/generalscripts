@@ -155,20 +155,25 @@ This repository includes comprehensive test coverage using **Pester 5.7.1**. Tes
 
 ### Test Results
 
-- **Total Tests**: 150
-- **Test Files**: 4
+- **Total Tests**: 254
+- **Test Files**: 7
 - **Coverage Format**: JaCoCo XML with per-file breakdown
 - **CI/CD Integration**: Automated tests run on every push via GitHub Actions
 
 ### Current Test Coverage
 
-- **Test Breakdown**:
+- **Script Tests**:
   - `get-duplicate-files-with-progress.ps1`: 32 tests
   - `update-winget-packages.ps1`: 30 tests
   - `update-third-party-with-winget.ps1`: 42 tests
   - `update-winget-packages-create-start-menu-shortcut.ps1`: 46 tests
 
-**Total**: 150 tests
+- **Installer Tests**:
+  - `install-winget-updater.ps1`: 35 tests
+  - `uninstall-winget-updater.ps1`: 35 tests
+  - `create-installer-package.ps1`: 34 tests
+
+**Total**: 254 tests
 
 ## CI/CD Integration
 
@@ -178,7 +183,7 @@ This repository includes automated validation via `.github/workflows/powershell-
 
 - **PSScriptAnalyzer**: Static code analysis on every push
 - **Syntax Validation**: Ensures all scripts have valid PowerShell syntax
-- **Pester Tests**: Runs 150 comprehensive tests
+- **Pester Tests**: Runs 254 comprehensive tests
 - **Code Coverage**: Generates JaCoCo XML coverage reports
 - **Artifacts**: Test results uploaded as GitHub artifacts for 30 days
 
@@ -253,7 +258,7 @@ We welcome contributions to enhance the functionality and scope of these scripts
 ### Code Quality Requirements
 
 - ✅ PSScriptAnalyzer: 0 warnings
-- ✅ All tests passing (150/150)
+- ✅ All tests passing (254/254)
 - ✅ Help documentation in script comments
 - ✅ Parameter validation
 - ✅ Error handling with try-catch
