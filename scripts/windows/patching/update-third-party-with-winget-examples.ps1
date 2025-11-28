@@ -16,5 +16,6 @@ powershell.exe -ExecutionPolicy Bypass -File .\.Update-ThirdPartyWithWinget.ps1 
 Start-Process powershell.exe -Verb RunAs -ArgumentList '-ExecutionPolicy Bypass -File .\Update-ThirdPartyWithWinget.ps1 -Scope machine'
 
 #Combine multiple options
+
 #Run diagnostics, include unknown versions, and stop on first error:
 powershell.exe -ExecutionPolicy Bypass -File .\.Update-ThirdPartyWithWinget.ps1 -Diagnostics -IncludeUnknown -StopOnError
