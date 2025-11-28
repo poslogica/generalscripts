@@ -22,22 +22,61 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch all history for tags
+
+      - name: Get Next Version from GitHub Tags
+        id: version
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: pwsh
+        run: |
+          Write-Host "Determining next version from GitHub tags..." -ForegroundColor Cyan
+          
+          # Get the latest release tag from GitHub
+          $latestRelease = gh release list --limit 1 --json tagName --jq '.[0].tagName' 2>$null
+          
+          if ($latestRelease -and $latestRelease -match '^v?\d+\.\d+\.\d+$') {
+            $latestVersion = $latestRelease -replace '^v', ''
+            Write-Host "Latest release tag: $latestRelease" -ForegroundColor Gray
+          } else {
+            # Fallback: check git tags directly
+            $latestTag = git tag -l 'v*' --sort=-v:refname | Select-Object -First 1
+            if ($latestTag -and $latestTag -match '^v?\d+\.\d+\.\d+$') {
+              $latestVersion = $latestTag -replace '^v', ''
+              Write-Host "Latest git tag: $latestTag" -ForegroundColor Gray
+            } else {
+              $latestVersion = "0.0.0"
+              Write-Host "No existing tags found, starting from v0.0.0" -ForegroundColor Yellow
+            }
+          }
+          
+          # Parse and increment patch version
+          $parts = $latestVersion -split '\.'
+          [int]$major = $parts[0]
+          [int]$minor = $parts[1]
+          [int]$patch = $parts[2]
+          $patch++
+          
+          $newVersion = "$major.$minor.$patch"
+          $newTag = "v$newVersion"
+          
+          Write-Host "Next version: $newVersion (tag: $newTag)" -ForegroundColor Green
+          
+          # Set outputs for subsequent steps
+          Add-Content -Path $env:GITHUB_OUTPUT "version=$newVersion"
+          Add-Content -Path $env:GITHUB_OUTPUT "tag=$newTag"
+          Add-Content -Path $env:GITHUB_ENV "VERSION=$newVersion"
+          Add-Content -Path $env:GITHUB_ENV "TAG=$newTag"
 
       - name: Build Winget Updater ZIP package
         shell: pwsh
         run: |
-          Write-Host "Building Winget Updater distribution package..." -ForegroundColor Cyan
+          $version = "${{ steps.version.outputs.version }}"
+          Write-Host "Building Winget Updater v$version..." -ForegroundColor Cyan
 
           # Change to installer directory
           Set-Location -Path ./installer
-
-          # Read version from VERSION file
-          $versionFile = './VERSION'
-          $versionContent = Get-Content -Path $versionFile -Raw
-          $versionMatch = $versionContent | Select-String -Pattern '^\d+\.\d+\.\d+' -AllMatches
-          $version = if ($versionMatch.Matches) { $versionMatch.Matches[0].Value } else { '1.0.0' }
-
-          Write-Host "Version: $version" -ForegroundColor Green
 
           # Build the package with version in filename
           $outputPath = "${{ runner.temp }}/dist"
@@ -52,8 +91,7 @@ jobs:
             $fileSize = (Get-Item $zipPath).Length / 1MB
             Write-Host "✓ ZIP package created: $zipPath" -ForegroundColor Green
             Write-Host "  Size: $($fileSize.ToString('F2')) MB"
-            # Store version for later steps
-            Add-Content -Path $env:GITHUB_ENV "ZIP_VERSION=$version"
+            # Store for later steps
             Add-Content -Path $env:GITHUB_ENV "ZIP_NAME=$zipName"
             Add-Content -Path $env:GITHUB_ENV "ZIP_PATH=$zipPath"
           } else {
@@ -62,49 +100,22 @@ jobs:
             exit 1
           }
 
-      - name: Create Git Tag and GitHub Release
+      - name: Create GitHub Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: pwsh
         run: |
-          $version = "${{ env.ZIP_VERSION }}"
+          $version = "${{ steps.version.outputs.version }}"
+          $tagName = "${{ steps.version.outputs.tag }}"
           $zipPath = "${{ env.ZIP_PATH }}"
           $zipName = "${{ env.ZIP_NAME }}"
           $buildNum = "${{ github.run_number }}"
           $commitSha = "${{ github.sha }}".Substring(0, 7)
           $actor = "${{ github.actor }}"
-          $tagName = "v$version"
           
-          Write-Host "Creating Git Tag and GitHub Release $tagName..." -ForegroundColor Cyan
+          Write-Host "Creating GitHub Release $tagName..." -ForegroundColor Cyan
           
-          # Configure git
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          
-          # Fetch all tags from remote to ensure we have the latest
-          git fetch --tags
-          
-          # Check if tag already exists (locally or remotely)
-          $existingTag = git tag -l $tagName
-          if ($existingTag) {
-            Write-Host "⚠ Tag $tagName already exists, skipping tag creation and release" -ForegroundColor Yellow
-            Write-Host "ℹ To create a new release, increment the version in installer/VERSION" -ForegroundColor Cyan
-            exit 0
-          }
-          
-          # Check if GitHub release already exists
-          $releaseCheck = gh release view $tagName 2>&1
-          if ($LASTEXITCODE -eq 0) {
-            Write-Host "⚠ GitHub Release $tagName already exists, skipping" -ForegroundColor Yellow
-            exit 0
-          }
-          
-          # Create annotated tag
-          git tag -a $tagName -m "Release $tagName - Winget Updater Installer"
-          git push origin $tagName
-          Write-Host "✓ Git tag $tagName created and pushed" -ForegroundColor Green
-          
-          # Create GitHub Release with the ZIP artifact
+          # Build release notes
           $releaseNotes = "## Winget Updater $tagName`n`n"
           $releaseNotes += "Automated build of the Winget Updater installer package.`n`n"
           $releaseNotes += "### Installation`n"
@@ -117,10 +128,12 @@ jobs:
           $releaseNotes += "- **Commit**: $commitSha`n"
           $releaseNotes += "- **Built by**: $actor"
           
+          # Create release (this automatically creates the tag)
           gh release create $tagName `
             "$zipPath" `
             --title "Winget Updater $tagName" `
-            --notes "$releaseNotes"
+            --notes "$releaseNotes" `
+            --target ${{ github.sha }}
           
           if ($LASTEXITCODE -eq 0) {
             Write-Host "✓ GitHub Release $tagName created successfully" -ForegroundColor Green
@@ -129,63 +142,11 @@ jobs:
             exit 1
           }
 
-      - name: Increment Version for Next Build
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        shell: pwsh
-        run: |
-          Write-Host "Incrementing version for next build..." -ForegroundColor Cyan
-          
-          $versionFile = './installer/VERSION'
-          $versionContent = Get-Content -Path $versionFile -Raw
-          
-          # Extract version using regex - look for standalone version number on a line
-          if ($versionContent -match '(?m)^\d+\.\d+\.\d+$') {
-            $currentVersion = $matches[0]
-          } else {
-            $currentVersion = '1.0.0'
-          }
-          
-          # Parse version components
-          $parts = $currentVersion -split '\.'
-          [int]$major = $parts[0]
-          [int]$minor = $parts[1]
-          [int]$patch = $parts[2]
-          
-          # Increment patch version
-          $patch++
-          $newVersion = "$major.$minor.$patch"
-          
-          Write-Host "Version incremented: $currentVersion → $newVersion" -ForegroundColor Green
-          
-          # Update VERSION file with new version
-          $updatedContent = $versionContent -replace '(?m)^\d+\.\d+\.\d+$', $newVersion
-          Set-Content -Path $versionFile -Value $updatedContent
-          
-          # Check if file was actually modified
-          $gitStatus = & git status --short
-          if ($gitStatus -match 'VERSION') {
-            Write-Host "✓ VERSION file modified successfully" -ForegroundColor Green
-            
-            # Commit and push version update
-            git config user.name "github-actions[bot]"
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add $versionFile
-            git commit -m "chore: Bump version to $newVersion for next release"
-            
-            # Pull before push to avoid conflicts
-            git pull --rebase origin main
-            git push origin main
-            
-            Write-Host "✓ Version $newVersion committed and pushed" -ForegroundColor Green
-          } else {
-            Write-Host "⚠ VERSION file not modified (no changes detected)" -ForegroundColor Yellow
-          }
-
       - name: Publish Installer Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: winget-updater-setup-${{ env.ZIP_VERSION }}
+          name: winget-updater-setup-v${{ steps.version.outputs.version }}
           path: ${{ env.ZIP_PATH }}
           retention-days: 90
           compression-level: 0
+
