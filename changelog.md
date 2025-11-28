@@ -2,6 +2,12 @@
 
 ## 2025-11-28
 
+- [`18e1251`](https://github.com/poslogica/generalscripts/commit/18e1251b892375f83fa0c08d8b11c2bde2c9e8c8) **docs: Add comprehensive comments to update-winget-packages.tests.ps1**
+  *by poslogica*
+- [`ec9efb7`](https://github.com/poslogica/generalscripts/commit/ec9efb7d62ca468a989e27e1ee8486a59cc278bb) **docs: Add comprehensive comments to update-winget-packages-create-start-menu-shortcut.tests.ps1**
+  *by poslogica*
+- [`50c1b36`](https://github.com/poslogica/generalscripts/commit/50c1b3694bbd0dcef000fe6f49d4754ebb0b2134) **chore: update change logs [skip ci]**
+  *by github-actions[bot]*
 - [`cdf97a2`](https://github.com/poslogica/generalscripts/commit/cdf97a279c37ccad13052fd968b2b54a65cfd61e) **docs: Add comprehensive comments to update-third-party-with-winget.tests.ps1**
   *by poslogica*
 - [`358a063`](https://github.com/poslogica/generalscripts/commit/358a063676f012dd4c6790e2ffc2a37602c3ce5d) **docs: Update markdown files for accuracy - remove obsolete patch-software-windows references, fix test counts, correct script name typo**

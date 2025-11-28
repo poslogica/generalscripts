@@ -1,6 +1,9 @@
 Change Logs - 2025-11-28
 ==================================================
 2025-11-28
+- docs: Add comprehensive comments to update-winget-packages.tests.ps1 (by poslogica)
+- docs: Add comprehensive comments to update-winget-packages-create-start-menu-shortcut.tests.ps1 (by poslogica)
+- chore: update change logs [skip ci] (by github-actions[bot])
 - docs: Add comprehensive comments to update-third-party-with-winget.tests.ps1 (by poslogica)
 - docs: Update markdown files for accuracy - remove obsolete patch-software-windows references, fix test counts, correct script name typo (by poslogica)
 - docs: Add Documentation section to README with links to GitHub Actions and Version Management guides (by poslogica)
