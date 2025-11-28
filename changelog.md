@@ -2,6 +2,10 @@
 
 ## 2025-11-28
 
+- [`081f91e`](https://github.com/poslogica/generalscripts/commit/081f91eef4efa209a9c02cef8ea06c936d173f4a) **docs: Add note about administrator privileges requirement to Update-WingetPackages.ps1**
+  *by poslogica*
+- [`3669464`](https://github.com/poslogica/generalscripts/commit/366946403f7afc942f6c295a9d3917aefb3feed6) **chore: update change logs [skip ci]**
+  *by github-actions[bot]*
 - [`3e47afd`](https://github.com/poslogica/generalscripts/commit/3e47afd595d1a87072a291f16cfa0a2a9cf9357c) **fix: Only create output file when duplicates are found**
   *by poslogica*
 - [`53ddafd`](https://github.com/poslogica/generalscripts/commit/53ddafd8f7e7d05940385ba1c7ba3096ac45b386) **chore: Remove obsolete patch-software-windows tests and fix duplicate file script output format**
