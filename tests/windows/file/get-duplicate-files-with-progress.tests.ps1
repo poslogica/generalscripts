@@ -1,5 +1,7 @@
 # Test file for get-duplicate-files-with-progress.ps1
 # Located in tests/ directory to keep tests separate from distribution
+# Compatible with both Pester 3.4.0 and Pester 5.x
+
 $scriptPath = Join-Path -Path $PSScriptRoot -ChildPath "..\..\..\scripts\windows\file\get-duplicate-files-with-progress.ps1"
 $scriptDir = Split-Path -Parent $scriptPath
 $outputFile = Join-Path -Path $scriptDir -ChildPath "duplicate_files_with_progress.txt"
