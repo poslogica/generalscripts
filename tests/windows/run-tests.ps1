@@ -27,8 +27,7 @@ param(
 
 # Resolve script directory
 $scriptDir = if ($PSScriptRoot) { $PSScriptRoot } else { (Get-Location).Path }
-$testsPath = $scriptDir
-$repoRoot = Split-Path -Path $scriptDir -Parent
+$testsPath = Split-Path -Path $scriptDir -Parent  # Go up to tests/ directory
 
 # Verify we're in the tests directory by checking for test files
 $testFiles = @(Get-ChildItem -Path $testsPath -Filter '*.tests.ps1' -Recurse)
