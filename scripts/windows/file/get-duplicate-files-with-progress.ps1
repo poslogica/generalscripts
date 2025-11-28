@@ -86,6 +86,11 @@ foreach ($group in $duplicates) {
 # Clear previous output if exists
 Remove-Item $outputFile -ErrorAction SilentlyContinue
 
+# Only write output file if duplicates found
+if ($totalDuplicates -eq 0) {
+    exit 0
+}
+
 # Write header to file
 $header = @"
 ================================================================================
