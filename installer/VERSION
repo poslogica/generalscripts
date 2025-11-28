@@ -1,0 +1,20 @@
+# Winget Updater Version Information
+
+This file is used by the build system to version the installer package.
+
+## Version Format
+
+Semantic Versioning: MAJOR.MINOR.PATCH
+
+## Current Version
+
+1.0.0
+
+## Version History
+
+- **1.0.0** - Initial release (2025-11-28)
+  - Automated Winget updates
+  - Configurable scheduling
+  - Task Scheduler integration
+  - Start Menu shortcuts
+  - Comprehensive logging

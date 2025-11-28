@@ -11,15 +11,22 @@
     The directory where the ZIP file will be created. Defaults to current directory.
 
     .PARAMETER OutputName
-    The name of the ZIP file. Defaults to 'winget-updater-setup.zip'
+    The name of the ZIP file. Defaults to 'winget-updater-setup-v{version}.zip'
+
+    .PARAMETER Version
+    The version number to include in the filename. Defaults to reading from VERSION file.
+    Format: MAJOR.MINOR.PATCH (e.g., 1.0.0)
 
     .EXAMPLE
     .\create-installer-package.ps1
 
-    .\create-installer-package.ps1 -OutputPath 'C:\Releases' -OutputName 'winget-updater-v1.0.zip'
+    .\create-installer-package.ps1 -OutputPath 'C:\Releases'
+
+    .\create-installer-package.ps1 -Version '1.0.0' -OutputPath 'C:\Releases'
 
     .NOTES
     Requires PowerShell 5.1+
+    Version file location: installer/VERSION
 #>
 
 [CmdletBinding()]
@@ -28,24 +35,50 @@ param(
     [string]$OutputPath = (Get-Location).Path,
 
     [Parameter(Mandatory = $false)]
-    [string]$OutputName = 'winget-updater-setup.zip'
+    [string]$OutputName = '',
+
+    [Parameter(Mandatory = $false)]
+    [string]$Version = ''
 )
 
 $ErrorActionPreference = 'Stop'
-
-Write-Host "`n=== Creating Winget Updater Distribution Package ===" -ForegroundColor Cyan
-Write-Host "Output: $OutputPath\$OutputName`n" -ForegroundColor Green
 
 # Get directories
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $installerDir = $scriptDir
 $repoRoot = Split-Path -Parent $installerDir
 $patchingDir = Join-Path $repoRoot 'scripts\windows\patching'
+$versionFile = Join-Path $installerDir 'VERSION'
 
 if (-not (Test-Path $installerDir)) {
     Write-Error "Installer directory not found: $installerDir"
     exit 1
 }
+
+# Read version from file if not provided
+if ([string]::IsNullOrWhiteSpace($Version)) {
+    if (Test-Path $versionFile) {
+        $versionContent = Get-Content -Path $versionFile -Raw
+        $versionMatch = $versionContent | Select-String -Pattern '^\d+\.\d+\.\d+' -AllMatches
+        if ($versionMatch.Matches) {
+            $Version = $versionMatch.Matches[0].Value
+        }
+    }
+}
+
+# Default to 1.0.0 if still empty
+if ([string]::IsNullOrWhiteSpace($Version)) {
+    $Version = '1.0.0'
+}
+
+# Generate output filename with version if not specified
+if ([string]::IsNullOrWhiteSpace($OutputName)) {
+    $OutputName = "winget-updater-setup-v$Version.zip"
+}
+
+Write-Host "`n=== Creating Winget Updater Distribution Package ===" -ForegroundColor Cyan
+Write-Host "Version: $Version" -ForegroundColor Green
+Write-Host "Output: $OutputPath\$OutputName`n" -ForegroundColor Green
 
 # Create temp working directory
 $tempDir = New-Item -ItemType Directory -Path (Join-Path $env:TEMP "winget-pkg-$((Get-Date).Ticks)") -Force

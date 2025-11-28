@@ -26,28 +26,42 @@ jobs:
           # Change to installer directory
           Set-Location -Path ./installer
 
-          # Build the package
+          # Read version from VERSION file
+          $versionFile = './VERSION'
+          $versionContent = Get-Content -Path $versionFile -Raw
+          $versionMatch = $versionContent | Select-String -Pattern '^\d+\.\d+\.\d+' -AllMatches
+          $version = if ($versionMatch.Matches) { $versionMatch.Matches[0].Value } else { '1.0.0' }
+
+          Write-Host "Version: $version" -ForegroundColor Green
+
+          # Build the package with version in filename
           $outputPath = "${{ runner.temp }}/dist"
           New-Item -ItemType Directory -Path $outputPath -Force | Out-Null
 
-          .\create-installer-package.ps1 -OutputPath $outputPath -OutputName "winget-updater-setup.zip"
+          $zipName = "winget-updater-setup-v$version.zip"
+          .\create-installer-package.ps1 -OutputPath $outputPath -Version $version
 
           # Verify ZIP was created
-          $zipPath = Join-Path $outputPath "winget-updater-setup.zip"
+          $zipPath = Join-Path $outputPath $zipName
           if (Test-Path $zipPath) {
             $fileSize = (Get-Item $zipPath).Length / 1MB
             Write-Host "✓ ZIP package created: $zipPath" -ForegroundColor Green
             Write-Host "  Size: $($fileSize.ToString('F2')) MB"
+            # Store version for later steps
+            Add-Content -Path $env:GITHUB_ENV "ZIP_VERSION=$version"
+            Add-Content -Path $env:GITHUB_ENV "ZIP_NAME=$zipName"
+            Add-Content -Path $env:GITHUB_ENV "ZIP_PATH=$zipPath"
           } else {
-            Write-Error "Failed to create ZIP package"
+            Write-Error "Failed to create ZIP package at $zipPath"
+            Get-ChildItem -Path $outputPath
             exit 1
           }
 
       - name: Publish Installer Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: winget-updater-setup
-          path: ${{ runner.temp }}/dist/winget-updater-setup.zip
+          name: winget-updater-setup-${{ env.ZIP_VERSION }}
+          path: ${{ env.ZIP_PATH }}
           retention-days: 90
           compression-level: 0
 
@@ -60,11 +74,14 @@ jobs:
           BUILD_NUM="${{ github.run_number }}"
           COMMIT_SHA="${{ github.sha }}"
           ACTOR="${{ github.actor }}"
+          ZIP_VERSION="${{ env.ZIP_VERSION }}"
+          ZIP_NAME="${{ env.ZIP_NAME }}"
+          ZIP_PATH="${{ env.ZIP_PATH }}"
 
-          gh release create "installer-${BUILD_NUM}" \
-            "${{ runner.temp }}/dist/winget-updater-setup.zip" \
-            --title "Winget Updater Installer Build ${BUILD_NUM}" \
-            --notes "Automated build of Winget Updater installer package. Build: ${BUILD_NUM}, Commit: ${COMMIT_SHA:0:7}, By: ${ACTOR}" \
-            --target main || echo "Release already exists, skipping creation"
+          gh release create "v${ZIP_VERSION}" \
+            "${ZIP_PATH}" \
+            --title "Winget Updater v${ZIP_VERSION}" \
+            --notes "Automated build of Winget Updater installer package v${ZIP_VERSION}. Build: ${BUILD_NUM}, Commit: ${COMMIT_SHA:0:7}, By: ${ACTOR}" \
+            --target main || echo "Release v${ZIP_VERSION} already exists, skipping creation"
 
-          echo "✓ GitHub Release available for installer-${BUILD_NUM}"
+          echo "✓ GitHub Release available: v${ZIP_VERSION}"
