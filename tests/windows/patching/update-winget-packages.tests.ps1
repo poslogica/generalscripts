@@ -1,6 +1,5 @@
 BeforeAll {
     $scriptPath = Join-Path -Path $PSScriptRoot -ChildPath '..\..\..\scripts\windows\patching\update-winget-packages.ps1'
-    $scriptDir = Split-Path -Path $scriptPath -Parent
 }
 
 Describe "update-winget-packages Script Tests" {
@@ -158,7 +157,6 @@ Describe "update-winget-packages Script Tests" {
         }
 
         It "Should reference Update-ThirdPartyWithWinget.ps1 in same directory" {
-            $mainScript = Join-Path -Path $scriptDir -ChildPath 'Update-ThirdPartyWithWinget.ps1'
             $content = Get-Content -Path $scriptPath -Raw
             $content | Should -Match 'Update-ThirdPartyWithWinget\.ps1'
         }
