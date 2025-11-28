@@ -44,12 +44,12 @@ Describe "get-duplicate-files-with-progress Script Tests" {
             { & $scriptPath } | Should -Not -Throw
         }
 
-        It "Should handle invalid path gracefully" -Skip:($env:GITHUB_ACTIONS -eq 'true') {
-            # Script should handle invalid path gracefully without crashing
-            # Use $null assignment to suppress all output and error streams
-            $null = & $scriptPath -Path "C:\NonExistent\InvalidPath\12345" -ErrorVariable scriptErrors 2>&1
-            # The script should complete (even with errors), not throw an exception
-            $true | Should -Be $true
+        It "Should handle invalid path gracefully" {
+            # Script should handle invalid path gracefully without throwing
+            # Run in separate process to isolate error streams completely
+            $result = & powershell.exe -NoProfile -Command "& '$scriptPath' -Path 'C:\NonExistent\InvalidPath\12345' 2>&1 | Out-Null; exit `$LASTEXITCODE"
+            # Exit code 1 indicates graceful error handling (not a crash)
+            $LASTEXITCODE | Should -Be 1
         }
 
         It "Should handle path with special characters" {
