@@ -207,18 +207,24 @@ We welcome contributions to enhance the functionality and scope of these scripts
 ### Contribution Process
 
 1. **Fork** the repository
+
 2. **Create a feature branch**:
+
    ```bash
    git checkout -b feature/description
    ```
+
 3. **Make your changes** and ensure:
-   - All tests pass locally: `.\tests\windows\run-tests.ps1`
+   - All tests pass locally: `./tests/windows/run-tests.ps1`
    - Scripts follow PSScriptAnalyzer best practices
    - Code is documented with help comments
+
 4. **Commit with descriptive messages**:
+
    ```bash
    git commit -m "feat: description of changes"
    ```
+
 5. **Push and submit a pull request**
 
 ### Code Quality Requirements

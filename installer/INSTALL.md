@@ -121,7 +121,7 @@ C:\Program Files\WingetUpdater\winget-config.json
 
 ### View Logs
 
-```
+```text
 C:\Program Files\WingetUpdater\logs\
 ```
 

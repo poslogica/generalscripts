@@ -10,11 +10,14 @@
 
 This PowerShell script automates the process of updating third-party software installed on a Windows computer using `winget`. It logs all update actions and handles errors gracefully. This script is intended for environments where keeping software up to date is critical.
 
-**Key Differences from Recommended Script**:
+### Key Differences from Recommended Script
+
 - Simpler implementation
 - Hardcoded log location: `C:\\tools\\patching\\logs\\`
 - No JSON configuration support
-- No filtering or scoping options## Requirements
+- No filtering or scoping options
+
+## Requirements
 
 1. **PowerShell**: This script requires PowerShell, which comes pre-installed on most modern Windows systems.
 2. **Winget**: Ensure the Windows Package Manager (`winget`) is installed. The script assumes that `winget` is installed under a specific directory based on the version number.
