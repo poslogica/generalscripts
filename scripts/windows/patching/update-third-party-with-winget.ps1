@@ -16,6 +16,10 @@
   .\Update-ThirdPartyWithWinget.ps1
   .\Update-ThirdPartyWithWinget.ps1 -IncludeUnknown -Diagnostics
   .\Update-ThirdPartyWithWinget.ps1 -LogPath "C:\Logs\winget-upgrades.log"
+Notes:
+- Requires Windows 10/11 or Windows Server 2019+
+- Winget must be installed and available
+- PowerShell 5.1+ required
 #>
 
 [CmdletBinding(SupportsShouldProcess = $true)]
