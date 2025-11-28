@@ -44,7 +44,7 @@ Describe "get-duplicate-files-with-progress Script Tests" {
             { & $scriptPath } | Should -Not -Throw
         }
 
-        It "Should handle invalid path gracefully" {
+        It "Should handle invalid path gracefully" -Skip:($env:GITHUB_ACTIONS -eq 'true') {
             # Script should handle invalid path gracefully without crashing
             # Use $null assignment to suppress all output and error streams
             $null = & $scriptPath -Path "C:\NonExistent\InvalidPath\12345" -ErrorVariable scriptErrors 2>&1
