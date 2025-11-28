@@ -59,6 +59,8 @@ logger = logging.getLogger(__name__)
 
 # Constants
 UNKNOWN_DATE = "Unknown Date"
+UNKNOWN_MESSAGE = "No commit message"
+UNKNOWN_AUTHOR = "Unknown Author"
 
 
 class ChangeLogsGenerator:
@@ -161,8 +163,8 @@ class ChangeLogsGenerator:
         for date_str in sorted(commits_by_date.keys(), reverse=True):
             change_logs += f"{date_str}\n"
             for commit in commits_by_date[date_str]:
-                message = commit.get("commit", {}).get("message", "No commit message")
-                author = commit.get("commit", {}).get("author", {}).get("name", "Unknown Author")
+                message = commit.get("commit", {}).get("message", UNKNOWN_MESSAGE)
+                author = commit.get("commit", {}).get("author", {}).get("name", UNKNOWN_AUTHOR)
                 change_logs += f"- {message} (by {author})\n"
             change_logs += "\n"
 
@@ -198,8 +200,8 @@ class ChangeLogsGenerator:
             
             # Add blank line before list (MD032)
             for commit in commits_by_date[date_str]:
-                message = commit.get("commit", {}).get("message", "No commit message")
-                author = commit.get("commit", {}).get("author", {}).get("name", "Unknown Author")
+                message = commit.get("commit", {}).get("message", UNKNOWN_MESSAGE)
+                author = commit.get("commit", {}).get("author", {}).get("name", UNKNOWN_AUTHOR)
                 sha = commit.get("sha", "")[:7]
                 url = commit.get("html_url", "")
                 
