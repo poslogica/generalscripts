@@ -37,7 +37,7 @@ Each script in this directory has comprehensive test coverage:
 
 - `update-winget-packages.ps1`: 30 tests
 - `update-third-party-with-winget.ps1`: 42 tests
-- `update-winget-packages-create-start-menu-shortcut.ps1`: 48 tests
+- `update-winget-packages-create-start-menu-shortcut.ps1`: 46 tests
 
 ## Documentation
 

@@ -129,9 +129,6 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 - **[update-winget-packages.bat](./scripts/windows/patching/)** - Batch file wrapper
   - Alternative batch file implementation for Windows Task Scheduler integration
 
-- **[patch-software-windows.ps1](./scripts/windows/patching/patch-software-windows.md)** - Legacy patching method *(deprecated)*
-  - Maintained for backward compatibility
-
 #### Container Management
 
 - **[Podman Resource Management](./scripts/windows/podman/resource.md)** - Documentation for Podman resource configuration
@@ -171,6 +168,8 @@ This repository includes comprehensive test coverage using **Pester 5.7.1**. Tes
   - `update-third-party-with-winget.ps1`: 42 tests
   - `update-winget-packages-create-start-menu-shortcut.ps1`: 46 tests
 
+**Total**: 150 tests
+
 ## CI/CD Integration
 
 ### GitHub Actions Workflow
@@ -179,7 +178,7 @@ This repository includes automated validation via `.github/workflows/powershell-
 
 - **PSScriptAnalyzer**: Static code analysis on every push
 - **Syntax Validation**: Ensures all scripts have valid PowerShell syntax
-- **Pester Tests**: Runs 149 comprehensive tests
+- **Pester Tests**: Runs 150 comprehensive tests
 - **Code Coverage**: Generates JaCoCo XML coverage reports
 - **Artifacts**: Test results uploaded as GitHub artifacts for 30 days
 
@@ -254,7 +253,7 @@ We welcome contributions to enhance the functionality and scope of these scripts
 ### Code Quality Requirements
 
 - ✅ PSScriptAnalyzer: 0 warnings
-- ✅ All tests passing (149/149)
+- ✅ All tests passing (150/150)
 - ✅ Help documentation in script comments
 - ✅ Parameter validation
 - ✅ Error handling with try-catch

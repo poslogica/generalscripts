@@ -14,31 +14,33 @@ The repository includes a GitHub Actions workflow that **automatically builds an
 
 The workflow triggers automatically when:
 
-- Code is pushed to `main` or `develop` branches
-- Changes are made to:
-  - `installer/` directory
-  - `scripts/windows/patching/` directory
-  - The workflow file itself
+- **PowerShell Script Validation** workflow completes successfully
+- Manual trigger via "Run workflow" button
+
+This ensures installers are only built after all tests pass.
 
 ### ✅ Build Process
 
 1. **Checkout code** from the repository
-2. **Run package builder** (`create-installer-package.ps1`)
-3. **Verify** ZIP package was created successfully
-4. **Upload artifact** to GitHub Actions
+2. **Get version** from latest GitHub release tag (auto-increment)
+3. **Run package builder** (`create-installer-package.ps1`)
+4. **Verify** ZIP package was created successfully
+5. **Create GitHub Release** with the new version tag
+6. **Upload artifact** to GitHub Actions
 
 ### ✅ Artifact Publishing
 
-- **Name:** `winget-updater-setup`
+- **Name:** `winget-updater-setup-v{version}` (e.g., `winget-updater-setup-v1.0.5`)
 - **Content:** ZIP file with all installer components
 - **Retention:** 90 days
 - **Access:** Available in Actions run summary
 
-### ✅ GitHub Release Creation (Main Branch Only)
+### ✅ GitHub Release Creation
 
-When changes are pushed to `main`:
+Every successful build:
 
-- **Creates a release** with tag: `installer-{build_number}`
+- **Creates a release** with semantic version tag (e.g., `v1.0.5`)
+- **Auto-increments** patch version from previous release
 - **Uploads ZIP** as release asset
 - **Includes notes** with build info, features, and quick start guide
 - **Available** on repository Releases page
@@ -67,16 +69,17 @@ cd installer
 
 ## Workflow Triggers
 
-### Automatic (Push Events)
+### Automatic (After Validation)
 
 ```yaml
 on:
-  push:
-    branches: [ main, develop ]
-    paths:
-      - 'installer/**'
-      - 'scripts/windows/patching/**'
+  workflow_run:
+    workflows: ["PowerShell Script Validation"]
+    types:
+      - completed
 ```
+
+The installer workflow **only runs** after PowerShell validation succeeds.
 
 ### Manual Trigger
 
@@ -111,6 +114,7 @@ Each release includes:
 winget-updater-setup.zip
 ├── install-winget-updater.ps1
 ├── install-winget-updater.bat
+├── uninstall-winget-updater.ps1
 ├── INSTALL.md
 ├── README.txt
 ├── update-winget-packages.ps1
@@ -159,15 +163,16 @@ Changes:
 
 ## Release Naming Convention
 
-Releases use the format: `installer-{build_number}`
+Releases use **semantic versioning** format: `v{MAJOR}.{MINOR}.{PATCH}`
 
 Examples:
 
-- `installer-1234`
-- `installer-1235`
-- `installer-1236`
+- `v1.0.0` - Initial release
+- `v1.0.1` - First patch (auto-incremented)
+- `v1.1.0` - Minor version bump
+- `v2.0.0` - Major version bump
 
-Each build automatically increments the number.
+Patch versions are automatically incremented. Major/minor versions require manual release creation.
 
 ## Retention Policies
 
@@ -198,9 +203,10 @@ Each build automatically increments the number.
 
 ### Release Not Created
 
-1. Push must be to `main` branch
-2. Event type must be `push` (not pull request)
-3. Check release tag `installer-{number}` already exists
+1. Check workflow has `contents: write` permission
+2. Verify `GITHUB_TOKEN` is available
+3. Check if release tag already exists (duplicate version)
+4. Review "Create GitHub Release" step logs
 
 ## Workflow Orchestration Chain
 
@@ -280,5 +286,5 @@ Possible improvements:
 
 ---
 
-**Last Updated:** 2025-11-28  
+**Last Updated:** 2025-11-29  
 **Workflow File:** `.github/workflows/publish-installer.yml`

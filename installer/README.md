@@ -58,7 +58,7 @@ See `INSTALL.md` for complete documentation and examples.
 ✓ **Flexible scheduling** - Daily, Weekly, or Monthly automatic updates
 ✓ **Task Scheduler integration** - Runs as SYSTEM with highest privileges
 ✓ **Start Menu shortcut** - Easy access to manual execution
-✓ **Uninstall script** - Clean removal of all components
+✓ **Uninstall script** - Clean removal of all components with optional backup
 ✓ **Logging** - Comprehensive logs in installation directory
 ✓ **Configuration** - Customizable via `winget-config.json`
 
@@ -78,5 +78,5 @@ For issues, documentation, or feature requests:
 
 ---
 
-**Last Updated**: 2025-11-28  
-**Version**: 1.0
+**Last Updated**: 2025-11-29  
+**Version**: 1.1

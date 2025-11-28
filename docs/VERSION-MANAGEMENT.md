@@ -6,16 +6,24 @@ This document explains how versioning works for the Winget Updater installer.
 
 The Winget Updater uses **Semantic Versioning** (MAJOR.MINOR.PATCH) for all releases and built installer packages.
 
-**Current Version:** 1.0.0
+**Version Source:** GitHub Release Tags (e.g., `v1.0.0`)
 
-## Version File
+## How Versioning Works
+
+Versions are **automatically determined** from GitHub release tags:
+
+1. The workflow queries the latest GitHub release tag
+2. Parses the version number (e.g., `v1.0.5` → `1.0.5`)
+3. Increments the patch version (e.g., `1.0.5` → `1.0.6`)
+4. Creates a new release with the incremented version
+
+If no releases exist, versioning starts at `v0.0.1`.
+
+## Version File (Reference Only)
 
 **Location:** `installer/VERSION`
 
-This file contains the current version number and is used by:
-
-- `create-installer-package.ps1` - Reads version when building locally
-- GitHub Actions workflow - Extracts version for releases and artifacts
+This file exists for **reference purposes only**. The actual version is derived from GitHub release tags, not this file.
 
 ## Version Format
 
@@ -62,37 +70,32 @@ Contains: winget-updater-setup-v1.0.0.zip
 
 ## How to Update Version
 
-### Step 1: Edit VERSION File
+### Automatic (Recommended)
+
+Versions are automatically incremented when the workflow runs. Each successful build:
+
+1. Gets the latest release tag from GitHub
+2. Increments the patch version
+3. Creates a new release with the new version
+
+### Manual Version Bump
+
+To manually set a specific version (e.g., for major/minor releases):
+
+#### Option 1: Create a Release Manually
+
+1. Go to GitHub → Releases → "Create a new release"
+2. Enter your desired tag (e.g., `v2.0.0`)
+3. The next automated build will increment from this version
+
+#### Option 2: Use GitHub CLI
 
 ```bash
-cd installer
-edit VERSION  # or your editor
+# Create a new release with a specific version
+gh release create v2.0.0 --title "Winget Updater v2.0.0" --notes "Major release"
 ```
 
-### Step 2: Update Version Number
-
-Find the version line:
-
-```text
-1.0.0
-```
-
-Change to:
-
-```text
-1.0.1
-```
-
-### Step 3: Optionally Update Version History
-
-Add entry to Version History section:
-
-```markdown
-- **1.0.1** - Bug fix release (2025-11-28)
-  - Fixed issue with task scheduling
-```
-
-### Step 4: Commit and Push
+### Step 3: Commit and Push
 
 ```bash
 git add installer/VERSION
@@ -186,11 +189,11 @@ Creates: `my-custom-name.zip`
 
 The GitHub Actions workflow automatically:
 
-1. **Reads** `installer/VERSION`
-2. **Extracts** version (first line matching `\d+\.\d+\.\d+`)
-3. **Builds** ZIP with filename: `winget-updater-setup-v{version}.zip`
-4. **Creates** artifact named: `winget-updater-setup-v{version}`
-5. **Tags** release: `v{version}`
+1. **Queries** latest release tag via `gh release list`
+2. **Parses** version from tag (e.g., `v1.0.5` → `1.0.5`)
+3. **Increments** patch version (e.g., `1.0.5` → `1.0.6`)
+4. **Builds** ZIP with filename: `winget-updater-setup-v{version}.zip`
+5. **Creates** GitHub Release with tag: `v{version}`
 
 ### Version Environment Variables
 
@@ -243,21 +246,29 @@ Users can download any version they need.
 
 ## Troubleshooting
 
-### Version Not Detected
+### Version Not Incrementing
 
-If the build shows version as "1.0.0" but you expected something else:
+If the build shows the same version:
 
-1. Check `installer/VERSION` file exists
-2. Verify first line contains `MAJOR.MINOR.PATCH`
-3. Ensure no extra whitespace or content before version
+1. Check GitHub Releases page for existing releases
+2. Verify the workflow has `contents: write` permission
+3. Ensure `GITHUB_TOKEN` is available to the workflow
+
+### Starting Fresh
+
+To reset versioning:
+
+1. Delete all existing releases on GitHub
+2. Delete all tags: `git tag -l | xargs git tag -d && git push origin --delete $(git tag -l)`
+3. Next build will start at `v0.0.1`
 
 ### ZIP Filename Wrong
 
 If ZIP is named incorrectly:
 
-1. Check `-Version` parameter was passed correctly
-2. Verify `installer/VERSION` is readable
-3. Confirm regex pattern matches version format
+1. Check the "Get Next Version from GitHub Releases" step output
+2. Verify GitHub CLI (`gh`) is working in the workflow
+3. Review workflow logs for version parsing errors
 
 ### Release Not Created
 
@@ -269,7 +280,7 @@ If release wasn't created:
 
 ---
 
-**Last Updated:** 2025-11-28  
-**Version File:** `installer/VERSION`  
+**Last Updated:** 2025-11-29  
+**Version Source:** GitHub Release Tags  
 **Builder Script:** `installer/create-installer-package.ps1`  
 **Workflow:** `.github/workflows/publish-installer.yml`
