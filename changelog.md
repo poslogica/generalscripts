@@ -2,6 +2,12 @@
 
 ## 2025-11-28
 
+- [`a9e77ee`](https://github.com/poslogica/generalscripts/commit/a9e77ee4b521910db1fcf98005a0cb11cd27f9d2) **fix: Correct inaccurate parameter examples in update-third-party-with-winget-examples.ps1**
+  *by poslogica*
+- [`f2b8215`](https://github.com/poslogica/generalscripts/commit/f2b82156d8506c747c333b122b57c1e3a26780b4) **fix: Improve version increment step with better regex, file verification, and conflict resolution**
+  *by poslogica*
+- [`536d296`](https://github.com/poslogica/generalscripts/commit/536d296e447f0cacc67c84a92c1adb65cd787410) **chore: update change logs [skip ci]**
+  *by github-actions[bot]*
 - [`6bcb4ea`](https://github.com/poslogica/generalscripts/commit/6bcb4ea86cf66f12e9466f07533a0109bf458b67) **docs: Add comprehensive comments to update-winget-packages-create-start-menu-shortcut.ps1**
   *by poslogica*
 - [`694e413`](https://github.com/poslogica/generalscripts/commit/694e41321d00cbb73587788a674cffacb268a86b) **fix: Add write permissions and use GITHUB_TOKEN for version increment push**

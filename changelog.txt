@@ -1,6 +1,9 @@
 Change Logs - 2025-11-28
 ==================================================
 2025-11-28
+- fix: Correct inaccurate parameter examples in update-third-party-with-winget-examples.ps1 (by poslogica)
+- fix: Improve version increment step with better regex, file verification, and conflict resolution (by poslogica)
+- chore: update change logs [skip ci] (by github-actions[bot])
 - docs: Add comprehensive comments to update-winget-packages-create-start-menu-shortcut.ps1 (by poslogica)
 - fix: Add write permissions and use GITHUB_TOKEN for version increment push (by poslogica)
 - chore: update change logs [skip ci] (by github-actions[bot])
