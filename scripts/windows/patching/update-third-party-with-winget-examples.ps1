@@ -9,12 +9,12 @@ powershell.exe -ExecutionPolicy Bypass -File .\Update-ThirdPartyWithWinget.ps1 -
 #Updates packages even if their installed version is unknown:
 powershell.exe -ExecutionPolicy Bypass -File .\Update-ThirdPartyWithWinget.ps1 -IncludeUnknown
 
-#Save logs to a custom file
-powershell.exe -ExecutionPolicy Bypass -File .\Update-ThirdPartyWithWinget.ps1 -LogPath "C:\Logs\winget-upgrade.log"
+#Stop on first error (instead of continuing with remaining packages)
+powershell.exe -ExecutionPolicy Bypass -File .\.Update-ThirdPartyWithWinget.ps1 -StopOnError
 
 #Force machine-scope installs (requires admin)
 Start-Process powershell.exe -Verb RunAs -ArgumentList '-ExecutionPolicy Bypass -File .\Update-ThirdPartyWithWinget.ps1 -Scope machine'
 
-#Test mode (no actual installs)
-#Use -WhatIf to simulate updates:
-powershell.exe -ExecutionPolicy Bypass -File .\Update-ThirdPartyWithWinget.ps1 -WhatIf
+#Combine multiple options
+#Run diagnostics, include unknown versions, and stop on first error:
+powershell.exe -ExecutionPolicy Bypass -File .\.Update-ThirdPartyWithWinget.ps1 -Diagnostics -IncludeUnknown -StopOnError
