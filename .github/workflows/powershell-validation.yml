@@ -37,7 +37,7 @@ jobs:
       - name: Validate Script Syntax
         shell: pwsh
         run: |
-          $scripts = Get-ChildItem -Path . -Include *.ps1 -Recurse
+          $scripts = Get-ChildItem -Path . -Include *.ps1 -Recurse | Where-Object { $_.Name -notlike "*.tests.ps1" }
           $errors = 0
           foreach ($script in $scripts) {
             Write-Host "Checking syntax: $($script.FullName)"
@@ -50,3 +50,25 @@ jobs:
             }
           }
           if ($errors -gt 0) { exit 1 }
+
+      - name: Run Pester Tests
+        shell: pwsh
+        run: |
+          # Install Pester if not available
+          if ($null -eq (Get-Module -Name Pester -ListAvailable)) {
+            Install-Module -Name Pester -Force -Scope CurrentUser
+          }
+          
+          # Find and run all test files
+          $testFiles = Get-ChildItem -Path . -Include "*.tests.ps1" -Recurse
+          
+          if ($testFiles) {
+            Write-Host "Found $($testFiles.Count) test file(s)"
+            foreach ($testFile in $testFiles) {
+              Write-Host "Running tests: $($testFile.FullName)"
+              Invoke-Pester -Path $testFile.FullName -OutputFormat NUnitXml -OutputFile "${{ runner.temp }}/TEST-$($testFile.BaseName).xml"
+            }
+            Write-Host "✓ All Pester tests completed"
+          } else {
+            Write-Host "No test files found (*.tests.ps1)"
+          }
