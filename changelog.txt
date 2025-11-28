@@ -1,6 +1,22 @@
 Change Logs - 2025-11-28
 ==================================================
 2025-11-28
+- docs: Add system requirements notes to Update-ThirdPartyWithWinget
+
+- Windows 10/11 or Windows Server 2019+
+- Winget must be installed
+- PowerShell 5.1+ required (by poslogica)
+- ci: Rename version step to reflect GitHub Releases as primary source (by poslogica)
+- ci: Switch to native GitHub tag-based versioning
+
+- Version now derived from latest GitHub release tag
+- Uses gh release list API for single source of truth
+- Automatically increments patch version
+- Starts at v0.0.1 if no releases exist
+- VERSION file updated for reference only (not used for versioning)
+- Eliminates race conditions from VERSION file commits (by poslogica)
+- fix: Fetch remote tags before checking, gracefully handle existing tags/releases (by poslogica)
+- chore: update change logs [skip ci] (by github-actions[bot])
 - docs: Add Windows and Winget requirements to update-winget-packages.ps1 notes (by poslogica)
 - chore: Bump version to 1.0.1 for next release (by github-actions[bot])
 - fix: Replace PowerShell here-string with concatenation to fix YAML syntax error (by poslogica)
