@@ -81,40 +81,52 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           
-          # Check if tag already exists
+          # Fetch all tags from remote to ensure we have the latest
+          git fetch --tags
+          
+          # Check if tag already exists (locally or remotely)
           $existingTag = git tag -l $tagName
           if ($existingTag) {
-            Write-Host "⚠ Tag $tagName already exists, skipping release" -ForegroundColor Yellow
+            Write-Host "⚠ Tag $tagName already exists, skipping tag creation and release" -ForegroundColor Yellow
+            Write-Host "ℹ To create a new release, increment the version in installer/VERSION" -ForegroundColor Cyan
+            exit 0
+          }
+          
+          # Check if GitHub release already exists
+          $releaseCheck = gh release view $tagName 2>&1
+          if ($LASTEXITCODE -eq 0) {
+            Write-Host "⚠ GitHub Release $tagName already exists, skipping" -ForegroundColor Yellow
+            exit 0
+          }
+          
+          # Create annotated tag
+          git tag -a $tagName -m "Release $tagName - Winget Updater Installer"
+          git push origin $tagName
+          Write-Host "✓ Git tag $tagName created and pushed" -ForegroundColor Green
+          
+          # Create GitHub Release with the ZIP artifact
+          $releaseNotes = "## Winget Updater $tagName`n`n"
+          $releaseNotes += "Automated build of the Winget Updater installer package.`n`n"
+          $releaseNotes += "### Installation`n"
+          $releaseNotes += "1. Download ``$zipName```n"
+          $releaseNotes += "2. Extract to desired location`n"
+          $releaseNotes += "3. Run ``install-winget-updater.ps1`` as Administrator`n`n"
+          $releaseNotes += "### Build Info`n"
+          $releaseNotes += "- **Version**: $version`n"
+          $releaseNotes += "- **Build**: #$buildNum`n"
+          $releaseNotes += "- **Commit**: $commitSha`n"
+          $releaseNotes += "- **Built by**: $actor"
+          
+          gh release create $tagName `
+            "$zipPath" `
+            --title "Winget Updater $tagName" `
+            --notes "$releaseNotes"
+          
+          if ($LASTEXITCODE -eq 0) {
+            Write-Host "✓ GitHub Release $tagName created successfully" -ForegroundColor Green
           } else {
-            # Create annotated tag
-            git tag -a $tagName -m "Release $tagName - Winget Updater Installer"
-            git push origin $tagName
-            Write-Host "✓ Git tag $tagName created and pushed" -ForegroundColor Green
-            
-            # Create GitHub Release with the ZIP artifact
-            $releaseNotes = "## Winget Updater $tagName`n`n"
-            $releaseNotes += "Automated build of the Winget Updater installer package.`n`n"
-            $releaseNotes += "### Installation`n"
-            $releaseNotes += "1. Download ``$zipName```n"
-            $releaseNotes += "2. Extract to desired location`n"
-            $releaseNotes += "3. Run ``install-winget-updater.ps1`` as Administrator`n`n"
-            $releaseNotes += "### Build Info`n"
-            $releaseNotes += "- **Version**: $version`n"
-            $releaseNotes += "- **Build**: #$buildNum`n"
-            $releaseNotes += "- **Commit**: $commitSha`n"
-            $releaseNotes += "- **Built by**: $actor"
-            
-            gh release create $tagName `
-              "$zipPath" `
-              --title "Winget Updater $tagName" `
-              --notes "$releaseNotes"
-            
-            if ($LASTEXITCODE -eq 0) {
-              Write-Host "✓ GitHub Release $tagName created successfully" -ForegroundColor Green
-            } else {
-              Write-Error "Failed to create GitHub Release"
-              exit 1
-            }
+            Write-Error "Failed to create GitHub Release"
+            exit 1
           }
 
       - name: Increment Version for Next Build
