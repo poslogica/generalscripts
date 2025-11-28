@@ -44,6 +44,8 @@ For automated Windows Package Manager updates, the **Winget Updater** suite can 
 3. Right-click `install-winget-updater.bat` → **Run as administrator**
 4. Follow the installation prompts
 
+**Note:** The installer is automatically built and published by GitHub Actions. Updates are available on the [Releases](https://github.com/poslogica/generalscripts/releases) page. See [docs/GITHUB-ACTIONS-INSTALLER.md](docs/GITHUB-ACTIONS-INSTALLER.md) for more details.
+
 #### Option 2: PowerShell Installation
 
 ```powershell
