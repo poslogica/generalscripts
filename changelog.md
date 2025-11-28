@@ -2,6 +2,18 @@
 
 ## 2025-11-28
 
+- [`d2cdc49`](https://github.com/poslogica/generalscripts/commit/d2cdc495356d1d079c0a1820fa5449a870045ec6) **docs: Add Windows and Winget requirements to update-winget-packages.ps1 notes**
+  *by poslogica*
+- [`c7356fa`](https://github.com/poslogica/generalscripts/commit/c7356fa564c9dd395e903503e11d955ad4166270) **chore: Bump version to 1.0.1 for next release**
+  *by github-actions[bot]*
+- [`597d95b`](https://github.com/poslogica/generalscripts/commit/597d95b31382d617e3157f35ad3f929cfeacc72a) **fix: Replace PowerShell here-string with concatenation to fix YAML syntax error**
+  *by poslogica*
+- [`0f3c926`](https://github.com/poslogica/generalscripts/commit/0f3c9263744d543db6a3f050cd855f2e6fdc7d9f) **ci: Add git tagging and restructure workflow - create tag/release before version bump**
+  *by poslogica*
+- [`acd64eb`](https://github.com/poslogica/generalscripts/commit/acd64ebf5cf28b5d1bfeb8f7bf64aa82ed9b7815) **ci: Fix GitHub Release step - remove invalid condition and improve release notes**
+  *by poslogica*
+- [`5b82177`](https://github.com/poslogica/generalscripts/commit/5b82177ce6ca165d454d86faee084b69f7c9505f) **chore: update change logs [skip ci]**
+  *by github-actions[bot]*
 - [`0682485`](https://github.com/poslogica/generalscripts/commit/06824859404ab117b2cb7fa7f6f353a8ce41d335) **testing workflow**
   *by poslogica*
 - [`2348b1b`](https://github.com/poslogica/generalscripts/commit/2348b1bd56e742bb1d52f8d9d13bba4b2fbe8972) **fix: Use inline regex with (?m) multiline flag instead of invalid Select-String parameter**

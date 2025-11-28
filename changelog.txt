@@ -1,6 +1,12 @@
 Change Logs - 2025-11-28
 ==================================================
 2025-11-28
+- docs: Add Windows and Winget requirements to update-winget-packages.ps1 notes (by poslogica)
+- chore: Bump version to 1.0.1 for next release (by github-actions[bot])
+- fix: Replace PowerShell here-string with concatenation to fix YAML syntax error (by poslogica)
+- ci: Add git tagging and restructure workflow - create tag/release before version bump (by poslogica)
+- ci: Fix GitHub Release step - remove invalid condition and improve release notes (by poslogica)
+- chore: update change logs [skip ci] (by github-actions[bot])
 - testing workflow (by poslogica)
 - fix: Use inline regex with (?m) multiline flag instead of invalid Select-String parameter (by poslogica)
 - chore: update change logs [skip ci] (by github-actions[bot])
