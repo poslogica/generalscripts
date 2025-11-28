@@ -27,11 +27,13 @@ param(
 
 # Resolve script directory
 $scriptDir = if ($PSScriptRoot) { $PSScriptRoot } else { (Get-Location).Path }
-$testsPath = Join-Path -Path $scriptDir -ChildPath 'tests'
+$testsPath = $scriptDir
+$repoRoot = Split-Path -Path $scriptDir -Parent
 
-# Verify tests directory exists
-if (!(Test-Path -LiteralPath $testsPath)) {
-    Write-Error "Tests directory not found at: $testsPath"
+# Verify we're in the tests directory by checking for test files
+$testFiles = @(Get-ChildItem -Path $testsPath -Filter '*.tests.ps1' -Recurse)
+if ($testFiles.Count -eq 0) {
+    Write-Error "No test files (*.tests.ps1) found in: $testsPath"
     exit 1
 }
 
