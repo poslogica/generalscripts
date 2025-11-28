@@ -1,0 +1,70 @@
+name: Build and Publish Winget Updater Installer
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'installer/**'
+      - 'scripts/windows/patching/**'
+      - '.github/workflows/publish-installer.yml'
+  workflow_dispatch:
+
+jobs:
+  build-installer:
+    runs-on: windows-latest
+    name: Build Winget Updater ZIP Package
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Winget Updater ZIP package
+        shell: pwsh
+        run: |
+          Write-Host "Building Winget Updater distribution package..." -ForegroundColor Cyan
+
+          # Change to installer directory
+          Set-Location -Path ./installer
+
+          # Build the package
+          $outputPath = "${{ runner.temp }}/dist"
+          New-Item -ItemType Directory -Path $outputPath -Force | Out-Null
+
+          .\create-installer-package.ps1 -OutputPath $outputPath -OutputName "winget-updater-setup.zip"
+
+          # Verify ZIP was created
+          $zipPath = Join-Path $outputPath "winget-updater-setup.zip"
+          if (Test-Path $zipPath) {
+            $fileSize = (Get-Item $zipPath).Length / 1MB
+            Write-Host "✓ ZIP package created: $zipPath" -ForegroundColor Green
+            Write-Host "  Size: $($fileSize.ToString('F2')) MB"
+          } else {
+            Write-Error "Failed to create ZIP package"
+            exit 1
+          }
+
+      - name: Publish Installer Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: winget-updater-setup
+          path: ${{ runner.temp }}/dist/winget-updater-setup.zip
+          retention-days: 90
+          compression-level: 0
+
+      - name: Create GitHub Release
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          BUILD_NUM="${{ github.run_number }}"
+          COMMIT_SHA="${{ github.sha }}"
+          ACTOR="${{ github.actor }}"
+
+          gh release create "installer-${BUILD_NUM}" \
+            "${{ runner.temp }}/dist/winget-updater-setup.zip" \
+            --title "Winget Updater Installer Build ${BUILD_NUM}" \
+            --notes "Automated build of Winget Updater installer package. Build: ${BUILD_NUM}, Commit: ${COMMIT_SHA:0:7}, By: ${ACTOR}" \
+            --target main || echo "Release already exists, skipping creation"
+
+          echo "✓ GitHub Release available for installer-${BUILD_NUM}"
