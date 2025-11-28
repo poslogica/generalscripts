@@ -30,7 +30,7 @@ param (
 
 # Resolve the scan path safely
 try {
-    $resolvedPath = (Resolve-Path -LiteralPath  $Path -ErrorAction Stop).ProviderPath
+    $resolvedPath = (Resolve-Path -LiteralPath $Path -ErrorAction Stop).ProviderPath
 } catch {
     Write-Error "❌ The path '$Path' is invalid or does not exist."
     exit 1
@@ -56,8 +56,12 @@ foreach ($file in $files) {
     Write-Progress -Activity "Hashing files..." -Status "Processing $($file.Name)" -PercentComplete (($counter / $total) * 100)
 
     try {
-        $hash = Get-FileHash -LiteralPath  $file.FullName -ErrorAction Stop
-        $hashList += $hash
+        $hash = Get-FileHash -LiteralPath $file.FullName -ErrorAction Stop
+        $hashList += @{
+            Hash = $hash.Hash
+            Path = $file.FullName
+            Size = $file.Length
+        }
     } catch {
         Write-Warning "⚠️ Failed to hash $($file.FullName): $_"
     }
@@ -65,18 +69,62 @@ foreach ($file in $files) {
 
 # Group by hash and find duplicates
 $duplicates = $hashList |
-    Group-Object Hash |
-    Where-Object { $_.Count -gt 1 }
+    Group-Object { $_.Hash } |
+    Where-Object { $_.Count -gt 1 } |
+    Sort-Object { $_.Group[0].Size } -Descending
+
+# Calculate statistics
+$totalDuplicates = $duplicates.Count
+$totalWastedSpace = 0
+
+foreach ($group in $duplicates) {
+    $fileSize = $group.Group[0].Size
+    # Space wasted = file size * (count - 1), since one is the "original"
+    $totalWastedSpace += ($fileSize * ($group.Count - 1))
+}
 
 # Clear previous output if exists
 Remove-Item $outputFile -ErrorAction SilentlyContinue
 
+# Write header to file
+$header = @"
+================================================================================
+DUPLICATE FILES REPORT
+================================================================================
+Scan Date: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')
+Scan Location: $resolvedPath
+Total Files Scanned: $total
+Total Duplicate Groups: $totalDuplicates
+Total Wasted Space: $('{0:N2}' -f ($totalWastedSpace/1MB)) MB
+================================================================================
+
+"@
+Add-Content $outputFile $header
+
 # Write output to file
 foreach ($group in $duplicates) {
-    Add-Content $outputFile "`n=== Duplicates for hash: $($group.Name) ==="
-    foreach ($file in $group.Group) {
-        Add-Content $outputFile $file.Path
+    $fileSize = $group.Group[0].Size
+    $wastedSpace = $fileSize * ($group.Count - 1)
+    
+    Add-Content $outputFile "`n--- Hash: $($group.Name) ---"
+    Add-Content $outputFile "File Size: $('{0:N2}' -f ($fileSize/1KB)) KB"
+    Add-Content $outputFile "Wasted Space (if duplicates deleted): $('{0:N2}' -f ($wastedSpace/1MB)) MB"
+    Add-Content $outputFile "Number of Copies: $($group.Count)`n"
+    
+    foreach ($file in $group.Group | Sort-Object Path) {
+        Add-Content $outputFile "  $($file.Path)"
     }
 }
 
-Write-Output "`n✅ Done. Duplicate files written to: $outputFile"
+# Write footer with summary
+$footer = @"
+
+================================================================================
+END OF REPORT
+================================================================================
+"@
+Add-Content $outputFile $footer
+
+Write-Host "`n✅ Duplicate scan complete!" -ForegroundColor Green
+Write-Host "Report: $outputFile" -ForegroundColor Green
+Write-Host "Summary: Found $totalDuplicates duplicate groups with $('{0:N2}' -f ($totalWastedSpace/1MB)) MB of wasted space" -ForegroundColor Cyan
