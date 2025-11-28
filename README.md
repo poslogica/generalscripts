@@ -1,78 +1,77 @@
 # IT Automation Scripts
 
+> A collection of production-ready PowerShell scripts for IT automation, system administration, and Windows package management.
+
 ## Overview
 
-This repository contains a collection of scripts designed to help IT professionals automate routine tasks. These scripts are written to save time, increase efficiency, and reduce the chances of human error when managing IT operations. They cover a wide range of tasks including system administration, network management, cloud operations, and more.
+This repository contains a collection of scripts designed to help IT professionals automate routine tasks. These scripts are written to save time, increase efficiency, and reduce the chances of human error when managing IT operations. All scripts are tested with comprehensive Pester test suites and code coverage analysis.
 
 ## Table of Contents
 
-1. [Prerequisites](#prerequisites)
-2. [Installation](#installation)
-3. [Usage](#usage)
-4. [Scripts Overview](#scripts-overview)
-5. [Contributing](#contributing)
-6. [License](#license)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Scripts Overview](#scripts-overview)
+- [Testing](#testing)
+- [CI/CD Integration](#cicd-integration)
+- [Contributing](#contributing)
+- [License](#license)
 
 ## Prerequisites
 
-Before using these scripts, make sure you have the following tools installed:
+### Required
 
-- [Python 3.x](https://www.python.org/downloads/)
-- [Bash](https://www.gnu.org/software/bash/)
-- [Powershell](https://docs.microsoft.com/en-us/powershell/)
-- Any specific modules required by individual scripts (mentioned in each script's comments or documentation)
+- **Windows 10/11** or **Windows Server 2019+**
+- **PowerShell 5.1+** (included with Windows; PowerShell 7.x also supported)
+- **Winget** (Windows Package Manager) - for patching scripts
+- Administrator privileges (for elevation-required tasks)
+
+### Optional
+
+- **Pester 5.7.1+** (for running tests locally)
+- Any specific modules required by individual scripts (mentioned in script documentation)
 
 ## Installation
 
-To get started with these automation scripts:
+### Clone the Repository
 
-1. Clone this repository to your local machine:
+```bash
+git clone https://github.com/poslogica/generalscripts.git
+cd generalscripts
+```
 
-   ```bash
-   git clone https://github.com/poslogica/generalscripts.git
-   ```
+### Review Documentation
 
-2. Navigate to the directory:
+Each script includes inline help and documentation. View help for any PowerShell script:
 
-   ```bash
-   cd generalscripts
-   ```
-
-3. Review the README file of each script to understand specific installation steps if required.
+```powershell
+Get-Help .\scripts\windows\patching\update-third-party-with-winget.ps1 -Full
+```
 
 ## Usage
 
-1. Review the specific usage instructions provided in the comments section of each script.  
-2. Make sure to give the appropriate permissions to execute the scripts:
+### PowerShell Scripts
 
-   ```bash
-   chmod +x script-name.sh
-   ```
+All scripts in this repository are PowerShell scripts. Execute them as follows:
 
-3. Execute the script based on its type:
-   - **For Python scripts:**
+```powershell
+# From the repository root
+.\scripts\windows\patching\update-third-party-with-winget.ps1 -Verbose
 
-     ```bash
-     python3 script-name.py
-     ```
+# With specific parameters
+.\scripts\windows\patching\update-third-party-with-winget.ps1 -ConfigPath "./winget-config.json" -WhatIf
 
-   - **For Bash scripts:**
+# View available parameters
+Get-Help .\scripts\windows\patching\update-third-party-with-winget.ps1
+```
 
-     ```bash
-     ./script-name.sh
-     ```
+### Execution Policy
 
-   - **For PowerShell scripts (on Windows):**
+If you encounter execution policy errors, run:
 
-     ```powershell
-     ./script-name.ps1
-     ```
-
-4. Many scripts are configurable via command-line arguments. Run the script with the `--help` flag to see the available options:
-
-   ```bash
-   python3 script-name.py --help
-   ```
+```powershell
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+```
 
 ## Scripts Overview
 
@@ -114,7 +113,59 @@ To get started with these automation scripts:
 
 For detailed documentation on each script, please refer to the respective script files in the `/scripts` directory.
 
-## Best Practices
+## Testing
+
+This repository includes comprehensive test coverage using **Pester 5.7.1**. Tests validate script syntax, parameters, and functionality.
+
+### Run Tests Locally
+
+```powershell
+# Run all tests
+.\tests\windows\run-tests.ps1
+
+# Run with verbose output
+.\tests\windows\run-tests.ps1 -Verbose
+
+# Disable coverage reporting
+.\tests\windows\run-tests.ps1 -CoverageReport $false
+```
+
+### Test Results
+
+- **Total Tests**: 149
+- **Test Files**: 4
+- **Coverage Format**: JaCoCo XML with per-file breakdown
+- **CI/CD Integration**: Automated tests run on every push via GitHub Actions
+
+### Current Test Coverage
+
+- **Test Breakdown**:
+  - `get-duplicate-files-with-progress.ps1`: 32 tests
+  - `update-winget-packages.ps1`: 30 tests
+  - `update-third-party-with-winget.ps1`: 42 tests
+  - `patch-software-windows.ps1`: 45 tests
+
+## CI/CD Integration
+
+### GitHub Actions Workflow
+
+This repository includes automated validation via `.github/workflows/powershell-validation.yml`:
+
+- **PSScriptAnalyzer**: Static code analysis on every push
+- **Syntax Validation**: Ensures all scripts have valid PowerShell syntax
+- **Pester Tests**: Runs 149 comprehensive tests
+- **Code Coverage**: Generates JaCoCo XML coverage reports
+- **Artifacts**: Test results uploaded as GitHub artifacts for 30 days
+
+**Status**: Tests run on `main` and `develop` branches, and on pull requests.
+
+### Artifact Access
+
+Download test results from GitHub Actions:
+
+1. Go to the workflow run
+2. Scroll to "Artifacts" section
+3. Download `test-results` (NUnit XML)
 
 - Always review script documentation and examples before execution
 - Test scripts in a non-production environment first
@@ -127,22 +178,32 @@ This repository is configured for GitHub. Workflows and CI/CD pipelines can be a
 
 ## Contributing
 
-We welcome contributions to enhance the functionality and scope of these scripts. To contribute:
+We welcome contributions to enhance the functionality and scope of these scripts.
 
-1. Fork the repository.
-2. Create a new branch:
+### Contribution Process
 
+1. **Fork** the repository
+2. **Create a feature branch**:
    ```bash
-   git checkout -b feature-branch-name
+   git checkout -b feature/description
    ```
-
-3. Make your changes and commit:
-
+3. **Make your changes** and ensure:
+   - All tests pass locally: `.\tests\windows\run-tests.ps1`
+   - Scripts follow PSScriptAnalyzer best practices
+   - Code is documented with help comments
+4. **Commit with descriptive messages**:
    ```bash
-   git commit -m "Description of changes"
+   git commit -m "feat: description of changes"
    ```
+5. **Push and submit a pull request**
 
-4. Push to your fork and submit a pull request.
+### Code Quality Requirements
+
+- ✅ PSScriptAnalyzer: 0 warnings
+- ✅ All tests passing (149/149)
+- ✅ Help documentation in script comments
+- ✅ Parameter validation
+- ✅ Error handling with try-catch
 
 ## License
 

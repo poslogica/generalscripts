@@ -1,11 +1,20 @@
 
-# Patch Software Script
+
+
+# Patch Software Script (Legacy)
+
+> ⚠️ **Deprecated**: This script is maintained for backward compatibility only.
+> **Recommendation**: Use [`update-third-party-with-winget.ps1`](./update-third-party-with-winget.md) for new implementations.
 
 ## Overview
 
 This PowerShell script automates the process of updating third-party software installed on a Windows computer using `winget`. It logs all update actions and handles errors gracefully. This script is intended for environments where keeping software up to date is critical.
 
-## Requirements
+**Key Differences from Recommended Script**:
+- Simpler implementation
+- Hardcoded log location: `C:\\tools\\patching\\logs\\`
+- No JSON configuration support
+- No filtering or scoping options## Requirements
 
 1. **PowerShell**: This script requires PowerShell, which comes pre-installed on most modern Windows systems.
 2. **Winget**: Ensure the Windows Package Manager (`winget`) is installed. The script assumes that `winget` is installed under a specific directory based on the version number.
@@ -72,6 +81,12 @@ To ensure the script runs regularly (e.g., daily or weekly), you can schedule it
 
 - Make sure to update `$wingetversion` to the correct version when `winget` is updated.
 - If running this script as a scheduled task, make sure it is set to run with administrative privileges to allow for updates.
+- ⚠️ **Migration Notice**: For new deployments, consider using [`update-third-party-with-winget.ps1`](./update-third-party-with-winget.md) which offers:
+  - JSON-based configuration
+  - Better error handling
+  - Filtering and scope management
+  - More comprehensive logging
+  - Active maintenance and testing
 
 ## Troubleshooting
 

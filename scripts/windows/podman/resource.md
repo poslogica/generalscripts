@@ -1,8 +1,12 @@
-# Podman Resource Command
 
-The `podman resource` command allows you to manage and inspect system resources allocated for containers and pods in Podman. It supports listing available resources, setting limits, and querying current usage.
 
-## Subcommands
+# Podman Resource Management
+
+The `podman resource` command allows you to manage and inspect system resources allocated for containers and pods in Podman on Windows. It supports listing available resources, setting limits, and querying current usage.
+
+## Overview
+
+When running Podman on Windows via WSL (Windows Subsystem for Linux), you may need to configure system resources to ensure optimal container performance. This guide covers the key resource management commands.## Subcommands
 
 ### 1. `podman resource list`
 
@@ -52,7 +56,7 @@ podman machine ls
 
 ### Example 2: Configure Resource Limits
 
-#### Stop the Machine and Adjust Resources:
+#### Stop the Machine and Adjust Resources
 
 ```powershell
 podman machine stop
@@ -60,7 +64,7 @@ podman resource set --cpus=8 --memory=8192 --disk-size=40
 podman machine start
 ```
 
-#### Initialize Machine with Custom Resources:
+#### Initialize Machine with Custom Resources
 
 ```powershell
 podman machine init --cpus=8 --memory=8192 --disk-size=40
