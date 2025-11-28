@@ -247,4 +247,167 @@ Describe "get-duplicate-files-with-progress Script Tests" {
             $stopwatch.ElapsedMilliseconds | Should BeLessThan 30000
         }
     }
+
+    Context "Edge Cases - File Sizes" {
+        
+        It "Should handle zero-byte files" {
+            $testDir = New-Item -Path (Join-Path $TestDrive "ZeroByteTest") -ItemType Directory -Force
+            
+            # Create zero-byte files
+            New-Item -Path (Join-Path $testDir "empty1.txt") -ItemType File -Force | Out-Null
+            New-Item -Path (Join-Path $testDir "empty2.txt") -ItemType File -Force | Out-Null
+            
+            & $scriptPath -Path $testDir.FullName | Out-Null
+            
+            # Both zero-byte files should have same hash
+            Test-Path -Path $outputFile | Should Be $true
+            $content = Get-Content -Path $outputFile -Raw
+            $content | Should Match "empty1.txt"
+            $content | Should Match "empty2.txt"
+        }
+
+        It "Should handle large files (5MB+)" {
+            $testDir = New-Item -Path (Join-Path $TestDrive "LargeFileTest") -ItemType Directory -Force
+            
+            # Create 5MB files with identical content
+            $largeContent = [string]('X' * 5242880)  # 5MB of 'X' characters
+            $largeContent | Out-File -Path (Join-Path $testDir "large1.bin") -Encoding UTF8 -NoNewline
+            $largeContent | Out-File -Path (Join-Path $testDir "large2.bin") -Encoding UTF8 -NoNewline
+            
+            { & $scriptPath -Path $testDir.FullName } | Should Not Throw
+            
+            Test-Path -Path $outputFile | Should Be $true
+        }
+
+        It "Should handle mix of file sizes" {
+            $testDir = New-Item -Path (Join-Path $TestDrive "MixedSizeTest") -ItemType Directory -Force
+            
+            # Create files of varying sizes with duplicate content
+            "Duplicate content" | Out-File -Path (Join-Path $testDir "small1.txt") -Encoding UTF8
+            "Duplicate content" | Out-File -Path (Join-Path $testDir "small2.txt") -Encoding UTF8
+            
+            $mediumContent = [string]('M' * 1000000)  # 1MB
+            $mediumContent | Out-File -Path (Join-Path $testDir "medium1.bin") -Encoding UTF8 -NoNewline
+            $mediumContent | Out-File -Path (Join-Path $testDir "medium2.bin") -Encoding UTF8 -NoNewline
+            
+            & $scriptPath -Path $testDir.FullName | Out-Null
+            
+            Test-Path -Path $outputFile | Should Be $true
+        }
+    }
+
+    Context "Edge Cases - Special Characters and Encoding" {
+        
+        It "Should handle filenames with Unicode characters" {
+            $testDir = New-Item -Path (Join-Path $TestDrive "UnicodeTest") -ItemType Directory -Force
+            
+            "Duplicate" | Out-File -Path (Join-Path $testDir "файл1.txt") -Encoding UTF8
+            "Duplicate" | Out-File -Path (Join-Path $testDir "файл2.txt") -Encoding UTF8
+            
+            & $scriptPath -Path $testDir.FullName | Out-Null
+            
+            Test-Path -Path $outputFile | Should Be $true
+        }
+
+        It "Should handle files with spaces and special chars in names" {
+            $testDir = New-Item -Path (Join-Path $TestDrive "SpecialCharsTest") -ItemType Directory -Force
+            
+            "Content" | Out-File -Path (Join-Path $testDir "file 1.txt") -Encoding UTF8
+            "Content" | Out-File -Path (Join-Path $testDir "file 2.txt") -Encoding UTF8
+            
+            & $scriptPath -Path $testDir.FullName | Out-Null
+            
+            $content = Get-Content -Path $outputFile -Raw
+            $content | Should Match "file 1.txt"
+            $content | Should Match "file 2.txt"
+        }
+
+        It "Should detect duplicates with Unicode content" {
+            $testDir = New-Item -Path (Join-Path $TestDrive "UnicodeContentTest") -ItemType Directory -Force
+            
+            # Create files with Unicode content
+            "Привет мир 🌍" | Out-File -Path (Join-Path $testDir "unicode1.txt") -Encoding UTF8
+            "Привет мир 🌍" | Out-File -Path (Join-Path $testDir "unicode2.txt") -Encoding UTF8
+            
+            & $scriptPath -Path $testDir.FullName | Out-Null
+            
+            Test-Path -Path $outputFile | Should Be $true
+            $content = Get-Content -Path $outputFile -Raw
+            $content | Should Match "unicode1.txt"
+        }
+    }
+
+    Context "Edge Cases - Output File Behavior" {
+        
+        It "Should overwrite previous output file" {
+            $testDir = New-Item -Path (Join-Path $TestDrive "OverwriteTest") -ItemType Directory -Force
+            
+            # First run
+            "Content1" | Out-File -Path (Join-Path $testDir "file1.txt") -Encoding UTF8
+            "Content1" | Out-File -Path (Join-Path $testDir "file2.txt") -Encoding UTF8
+            & $scriptPath -Path $testDir.FullName | Out-Null
+            
+            $firstRun = Get-Content -Path $outputFile -Raw
+            $firstRun | Should Match "file1.txt"
+            
+            # Second run with different duplicates
+            Remove-Item (Join-Path $testDir "*") -Force
+            "Content2" | Out-File -Path (Join-Path $testDir "fileA.txt") -Encoding UTF8
+            "Content2" | Out-File -Path (Join-Path $testDir "fileB.txt") -Encoding UTF8
+            & $scriptPath -Path $testDir.FullName | Out-Null
+            
+            $secondRun = Get-Content -Path $outputFile -Raw
+            $secondRun | Should Match "fileA.txt"
+            $secondRun | Should Not Match "file1.txt"  # Old content should be gone
+        }
+
+        It "Should verify output file contains proper formatting" {
+            $testDir = New-Item -Path (Join-Path $TestDrive "FormattingTest") -ItemType Directory -Force
+            
+            "Test" | Out-File -Path (Join-Path $testDir "dup1.txt") -Encoding UTF8
+            "Test" | Out-File -Path (Join-Path $testDir "dup2.txt") -Encoding UTF8
+            
+            & $scriptPath -Path $testDir.FullName | Out-Null
+            
+            $content = Get-Content -Path $outputFile -Raw
+            # Should have header line with "===" markers
+            $content | Should Match "=== Duplicates for hash:"
+            # Should have file paths listed
+            $content | Should Match "dup1.txt"
+            $content | Should Match "dup2.txt"
+        }
+    }
+
+    Context "Edge Cases - File Permissions and State" {
+        
+        It "Should handle identical content but different file extensions" {
+            $testDir = New-Item -Path (Join-Path $TestDrive "ExtensionDupTest") -ItemType Directory -Force
+            
+            # Same content, different extensions - should be detected as duplicates
+            "Identical data" | Out-File -Path (Join-Path $testDir "document.txt") -Encoding UTF8
+            "Identical data" | Out-File -Path (Join-Path $testDir "document.bak") -Encoding UTF8
+            "Identical data" | Out-File -Path (Join-Path $testDir "document.tmp") -Encoding UTF8
+            
+            & $scriptPath -Path $testDir.FullName | Out-Null
+            
+            $content = Get-Content -Path $outputFile -Raw
+            # All three should be detected as same hash
+            $content | Should Match "document.txt"
+            $content | Should Match "document.bak"
+            $content | Should Match "document.tmp"
+        }
+
+        It "Should verify SHA256 hash format in output" {
+            $testDir = New-Item -Path (Join-Path $TestDrive "HashFormatTest") -ItemType Directory -Force
+            
+            "Content" | Out-File -Path (Join-Path $testDir "file1.txt") -Encoding UTF8
+            "Content" | Out-File -Path (Join-Path $testDir "file2.txt") -Encoding UTF8
+            
+            & $scriptPath -Path $testDir.FullName | Out-Null
+            
+            $content = Get-Content -Path $outputFile -Raw
+            # SHA256 hash is 64 hexadecimal characters
+            $content | Should Match "Duplicates for hash: [A-F0-9]{64}"
+        }
+    }
 }
