@@ -34,7 +34,7 @@ This PowerShell script automates the process of updating third-party software in
   
 ## Script Details
 
-- The script uses a hardcoded version of `winget`. It checks for the existence of the specified `winget.exe` before proceeding.
+- The script uses `winget.exe` from the system PATH for maximum compatibility with any installed version.
 - Updates all applications with available updates.
 - Logs all actions to a timestamped log file located in the directory `C:\tools\patching\logs\`.
 - Ensures that the log directory exists and creates it if necessary.
@@ -45,7 +45,7 @@ This PowerShell script automates the process of updating third-party software in
 ### 1. Setup
 
 - **Winget Installation**: Ensure that `winget` is installed on your system. You can get it from the [Microsoft Store](https://aka.ms/getwinget).
-- **Script Setup**: Save the PowerShell script to a desired location on your machine. [patch_software_windows.ps1](./patch_software_windows.ps1)
+- **Script Setup**: Save the PowerShell script to a desired location on your machine. [patch-software-windows.ps1](./patch-software-windows.ps1)
 
 ### 2. Running the Script
 
