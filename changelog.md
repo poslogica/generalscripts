@@ -2,6 +2,12 @@
 
 ## 2025-11-28
 
+- [`0682485`](https://github.com/poslogica/generalscripts/commit/06824859404ab117b2cb7fa7f6f353a8ce41d335) **testing workflow**
+  *by poslogica*
+- [`2348b1b`](https://github.com/poslogica/generalscripts/commit/2348b1bd56e742bb1d52f8d9d13bba4b2fbe8972) **fix: Use inline regex with (?m) multiline flag instead of invalid Select-String parameter**
+  *by poslogica*
+- [`50c206e`](https://github.com/poslogica/generalscripts/commit/50c206e12be984f8981a0b7753d955f98c630782) **chore: update change logs [skip ci]**
+  *by github-actions[bot]*
 - [`a9e77ee`](https://github.com/poslogica/generalscripts/commit/a9e77ee4b521910db1fcf98005a0cb11cd27f9d2) **fix: Correct inaccurate parameter examples in update-third-party-with-winget-examples.ps1**
   *by poslogica*
 - [`f2b8215`](https://github.com/poslogica/generalscripts/commit/f2b82156d8506c747c333b122b57c1e3a26780b4) **fix: Improve version increment step with better regex, file verification, and conflict resolution**

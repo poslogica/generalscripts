@@ -1,6 +1,9 @@
 Change Logs - 2025-11-28
 ==================================================
 2025-11-28
+- testing workflow (by poslogica)
+- fix: Use inline regex with (?m) multiline flag instead of invalid Select-String parameter (by poslogica)
+- chore: update change logs [skip ci] (by github-actions[bot])
 - fix: Correct inaccurate parameter examples in update-third-party-with-winget-examples.ps1 (by poslogica)
 - fix: Improve version increment step with better regex, file verification, and conflict resolution (by poslogica)
 - chore: update change logs [skip ci] (by github-actions[bot])
