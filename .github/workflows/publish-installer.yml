@@ -25,7 +25,7 @@ jobs:
         with:
           fetch-depth: 0  # Fetch all history for tags
 
-      - name: Get Next Version from GitHub Tags
+      - name: Get Next Version from GitHub Releases
         id: version
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
