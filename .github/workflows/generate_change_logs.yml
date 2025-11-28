@@ -43,14 +43,14 @@ jobs:
         with:
           name: change-logs
           path: |
-            change_logs.txt
+            changelog.txt
             changelog.md
 
       - name: Commit and Push Change Logs
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add change_logs.txt
+          git add changelog.txt
           git add changelog.md
           git commit -m "chore: update change logs [skip ci]" || echo "No changes to commit"
           git pull --rebase
