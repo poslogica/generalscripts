@@ -62,7 +62,67 @@ jobs:
             exit 1
           }
 
-      - name: Increment Version
+      - name: Create Git Tag and GitHub Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: pwsh
+        run: |
+          $version = "${{ env.ZIP_VERSION }}"
+          $zipPath = "${{ env.ZIP_PATH }}"
+          $zipName = "${{ env.ZIP_NAME }}"
+          $buildNum = "${{ github.run_number }}"
+          $commitSha = "${{ github.sha }}".Substring(0, 7)
+          $actor = "${{ github.actor }}"
+          $tagName = "v$version"
+          
+          Write-Host "Creating Git Tag and GitHub Release $tagName..." -ForegroundColor Cyan
+          
+          # Configure git
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          
+          # Check if tag already exists
+          $existingTag = git tag -l $tagName
+          if ($existingTag) {
+            Write-Host "⚠ Tag $tagName already exists, skipping release" -ForegroundColor Yellow
+          } else {
+            # Create annotated tag
+            git tag -a $tagName -m "Release $tagName - Winget Updater Installer"
+            git push origin $tagName
+            Write-Host "✓ Git tag $tagName created and pushed" -ForegroundColor Green
+            
+            # Create GitHub Release with the ZIP artifact
+            $releaseNotes = @"
+## Winget Updater $tagName
+
+Automated build of the Winget Updater installer package.
+
+### Installation
+1. Download ``$zipName``
+2. Extract to desired location
+3. Run ``install-winget-updater.ps1`` as Administrator
+
+### Build Info
+- **Version**: $version
+- **Build**: #$buildNum
+- **Commit**: $commitSha
+- **Built by**: $actor
+"@
+            
+            gh release create $tagName `
+              "$zipPath" `
+              --title "Winget Updater $tagName" `
+              --notes "$releaseNotes"
+            
+            if ($LASTEXITCODE -eq 0) {
+              Write-Host "✓ GitHub Release $tagName created successfully" -ForegroundColor Green
+            } else {
+              Write-Error "Failed to create GitHub Release"
+              exit 1
+            }
+          }
+
+      - name: Increment Version for Next Build
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: pwsh
@@ -97,20 +157,20 @@ jobs:
           
           # Check if file was actually modified
           $gitStatus = & git status --short
-          if ($gitStatus -match $versionFile) {
+          if ($gitStatus -match 'VERSION') {
             Write-Host "✓ VERSION file modified successfully" -ForegroundColor Green
             
             # Commit and push version update
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add $versionFile
-            git commit -m "chore: Increment version to $newVersion after successful build"
+            git commit -m "chore: Bump version to $newVersion for next release"
             
             # Pull before push to avoid conflicts
             git pull --rebase origin main
             git push origin main
             
-            Write-Host "✓ Version committed and pushed" -ForegroundColor Green
+            Write-Host "✓ Version $newVersion committed and pushed" -ForegroundColor Green
           } else {
             Write-Host "⚠ VERSION file not modified (no changes detected)" -ForegroundColor Yellow
           }
@@ -122,54 +182,3 @@ jobs:
           path: ${{ env.ZIP_PATH }}
           retention-days: 90
           compression-level: 0
-
-      - name: Create GitHub Release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        shell: pwsh
-        run: |
-          $version = "${{ env.ZIP_VERSION }}"
-          $zipPath = "${{ env.ZIP_PATH }}"
-          $zipName = "${{ env.ZIP_NAME }}"
-          $buildNum = "${{ github.run_number }}"
-          $commitSha = "${{ github.sha }}".Substring(0, 7)
-          $actor = "${{ github.actor }}"
-          
-          Write-Host "Creating GitHub Release v$version..." -ForegroundColor Cyan
-          
-          # Check if release already exists
-          $existingRelease = gh release view "v$version" 2>&1
-          if ($LASTEXITCODE -eq 0) {
-            Write-Host "⚠ Release v$version already exists, skipping creation" -ForegroundColor Yellow
-          } else {
-            # Create new release with the ZIP artifact
-            $releaseNotes = @"
-          ## Winget Updater v$version
-          
-          Automated build of the Winget Updater installer package.
-          
-          ### Installation
-          1. Download ``$zipName``
-          2. Extract to desired location
-          3. Run ``install-winget-updater.ps1`` as Administrator
-          
-          ### Build Info
-          - **Version**: $version
-          - **Build**: #$buildNum
-          - **Commit**: $commitSha
-          - **Built by**: $actor
-          "@
-            
-            gh release create "v$version" `
-              "$zipPath" `
-              --title "Winget Updater v$version" `
-              --notes "$releaseNotes" `
-              --target main
-            
-            if ($LASTEXITCODE -eq 0) {
-              Write-Host "✓ GitHub Release v$version created successfully" -ForegroundColor Green
-            } else {
-              Write-Error "Failed to create GitHub Release"
-              exit 1
-            }
-          }
