@@ -47,6 +47,8 @@ jobs:
             changelog.md
 
       - name: Commit and Push Change Logs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
@@ -54,4 +56,4 @@ jobs:
           git add changelog.md
           git commit -m "chore: update change logs [skip ci]" || echo "No changes to commit"
           git pull --rebase
-          git push
+          git push "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD:main
