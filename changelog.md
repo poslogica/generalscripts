@@ -2,6 +2,18 @@
 
 ## 2025-11-28
 
+- [`203a707`](https://github.com/poslogica/generalscripts/commit/203a7074bf91ee2e2e7a3035b997c2ff167d7b53) **test: Add comprehensive tests for installer scripts New test files (104 tests total): - install-winget-updater.tests.ps1 (35 tests) - uninstall-winget-updater.tests.ps1 (35 tests) - create-installer-package.tests.ps1 (34 tests) Tests cover: - Script file validation and syntax - Parameter definitions and validation - Script structure and required functionality - Output and error handling Also: - Update run-tests.ps1 to include installer scripts in coverage - Update README.md with new test counts (254 total)**
+  *by poslogica*
+- [`3a66cf6`](https://github.com/poslogica/generalscripts/commit/3a66cf6b61ec74f57810aeb0ac032f26ded4004b) **docs: Fix markdown files for accuracy and consistency README.md: - Remove broken link to deleted patch-software-windows.ps1 - Standardize test count to 150 across all references VERSION-MANAGEMENT.md: - Update to reflect GitHub tag-based versioning (no longer VERSION file) - Add instructions for manual version bumps via releases - Update troubleshooting for new versioning approach GITHUB-ACTIONS-INSTALLER.md: - Update workflow triggers (now uses workflow_run, not push) - Add uninstall-winget-updater.ps1 to ZIP contents - Update release naming to semantic versioning format - Fix artifact naming pattern installer/README.md: - Update uninstall feature description - Update version and date scripts/windows/patching/README.md: - Fix shortcut script test count (46, not 48)**
+  *by poslogica*
+- [`ac0d2b8`](https://github.com/poslogica/generalscripts/commit/ac0d2b83ff188d42b8a18a0d6be5380976cef598) **Merge branch 'main' of https://github.com/poslogica/generalscripts**
+  *by poslogica*
+- [`a4472c4`](https://github.com/poslogica/generalscripts/commit/a4472c42ab162831266876cccb7541b635e30e14) **refactor: Move uninstall script to installer folder - Move uninstall-winget-updater.ps1 to installer/ directory - Fix installer to look for files in same directory (extracted ZIP) - Update package builder to copy uninstall from installer folder**
+  *by poslogica*
+- [`15314e3`](https://github.com/poslogica/generalscripts/commit/15314e359201f4e511e7a47db43e7cb6d0887f61) **feat: Add uninstall script for Winget Updater - Create uninstall-winget-updater.ps1 with full cleanup capabilities - Removes scheduled task, Start Menu shortcut, and installation directory - Optional backup of logs and config with -KeepLogs/-KeepConfig flags - Support for custom backup path and silent uninstall (-Force) - Update installer to copy uninstall script to install location - Update package builder to include uninstall script - Update INSTALL.md with correct file names and uninstall examples**
+  *by poslogica*
+- [`ef853f9`](https://github.com/poslogica/generalscripts/commit/ef853f9c0d13366534c48f287031e05195bc0ea4) **chore: update change logs [skip ci]**
+  *by github-actions[bot]*
 - [`3f325f1`](https://github.com/poslogica/generalscripts/commit/3f325f172a0e95523d77195854eb19f2978604ea) **docs: Add system requirements notes to Update-ThirdPartyWithWinget - Windows 10/11 or Windows Server 2019+ - Winget must be installed - PowerShell 5.1+ required**
   *by poslogica*
 - [`08e86a0`](https://github.com/poslogica/generalscripts/commit/08e86a01405014cd89e2af7a0610cb21a37d17fb) **ci: Rename version step to reflect GitHub Releases as primary source**

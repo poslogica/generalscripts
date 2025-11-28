@@ -1,6 +1,61 @@
 Change Logs - 2025-11-28
 ==================================================
 2025-11-28
+- test: Add comprehensive tests for installer scripts
+
+New test files (104 tests total):
+- install-winget-updater.tests.ps1 (35 tests)
+- uninstall-winget-updater.tests.ps1 (35 tests)
+- create-installer-package.tests.ps1 (34 tests)
+
+Tests cover:
+- Script file validation and syntax
+- Parameter definitions and validation
+- Script structure and required functionality
+- Output and error handling
+
+Also:
+- Update run-tests.ps1 to include installer scripts in coverage
+- Update README.md with new test counts (254 total) (by poslogica)
+- docs: Fix markdown files for accuracy and consistency
+
+README.md:
+- Remove broken link to deleted patch-software-windows.ps1
+- Standardize test count to 150 across all references
+
+VERSION-MANAGEMENT.md:
+- Update to reflect GitHub tag-based versioning (no longer VERSION file)
+- Add instructions for manual version bumps via releases
+- Update troubleshooting for new versioning approach
+
+GITHUB-ACTIONS-INSTALLER.md:
+- Update workflow triggers (now uses workflow_run, not push)
+- Add uninstall-winget-updater.ps1 to ZIP contents
+- Update release naming to semantic versioning format
+- Fix artifact naming pattern
+
+installer/README.md:
+- Update uninstall feature description
+- Update version and date
+
+scripts/windows/patching/README.md:
+- Fix shortcut script test count (46, not 48) (by poslogica)
+- Merge branch 'main' of https://github.com/poslogica/generalscripts (by poslogica)
+- refactor: Move uninstall script to installer folder
+
+- Move uninstall-winget-updater.ps1 to installer/ directory
+- Fix installer to look for files in same directory (extracted ZIP)
+- Update package builder to copy uninstall from installer folder (by poslogica)
+- feat: Add uninstall script for Winget Updater
+
+- Create uninstall-winget-updater.ps1 with full cleanup capabilities
+- Removes scheduled task, Start Menu shortcut, and installation directory
+- Optional backup of logs and config with -KeepLogs/-KeepConfig flags
+- Support for custom backup path and silent uninstall (-Force)
+- Update installer to copy uninstall script to install location
+- Update package builder to include uninstall script
+- Update INSTALL.md with correct file names and uninstall examples (by poslogica)
+- chore: update change logs [skip ci] (by github-actions[bot])
 - docs: Add system requirements notes to Update-ThirdPartyWithWinget
 
 - Windows 10/11 or Windows Server 2019+
