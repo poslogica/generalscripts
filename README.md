@@ -29,13 +29,13 @@ To get started with these automation scripts:
 1. Clone this repository to your local machine:
 
    ```bash
-   git clone https://bitbucket.org/your-username/your-repository-name.git
+   git clone https://github.com/poslogica/generalscripts.git
    ```
 
 2. Navigate to the directory:
 
    ```bash
-   cd your-repository-name
+   cd generalscripts
    ```
 
 3. Review the README file of each script to understand specific installation steps if required.
@@ -76,12 +76,54 @@ To get started with these automation scripts:
 
 ## Scripts Overview
 
-Below is a list of some common scripts included in this repository:
+### Windows Scripts
 
-1. **Windows Third-Party Software Patching Script [patch_software_windows](./scripts/windows/patching/patch_software_windows.md)**  
-   Automates the process of updating third-party software on computers running the Windows operating system
+#### File Management
+
+- **get-duplicate-files-with-progress.ps1** - Identifies duplicate files by hash with real-time progress tracking
+  - Location: `scripts/windows/file/`
+  - Usage: `./get-duplicate-files-with-progress.ps1 -Path "C:\target-directory"`
+
+#### Patching & Updates
+
+- **[update-third-party-with-winget.ps1](./scripts/windows/patching/update-third-party-with-winget.md)** - Modern approach using winget package manager
+  - Location: `scripts/windows/patching/`
+  - Recommended for current Windows environments
+  - Supports JSON-based configuration and filtering
+  - Usage: `./update-third-party-with-winget.ps1 -ConfigPath "winget-config.json"`
+
+- **[update-third-party-with-winget-examples.ps1](./scripts/windows/patching/)** - Example implementations and scenarios
+  - Reference and example usage for update-third-party-with-winget.ps1
+
+- **[update-winget-packages.ps1](./scripts/windows/patching/)** - Wrapper script for winget package updates
+  - Simplified interface for package updates
+
+- **[update-winget-packages-create-start-menu-shortcut.ps1](./scripts/windows/patching/)** - Creates Start Menu shortcuts for winget packages
+  - Utility for creating Windows Start Menu shortcuts
+
+- **[update-winget-packages.bat](./scripts/windows/patching/)** - Batch file wrapper
+  - Alternative batch file implementation for Windows Task Scheduler integration
+
+- **[patch-software-windows.ps1](./scripts/windows/patching/patch-software-windows.md)** - Legacy patching method *(deprecated)*
+  - Maintained for backward compatibility
+
+#### Container Management
+
+- **[Podman Resource Management](./scripts/windows/podman/resource.md)** - Documentation for Podman resource configuration
+  - Location: `scripts/windows/podman/`
 
 For detailed documentation on each script, please refer to the respective script files in the `/scripts` directory.
+
+## Best Practices
+
+- Always review script documentation and examples before execution
+- Test scripts in a non-production environment first
+- Keep scripts and configurations synchronized across your organization
+- Monitor script logs for troubleshooting and auditing purposes
+
+## CI/CD & Automation
+
+This repository is configured for GitHub. Workflows and CI/CD pipelines can be added via `.github/workflows/` for automated testing and deployment.
 
 ## Contributing
 

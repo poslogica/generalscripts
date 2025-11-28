@@ -1,4 +1,30 @@
-﻿param (
+﻿<#
+.SYNOPSIS
+    Identifies and reports duplicate files in a directory tree using file hash comparison.
+
+.DESCRIPTION
+    This script recursively scans a specified directory, computes SHA256 hashes for all files,
+    and identifies duplicates by comparing their hash values. Results are written to a text file
+    with organized output showing hash values and file paths for all duplicates.
+
+.PARAMETER Path
+    The root directory to scan for duplicate files. Defaults to current directory (.).
+
+.EXAMPLE
+    .\get-duplicate-files-with-progress.ps1
+    Scans current directory and reports duplicates.
+
+.EXAMPLE
+    .\get-duplicate-files-with-progress.ps1 -Path "C:\Users\Documents"
+    Scans the Documents folder and all subdirectories for duplicate files.
+
+.NOTES
+    - Output file is created in the script directory as 'duplicate_files_with_progress.txt'
+    - Uses -LiteralPath to safely handle special characters in paths
+    - Continues processing even if some files cannot be hashed
+    - Progress bar shows real-time hashing progress
+#>
+param (
     [string]$Path = "."
 )
 

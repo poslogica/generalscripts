@@ -38,8 +38,8 @@ winget --version
 ## Files
 
 ```
-Update-ThirdPartyWithWinget.ps1   # main updater
-Update-WingetPackages.ps1         # optional wrapper (auto-elevate & logging)
+update-third-party-with-winget.ps1   # main updater
+update-winget-packages.ps1         # optional wrapper (auto-elevate & logging)
 winget-config.json                # config (you create/maintain this)
 logs/                             # created by wrapper (timestamped logs)
 ```
@@ -76,29 +76,29 @@ From the folder containing the script:
 
 ```powershell
 # Default run (no explicit scope, auto-detect + retry)
-powershell.exe -ExecutionPolicy Bypass -File .\Update-ThirdPartyWithWinget.ps1
+powershell.exe -ExecutionPolicy Bypass -File .\update-third-party-with-winget.ps1
 ```
 
 ### Useful switches
 
 ```powershell
 # Include packages with unknown installed version
-powershell.exe -ExecutionPolicy Bypass -File .\Update-ThirdPartyWithWinget.ps1 -IncludeUnknown
+powershell.exe -ExecutionPolicy Bypass -File .\update-third-party-with-winget.ps1 -IncludeUnknown
 
 # Diagnostics: saves raw winget outputs next to the script
-powershell.exe -ExecutionPolicy Bypass -File .\Update-ThirdPartyWithWinget.ps1 -Diagnostics
+powershell.exe -ExecutionPolicy Bypass -File .\update-third-party-with-winget.ps1 -Diagnostics
 
 # Log to a file
-powershell.exe -ExecutionPolicy Bypass -File .\Update-ThirdPartyWithWinget.ps1 -LogPath "C:\Logs\winget-upgrade.log"
+powershell.exe -ExecutionPolicy Bypass -File .\update-third-party-with-winget.ps1 -LogPath "C:\Logs\winget-upgrade.log"
 
 # Dry run (no changes)
-powershell.exe -ExecutionPolicy Bypass -File .\Update-ThirdPartyWithWinget.ps1 -WhatIf
+powershell.exe -ExecutionPolicy Bypass -File .\update-third-party-with-winget.ps1 -WhatIf
 
 # Stop on first failure
-powershell.exe -ExecutionPolicy Bypass -File .\Update-ThirdPartyWithWinget.ps1 -StopOnError
+powershell.exe -ExecutionPolicy Bypass -File .\update-third-party-with-winget.ps1 -StopOnError
 
 # Force a scope (if you know it); Admin recommended for machine
-powershell.exe -ExecutionPolicy Bypass -File .\Update-ThirdPartyWithWinget.ps1 -Scope machine
+powershell.exe -ExecutionPolicy Bypass -File .\update-third-party-with-winget.ps1 -Scope machine
 ```
 
 > Tip: Leave **`-Scope` unset** and let the script auto-detect unless you specifically need one.
@@ -111,19 +111,19 @@ The wrapper auto-elevates when `-Scope machine` is used and writes a timestamped
 
 ```powershell
 # Default: machine scope, include unknown, diagnostics, timestamped log
-.\Update-WingetPackages.ps1
+.\update-winget-packages.ps1
 
 # User scope dry run
-.\Update-WingetPackages.ps1 -Scope user -WhatIf
+.\update-winget-packages.ps1 -Scope user -WhatIf
 
 # Forward a flag to the main script after --
-.\Update-WingetPackages.ps1 -- -StopOnError
+.\update-winget-packages.ps1 -- -StopOnError
 ```
 
 Optional simple launcher (`.bat`):
 ```bat
 @echo off
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0Update-WingetPackages.ps1"
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0update-winget-packages.ps1"
 ```
 
 ---
