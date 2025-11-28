@@ -106,10 +106,12 @@ foreach ($group in $duplicates) {
     $fileSize = $group.Group[0].Size
     $wastedSpace = $fileSize * ($group.Count - 1)
     
-    Add-Content $outputFile "`n--- Hash: $($group.Name) ---"
+    Add-Content $outputFile ""
+    Add-Content $outputFile "=== Duplicates for hash: $($group.Name) ==="
     Add-Content $outputFile "File Size: $('{0:N2}' -f ($fileSize/1KB)) KB"
     Add-Content $outputFile "Wasted Space (if duplicates deleted): $('{0:N2}' -f ($wastedSpace/1MB)) MB"
-    Add-Content $outputFile "Number of Copies: $($group.Count)`n"
+    Add-Content $outputFile "Number of Copies: $($group.Count)"
+    Add-Content $outputFile ""
     
     foreach ($file in $group.Group | Sort-Object Path) {
         Add-Content $outputFile "  $($file.Path)"
