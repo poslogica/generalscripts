@@ -100,7 +100,12 @@ try {
     }
 
     # Copy script files
-    $scriptFiles = @('update-winget-packages.ps1', 'update-winget-packages-create-start-menu-shortcut.ps1', 'winget-config.json')
+    $scriptFiles = @(
+        'update-winget-packages.ps1',
+        'update-winget-packages-create-start-menu-shortcut.ps1',
+        'winget-config.json',
+        'uninstall-winget-updater.ps1'
+    )
     foreach ($file in $scriptFiles) {
         $source = Join-Path $patchingDir $file
         if (Test-Path $source) {

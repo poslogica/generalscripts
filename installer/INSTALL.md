@@ -77,8 +77,8 @@ Skip confirmation prompts and overwrite existing installation.
 - `update-winget-packages.ps1` - Main update script
 - `update-winget-packages-create-start-menu-shortcut.ps1` - Shortcut creation utility
 - `winget-config.json` - Configuration file
-- `uninstall.ps1` - Uninstall script
-- `README.md` - This guide
+- `uninstall-winget-updater.ps1` - Uninstall script
+- `README.txt` - Quick start guide
 
 ### Features
 
@@ -96,8 +96,7 @@ C:\Program Files\WingetUpdater\
 ├── update-winget-packages.ps1
 ├── update-winget-packages-create-start-menu-shortcut.ps1
 ├── winget-config.json
-├── uninstall.ps1
-├── README.md
+├── uninstall-winget-updater.ps1
 └── logs\
 ```
 
@@ -128,7 +127,14 @@ C:\Program Files\WingetUpdater\logs\
 ### Uninstall
 
 ```powershell
-C:\Program Files\WingetUpdater\uninstall.ps1
+# Basic uninstall
+C:\Program Files\WingetUpdater\uninstall-winget-updater.ps1
+
+# Uninstall but keep logs and config
+C:\Program Files\WingetUpdater\uninstall-winget-updater.ps1 -KeepLogs -KeepConfig
+
+# Silent uninstall
+C:\Program Files\WingetUpdater\uninstall-winget-updater.ps1 -Force
 ```
 
 Or manually:
@@ -224,6 +230,6 @@ See repository for license information: [poslogica/generalscripts](https://githu
 
 ---
 
-**Version**: 1.0
-**Last Updated**: 2025-11-28
+**Version**: 1.1
+**Last Updated**: 2025-11-29
 **Tested On**: Windows 11, Windows Server 2022

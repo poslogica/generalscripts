@@ -98,7 +98,8 @@ Write-Host "`nCopying script files..." -ForegroundColor Cyan
 $filesToCopy = @(
     'update-winget-packages.ps1',
     'update-winget-packages-create-start-menu-shortcut.ps1',
-    'winget-config.json'
+    'winget-config.json',
+    'uninstall-winget-updater.ps1'
 )
 
 foreach ($file in $filesToCopy) {
