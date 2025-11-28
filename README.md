@@ -33,6 +33,28 @@ This repository contains a collection of scripts designed to help IT professiona
 
 ## Installation
 
+### Quick Start: Winget Updater Suite
+
+For automated Windows Package Manager updates, the **Winget Updater** suite can be installed with a single command:
+
+#### Option 1: Automated Installation (Recommended)
+
+1. Download `winget-updater-setup.zip` from the [Releases](https://github.com/poslogica/generalscripts/releases)
+2. Extract the ZIP file
+3. Right-click `install-winget-updater.bat` → **Run as administrator**
+4. Follow the installation prompts
+
+#### Option 2: PowerShell Installation
+
+```powershell
+# As Administrator
+.\install-winget-updater.ps1 -ScheduleFrequency Weekly -ScheduleTime "02:00"
+```
+
+#### Option 3: Clone and Explore
+
+For manual script usage or development:
+
 ### Clone the Repository
 
 ```bash
