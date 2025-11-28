@@ -124,22 +124,52 @@ jobs:
           compression-level: 0
 
       - name: Create GitHub Release
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        shell: bash
+        shell: pwsh
         run: |
-          BUILD_NUM="${{ github.run_number }}"
-          COMMIT_SHA="${{ github.sha }}"
-          ACTOR="${{ github.actor }}"
-          ZIP_VERSION="${{ env.ZIP_VERSION }}"
-          ZIP_NAME="${{ env.ZIP_NAME }}"
-          ZIP_PATH="${{ env.ZIP_PATH }}"
-
-          gh release create "v${ZIP_VERSION}" \
-            "${ZIP_PATH}" \
-            --title "Winget Updater v${ZIP_VERSION}" \
-            --notes "Automated build of Winget Updater installer package v${ZIP_VERSION}. Build: ${BUILD_NUM}, Commit: ${COMMIT_SHA:0:7}, By: ${ACTOR}" \
-            --target main || echo "Release v${ZIP_VERSION} already exists, skipping creation"
-
-          echo "✓ GitHub Release available: v${ZIP_VERSION}"
+          $version = "${{ env.ZIP_VERSION }}"
+          $zipPath = "${{ env.ZIP_PATH }}"
+          $zipName = "${{ env.ZIP_NAME }}"
+          $buildNum = "${{ github.run_number }}"
+          $commitSha = "${{ github.sha }}".Substring(0, 7)
+          $actor = "${{ github.actor }}"
+          
+          Write-Host "Creating GitHub Release v$version..." -ForegroundColor Cyan
+          
+          # Check if release already exists
+          $existingRelease = gh release view "v$version" 2>&1
+          if ($LASTEXITCODE -eq 0) {
+            Write-Host "⚠ Release v$version already exists, skipping creation" -ForegroundColor Yellow
+          } else {
+            # Create new release with the ZIP artifact
+            $releaseNotes = @"
+          ## Winget Updater v$version
+          
+          Automated build of the Winget Updater installer package.
+          
+          ### Installation
+          1. Download ``$zipName``
+          2. Extract to desired location
+          3. Run ``install-winget-updater.ps1`` as Administrator
+          
+          ### Build Info
+          - **Version**: $version
+          - **Build**: #$buildNum
+          - **Commit**: $commitSha
+          - **Built by**: $actor
+          "@
+            
+            gh release create "v$version" `
+              "$zipPath" `
+              --title "Winget Updater v$version" `
+              --notes "$releaseNotes" `
+              --target main
+            
+            if ($LASTEXITCODE -eq 0) {
+              Write-Host "✓ GitHub Release v$version created successfully" -ForegroundColor Green
+            } else {
+              Write-Error "Failed to create GitHub Release"
+              exit 1
+            }
+          }
