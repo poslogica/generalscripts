@@ -92,22 +92,17 @@ jobs:
             Write-Host "✓ Git tag $tagName created and pushed" -ForegroundColor Green
             
             # Create GitHub Release with the ZIP artifact
-            $releaseNotes = @"
-## Winget Updater $tagName
-
-Automated build of the Winget Updater installer package.
-
-### Installation
-1. Download ``$zipName``
-2. Extract to desired location
-3. Run ``install-winget-updater.ps1`` as Administrator
-
-### Build Info
-- **Version**: $version
-- **Build**: #$buildNum
-- **Commit**: $commitSha
-- **Built by**: $actor
-"@
+            $releaseNotes = "## Winget Updater $tagName`n`n"
+            $releaseNotes += "Automated build of the Winget Updater installer package.`n`n"
+            $releaseNotes += "### Installation`n"
+            $releaseNotes += "1. Download ``$zipName```n"
+            $releaseNotes += "2. Extract to desired location`n"
+            $releaseNotes += "3. Run ``install-winget-updater.ps1`` as Administrator`n`n"
+            $releaseNotes += "### Build Info`n"
+            $releaseNotes += "- **Version**: $version`n"
+            $releaseNotes += "- **Build**: #$buildNum`n"
+            $releaseNotes += "- **Commit**: $commitSha`n"
+            $releaseNotes += "- **Built by**: $actor"
             
             gh release create $tagName `
               "$zipPath" `
