@@ -47,7 +47,7 @@ winget-upgrade-sanitized.json
 winget-list-upgrade-raw.json.txt
 
 # Script output files (generated during execution)
-duplicate_files_with-progress.txt
+duplicate_files_with_progress.txt
 *_results.txt
 *_output.txt
 TestResults.xml
