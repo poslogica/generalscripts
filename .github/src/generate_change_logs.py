@@ -6,26 +6,29 @@ This module provides functionality to generate change logs based on GitHub chang
 with the GitHub API to fetch commit data, formats the change logs, and saves them to a file.
 
 Classes:
-    - ReleaseNotesGenerator: A class to fetch GitHub commits, 
+    - ChangeLogsGenerator: A class to fetch GitHub commits, 
     generate change logs, and save them to a file.
 
 Methods:
-    - __init__(repository: str, auth_token: str, log_instance):
-        Initializes the ReleaseNotesGenerator with the repository, 
-        authentication token, and logger instance.
+    - __init__(repository: str, auth_token: str):
+        Initializes the ChangeLogsGenerator with the repository and authentication token.
     - fetch_github_commits() -> list:
         Fetches the latest commits from the GitHub repository using the GitHub API.
-    - generate_change_logs(commit_list: list) -> str:
-        Generates change logs based on the list of commits.
-    - save_change_logs(path: str, change_logs: str):
+    - generate_change_logs_txt(commit_list: list) -> str:
+        Generates change logs in plain text format based on the list of commits.
+    - generate_change_logs_markdown(commit_list: list) -> str:
+        Generates change logs in Markdown format based on the list of commits.
+    - save_change_logs(path: str, change_logs: str) -> bool:
         Saves the generated change logs to a file.
 
 Usage:
-    >>> from generate_change_logs import ReleaseNotesGenerator
-    >>> generator = ReleaseNotesGenerator("owner/repo", "your_token", logger)
+    >>> from generate_change_logs import ChangeLogsGenerator
+    >>> generator = ChangeLogsGenerator("owner/repo", "your_token")
     >>> commits = generator.fetch_github_commits()
-    >>> notes = generator.generate_change_logs(commits)
-    >>> generator.save_change_logs("change_logs.txt", notes)
+    >>> notes_txt = generator.generate_change_logs_txt(commits)
+    >>> notes_md = generator.generate_change_logs_markdown(commits)
+    >>> generator.save_change_logs("changelog.txt", notes_txt)
+    >>> generator.save_change_logs("changelog.md", notes_md)
 
 CLI:
     Run the script directly to generate change logs:
@@ -33,15 +36,17 @@ CLI:
 
 Features:
     - Fetches commit data from GitHub using the GitHub API.
-    - Formats change logs with commit messages and authors.
-    - Saves change logs to a file for distribution or archival.
+    - Formats change logs with commit messages and authors in both text and Markdown formats.
+    - Saves change logs to files for distribution or archival.
     - Includes logging for debugging and error handling.
+    - Supports pagination for large commit histories.
 
 Dependencies:
     - requests: Library for making HTTP requests to the GitHub API.
     - logging: Python's built-in logging framework for logging operations.
     - datetime: Library for generating timestamps for change logs.
     - os: Library for file path manipulation.
+    - collections: For defaultdict to group commits by date.
 """
 
 import os
@@ -254,7 +259,7 @@ if __name__ == "__main__":
     commits = generator.fetch_github_commits()
     logs_txt = generator.generate_change_logs_txt(commits)
     logs_md = generator.generate_change_logs_markdown(commits)
-    file_path_txt = os.path.join(os.getcwd(), "change_logs.txt")
+    file_path_txt = os.path.join(os.getcwd(), "changelog.txt")
     file_path_md = os.path.join(os.getcwd(), "changelog.md")
     generator.save_change_logs(file_path_txt, logs_txt)
     generator.save_change_logs(file_path_md, logs_md)
