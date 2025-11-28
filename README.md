@@ -14,6 +14,7 @@ This repository contains a collection of scripts designed to help IT professiona
 - [Scripts Overview](#scripts-overview)
 - [Testing](#testing)
 - [CI/CD Integration](#cicd-integration)
+- [Documentation](#documentation)
 - [Changelog](#changelog)
 - [Contributing](#contributing)
 - [License](#license)
@@ -200,6 +201,22 @@ Download test results from GitHub Actions:
 ## CI/CD & Automation
 
 This repository is configured for GitHub. Workflows and CI/CD pipelines can be added via `.github/workflows/` for automated testing and deployment.
+
+## Documentation
+
+Comprehensive documentation is available in the `/docs` directory:
+
+### Key Documents
+
+- **[GITHUB-ACTIONS-INSTALLER.md](docs/GITHUB-ACTIONS-INSTALLER.md)** - Complete guide to the automated installer build and publishing workflow
+  - Explains workflow triggers and dependencies
+  - Shows how to access built installers
+  - Documents the workflow orchestration chain
+  
+- **[VERSION-MANAGEMENT.md](docs/VERSION-MANAGEMENT.md)** - Semantic versioning system documentation
+  - Version file location and format
+  - How versions are applied to releases
+  - Release tagging conventions
 
 ## Changelog
 
