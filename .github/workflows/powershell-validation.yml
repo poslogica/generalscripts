@@ -7,11 +7,6 @@ on:
       - 'scripts/**/*.ps1'
       - 'tests/**/*.ps1'
       - '.github/workflows/powershell-validation.yml'
-  pull_request:
-    branches: [ main, develop ]
-    paths:
-      - 'scripts/**/*.ps1'
-      - 'tests/**/*.ps1'
 
 jobs:
   validate:
