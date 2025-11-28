@@ -1,16 +1,17 @@
 name: Build and Publish Winget Updater Installer
 
 on:
-  push:
-    branches: [ main, develop ]
-    paths:
-      - 'installer/**'
-      - 'scripts/windows/patching/**'
-      - '.github/workflows/publish-installer.yml'
+  workflow_run:
+    workflows: ["PowerShell Script Validation"]
+    types:
+      - completed
   workflow_dispatch:
 
 jobs:
   build-installer:
+    if: |
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success')
     runs-on: windows-latest
     name: Build Winget Updater ZIP Package
 
