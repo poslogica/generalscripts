@@ -72,9 +72,12 @@ jobs:
           $versionFile = './installer/VERSION'
           $versionContent = Get-Content -Path $versionFile -Raw
           
-          # Extract version - match any line that contains a version number
-          $versionMatch = $versionContent | Select-String -Pattern '^\d+\.\d+\.\d+$' -MultiLine
-          $currentVersion = if ($versionMatch.Matches) { $versionMatch.Matches[0].Value } else { '1.0.0' }
+          # Extract version using regex - look for standalone version number on a line
+          if ($versionContent -match '(?m)^\d+\.\d+\.\d+$') {
+            $currentVersion = $matches[0]
+          } else {
+            $currentVersion = '1.0.0'
+          }
           
           # Parse version components
           $parts = $currentVersion -split '\.'
@@ -89,7 +92,7 @@ jobs:
           Write-Host "Version incremented: $currentVersion → $newVersion" -ForegroundColor Green
           
           # Update VERSION file with new version
-          $updatedContent = $versionContent -replace "^\d+\.\d+\.\d+$", $newVersion -join [Environment]::NewLine
+          $updatedContent = $versionContent -replace '(?m)^\d+\.\d+\.\d+$', $newVersion
           Set-Content -Path $versionFile -Value $updatedContent
           
           # Check if file was actually modified
