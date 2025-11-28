@@ -19,12 +19,8 @@ This directory contains PowerShell scripts for managing software updates and pat
   - Wrapper script with auto-elevation and logging
   - Simplified interface for basic package updates
 
-### Legacy
-
-- **[patch-software-windows.ps1](./patch-software-windows.md)** ⚠️ **Deprecated**
-  - Legacy patching method
-  - Maintained for backward compatibility only
-  - **Recommendation**: Migrate to `update-third-party-with-winget.ps1`
+- **[update-winget-packages-create-start-menu-shortcut.ps1](./update-winget-packages-create-start-menu-shortcut.ps1)**
+  - Creates Start Menu shortcuts for quick access to winget update functionality
 
 ## Configuration
 
@@ -41,9 +37,8 @@ Each script in this directory has comprehensive test coverage:
 
 - `update-winget-packages.ps1`: 30 tests
 - `update-third-party-with-winget.ps1`: 42 tests
-- `patch-software-windows.ps1`: 45 tests
+- `update-winget-packages-create-start-menu-shortcut.ps1`: 48 tests
 
 ## Documentation
 
 - [Update-ThirdPartyWithWinget Documentation](./update-third-party-with-winget.md)
-- [Patch-SoftwareWindows Documentation](./patch-software-windows.md)

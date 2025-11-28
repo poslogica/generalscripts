@@ -21,7 +21,7 @@ This directory contains the installer and distribution package creation tools fo
 
 ```powershell
 # As Administrator
-.\install-updater-winget.ps1
+.\install-winget-updater.ps1
 ```
 
 ## For Developers/Maintainers

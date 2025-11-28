@@ -158,7 +158,7 @@ This repository includes comprehensive test coverage using **Pester 5.7.1**. Tes
 
 ### Test Results
 
-- **Total Tests**: 149
+- **Total Tests**: 150
 - **Test Files**: 4
 - **Coverage Format**: JaCoCo XML with per-file breakdown
 - **CI/CD Integration**: Automated tests run on every push via GitHub Actions
@@ -169,7 +169,7 @@ This repository includes comprehensive test coverage using **Pester 5.7.1**. Tes
   - `get-duplicate-files-with-progress.ps1`: 32 tests
   - `update-winget-packages.ps1`: 30 tests
   - `update-third-party-with-winget.ps1`: 42 tests
-  - `patch-software-windows.ps1`: 45 tests
+  - `update-winget-packages-create-start-menu-shortcut.ps1`: 46 tests
 
 ## CI/CD Integration
 
