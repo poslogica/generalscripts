@@ -1,0 +1,405 @@
+Change Logs - 2025-11-28
+==================================================
+2025-11-28
+- fix: Add explicit permissions and improve git authentication in changelog workflow
+
+- Add permissions block: contents:write, pull-requests:write
+- Update checkout action to v4 with token parameter
+- Use git credential helper for authentication
+- Store credentials in ~/.git-credentials file
+- Use standard 'origin main' push target
+- Resolves workflow_run permission restrictions issue (by poslogica)
+- fix: Use GitHub token for authenticated git push in changelog workflow
+
+- Add GITHUB_TOKEN to environment for authentication
+- Use token-based URL for git push instead of HTTPS
+- Resolves "Write access to repository not granted" error (403)
+- Allows workflow to push changelog updates to main branch (by poslogica)
+- docs: Fix markdown formatting issues across all documentation files
+
+- Add blank lines around code fences (MD031)
+- Add language specifiers to code blocks (MD040)
+- Add trailing newlines to all markdown files (MD047)
+- Fix list spacing around headings (MD032, MD022)
+- Improve readability of numbered lists with blank line separation
+- All 9 markdown files now pass linting checks (by poslogica)
+- feat: Add automated changelog generation via GitHub Actions
+
+## Overview
+Implement fully automated changelog generation system that creates both text and
+Markdown formatted changelogs from GitHub commit history. Changelogs are generated
+after successful PowerShell validation and published as artifacts.
+
+## Changes
+
+### New Files
+- .github/workflows/generate_change_logs.yml
+  * Triggered after successful PowerShell Script Validation workflow
+  * Supports manual triggering via workflow_dispatch
+  * Automatically commits generated changelogs to repository
+  * Retains 90-day artifact history
+
+- .github/src/generate_change_logs.py
+  * ChangeLogsGenerator class for fetching and formatting commits
+  * Supports GitHub API pagination (100 commits per page)
+  * Generates changelog.txt (plain text format)
+  * Generates changelog.md (Markdown format with clickable commit links)
+  * Comprehensive logging and error handling
+  * Self-contained logger using Python's logging module
+
+- .github/src/requirements.txt
+  * Single dependency: requests>=2.28.0
+  * Installed by workflow during build process
+
+### Implementation Details
+- Commits grouped by date (YYYY-MM-DD) in reverse chronological order
+- Markdown format includes clickable commit SHA links to GitHub commits
+- Author attribution for each commit
+- Proper Markdown formatting (MD022/MD032 compliant)
+- Multi-line commit messages normalized to single line
+- All string constants centralized (UNKNOWN_DATE, UNKNOWN_MESSAGE, UNKNOWN_AUTHOR)
+- Type hints on all methods
+- Zero lint errors
+
+## Workflow Integration
+- Triggered: After PowerShell Script Validation workflow completes successfully
+- Manual trigger: Available via GitHub UI (workflow_dispatch)
+- Commits: Generated files auto-committed with [skip ci] flag
+- Artifacts: Published with 90-day retention
+- Rebase handling: Prevents conflicts with concurrent commits (by poslogica)
+- Update module docstring to reference correct class and filenames (by poslogica)
+- Add constants for error messages (UNKNOWN_MESSAGE, UNKNOWN_AUTHOR) (by poslogica)
+- Add requirements.txt and update workflow to use it (by poslogica)
+- Remove log_instance dependency and use built-in logging (by poslogica)
+- Add comprehensive version management documentation (by poslogica)
+- Add version management to installer builds
+
+- Created installer/VERSION file (semantic versioning: 1.0.0)
+- Updated create-installer-package.ps1:
+  * New -Version parameter for custom versions
+  * Reads version from VERSION file by default
+  * Generates ZIP filename: winget-updater-setup-v{version}.zip
+  * Displays version in build output
+- Updated GitHub Actions workflow:
+  * Extracts version from VERSION file
+  * Includes version in artifact name
+  * Tags releases with version (v1.0.0 format)
+  * Release notes include version number
+- Benefits:
+  * Users can identify installer version at a glance
+  * Multiple versions coexist in releases
+  * Easy version bumping by editing VERSION file
+  * Semantic versioning for clear compatibility tracking (by poslogica)
+- Add note about automated installer builds in main README
+
+- Added reference to Releases page for pre-built installer
+- Linked to GITHUB-ACTIONS-INSTALLER.md documentation
+- Notes that installers are automatically published by CI/CD (by poslogica)
+- Add documentation for GitHub Actions installer workflow
+
+- Created docs/GITHUB-ACTIONS-INSTALLER.md
+- Documents automatic build and publishing process
+- Includes:
+  * How the workflow is triggered
+  * What gets built and where artifacts are stored
+  * How users download the installer
+  * Build information included in releases
+  * Workflow structure and configuration
+  * Developer guide for manual builds
+  * Troubleshooting section
+  * Security considerations
+  * Future enhancement ideas
+- All markdown standards compliant (by poslogica)
+- Add GitHub Actions workflow to build and publish Winget Updater installer
+
+- New workflow: .github/workflows/publish-installer.yml
+- Triggers on: push to main/develop branches, changes to installer or patching scripts
+- Build process:
+  * Runs on Windows latest runner
+  * Executes create-installer-package.ps1
+  * Verifies ZIP package creation
+- Publishing:
+  * Uploads artifact (winget-updater-setup.zip) to GitHub with 90-day retention
+  * Creates GitHub Release (main branch only) with build info
+  * Release tagged with build number (installer-{run_number})
+- Benefits:
+  * Users can download ready-to-use installer from Releases page
+  * Automatic builds on code changes
+  * Can be triggered manually via workflow_dispatch
+  * Release notes include quick start instructions and feature list (by poslogica)
+- Add Winget Updater installation documentation to main README
+
+- Added Quick Start section with three installation options
+- Option 1: Automated installation via ZIP (recommended)
+- Option 2: PowerShell direct installation
+- Option 3: Clone repository for manual use
+- Improved markdown compliance for heading levels
+- Users can now easily get started with automated updates (by poslogica)
+- Refactor installer scripts for clean architecture and code quality
+
+- Simplified install-winget-updater.ps1 with direct implementation (no nested functions)
+- Cleaned create-installer-package.ps1 with minimal dependencies
+- All critical PSScriptAnalyzer warnings resolved
+- Write-Host retained for interactive UI (acceptable for installer/tool scripts)
+- Removed unused parameters, variables, and BOM encoding issues
+- Both scripts ready for production use
+- Full functionality maintained: admin checks, task scheduling, shortcut creation, uninstall (by poslogica)
+- Add README for installer directory with usage instructions (by poslogica)
+- Add installer package for Winget Updater suite
+
+- Create install-winget-updater.ps1 PowerShell installer with full features
+- Add install-winget-updater.bat wrapper for easy execution
+- Create INSTALL.md comprehensive installation guide (GitHub markdown compliant)
+- Create create-installer-package.ps1 to build distribution ZIP files
+- Installer features:
+  * Admin privilege checks
+  * Winget availability validation
+  * Configurable installation path (default: C:\Program Files\WingetUpdater)
+  * Scheduled task creation (Daily/Weekly/Monthly options)
+  * Start Menu shortcut generation
+  * Uninstall script generation
+  * Comprehensive logging support
+  * Installation documentation generation (by poslogica)
+- Fix regex pattern in shortcut test - match TargetPath assignment correctly (by poslogica)
+- docs: update all markdown files to follow GitHub standards
+
+- Updated main README with comprehensive documentation
+- Added Testing section with test results and coverage information
+- Added CI/CD Integration section
+- Updated Contributing section with code quality requirements
+- Reorganized Prerequisites section for Windows-focused content
+- Updated Patching directory README with active/legacy script status
+- Added deprecation notice and migration path for legacy patch script
+- Fixed markdown lint issues: trailing punctuation, code block spacing, newlines
+- All markdown files now follow GitHub markdown standards (by poslogica)
+- refactor: exclude duplicate_files_with_progress.txt from git tracking (by poslogica)
+- feat: add code coverage reporting to test runner
+
+- Integrated Pester code coverage analysis with JaCoCo XML output
+- Displays overall coverage percentage and per-file breakdown
+- Coverage color-coded: Green (>=80%), Yellow (>=60%), Red (<60%)
+- Added -CoverageReport parameter to enable/disable coverage (default: enabled)
+- Generates CodeCoverage.xml report for CI/CD integration
+- All 149 tests pass with coverage analysis enabled (by poslogica)
+- test: add comprehensive test suite for patch-software-windows.ps1
+
+- Added 45 tests covering 11 context areas
+- Tests validate script syntax, structure, and key functionality
+- Coverage includes: log configuration, execution policy, winget integration, error handling, transcript management, and robustness
+- All 149 tests pass (104 existing + 45 new) (by poslogica)
+- fix: update run-tests.ps1 path resolution for tests/windows directory (by poslogica)
+- refactor: move run-tests.ps1 to tests/windows directory (by poslogica)
+- ci: update GitHub Actions to use latest versions (actions/checkout@v4, actions/upload-artifact@v4) (by poslogica)
+- ci: add artifact upload for test results to GitHub Actions (by poslogica)
+- refactor: add pattern to gitignore all test result XML files (by poslogica)
+- fix: change Scope parameter tests to static validation instead of execution
+
+- Tests were failing on GitHub Actions due to Start-Process elevation requirements
+- Machine scope attempts to re-elevate which fails in CI environment where pwsh is used
+- Changed tests to validate parameter definitions statically instead of executing the script
+- Tests now verify ValidateSet and default values directly from script content
+- All 104 tests now pass consistently on both local and GitHub Actions (by poslogica)
+- refactor: add TestResults.xml to gitignore (by poslogica)
+- fix: update run-tests.ps1 to work correctly from tests directory (by poslogica)
+- refactor: move run-tests.ps1 to tests directory (by poslogica)
+- feat: add run-tests.ps1 script to execute all Pester tests locally (by poslogica)
+- refactor: remove unused scriptDir and mainScript variables (by poslogica)
+- fix: resolve GitHub Actions test failures - use pwsh.exe for isolated process and handle machine scope elevation (by poslogica)
+- fix: run invalid path test in isolated process for consistency
+
+- Remove conditional skip for GitHub Actions
+- Run test in separate powershell.exe process to isolate error streams
+- Validates exit code (1) for graceful error handling
+- Ensures 100% consistency between local and GitHub Actions environments
+- All 104 tests now pass in both environments (no skips) (by poslogica)
+- test: add comprehensive test suite for update-third-party-with-winget.ps1
+
+- 42 tests covering script structure, parameters, and utility functions
+- Validates configuration handling and winget integration
+- Tests JSON/table output parsing, error handling, and filtering
+- Verifies robustness features: noisy output handling, PS 5.1 compatibility
+- All tests passing locally (697ms) (by poslogica)
+- test: add comprehensive test suite for update-winget-packages.ps1
+
+- 30 tests covering script syntax, parameters, structure, and logic
+- Validates parameter validation and default values
+- Verifies admin elevation handling and log directory creation
+- Tests edge cases: WhatIf flag, argument forwarding, PSBoundParameters
+- All tests passing locally (619ms) (by poslogica)
+- test: conditionally skip invalid path test on GitHub Actions
+
+Skip test on GitHub Actions due to stricter error stream detection in CI/CD
+environment. Test runs locally (32/32 passing) and skips on GitHub Actions
+(31/31 + 1 skipped) to prevent false failures. (by poslogica)
+- fix: use null assignment to suppress script errors completely (by poslogica)
+- fix: redirect all output streams in invalid path test for full compatibility (by poslogica)
+- fix: simplify invalid path test to use -ErrorAction Continue for cross-platform compatibility (by poslogica)
+- fix: update invalid path test to properly handle error exceptions (by poslogica)
+- fix: update invalid path test to check exit code instead of catching exceptions (by poslogica)
+- fix: suppress error stream in invalid path test to prevent false failures (by poslogica)
+- fix: update GitHub Actions to use modern Pester 5.x configuration to eliminate legacy parameter set warning (by poslogica)
+- fix: wrap invalid path test in error suppression to properly handle Write-Error (by poslogica)
+- fix: convert test file to Pester 5.x syntax for GitHub Actions
+
+- Update BeforeAll block for Pester 5.x variable scoping
+- Use hyphenated assertions (Should -Be, Should -Match, Should -Not -Throw)
+- All 32 tests pass with Pester 5.7.1 (matches GitHub Actions version)
+- Tests also work with legacy parameter set in older environments
+- Fixes CI/CD pipeline test execution (by poslogica)
+- fix: update test file for Pester 3.4.0 compatibility
+
+- Convert all test assertions to Pester 3.4.0 syntax (compatible with older versions)
+- Use 'Should Match' instead of 'Should -Match'
+- Use 'Should Be' instead of 'Should -Be'
+- Use 'Should Not Throw' instead of 'Should -Not -Throw'
+- Use 'Should BeLessThan' instead of 'Should -BeLessThan'
+- All 32 tests pass locally with Pester 3.4.0
+- Tests will also work with Pester 5.x on GitHub Actions (legacy parameter set) (by poslogica)
+- build: exclude generated script output files from git tracking
+
+- Add duplicate_files_with_progress.txt to .gitignore
+- Exclude all *_results.txt and *_output.txt files
+- These are generated artifacts from test/script execution, not source files (by poslogica)
+- test: add 10 edge case tests for improved coverage
+
+New test contexts added:
+- Edge Cases - File Sizes: zero-byte files, large files (5MB+), mixed sizes
+- Edge Cases - Special Characters and Encoding: Unicode filenames, Unicode content
+- Edge Cases - Output File Behavior: overwriting, proper formatting verification
+- Edge Cases - File Permissions and State: identical content different extensions, SHA256 format
+
+Test count: 22 -> 32 tests (45% coverage increase)
+All tests pass with Pester v3.4.0
+Covers edge cases: large files, Unicode, special characters, output formatting, hash validation (by poslogica)
+- refactor: move test files to separate tests directory
+
+- Move get-duplicate-files-with-progress.tests.ps1 from scripts/windows/file/ to tests/windows/file/
+- Keep tests separate from distribution package
+- Update workflow to discover tests in new location
+- Simplifies release packaging - only ship scripts/ directory
+- Tests remain accessible for development and CI/CD (by poslogica)
+- test: fix output file path reference in test file
+
+- Update output file path to use scripts directory instead of test directory
+- Ensures test file can be located anywhere without affecting functionality
+- All 22 tests pass with corrected paths (by poslogica)
+- ci: add pester test execution to github actions workflow
+
+- Install and run Pester tests in CI pipeline
+- Exclude *.tests.ps1 files from PSScriptAnalyzer validation
+- Generate NUnit XML output for test reporting
+- Tests will run automatically on push/PR to main or develop branches (by poslogica)
+- test: add comprehensive pester test suite for get-duplicate-files-with-progress script
+
+- Create 22 test cases covering script functionality
+- Test contexts: syntax validation, parameter handling, duplicate detection, recursive scanning, output generation, file handling, error handling, and performance
+- All tests pass with Pester v3.4.0 syntax compatibility
+- Tests validate core functionality: hash-based duplicate detection, multi-group handling, recursive directory scanning, and proper error handling
+- Output file generation and formatting verified
+- Performance validated for standard use cases (20+ files in under 30 seconds) (by poslogica)
+- refactor: standardize naming conventions and fix code quality issues
+
+- Rename all PowerShell scripts to kebab-case for consistency
+  - get-duplicate-files-with-progress.ps1
+  - patch-software-windows.ps1
+  - update-third-party-with-winget.ps1
+  - update-third-party-with-winget-examples.ps1
+  - update-winget-packages.ps1
+  - update-winget-packages-create-start-menu-shortcut.ps1
+  - update-winget-packages.bat
+
+- Rename documentation files to kebab-case
+  - patch-software-windows.md
+  - update-third-party-with-winget.md
+
+- Add comprehensive docstrings to PowerShell scripts with examples
+
+- Fix all PSScriptAnalyzer warnings:
+  - Replace Write-Host with Write-Output/Write-LogMessage
+  - Remove unused variables (\, \)
+  - Add proper error handling in catch blocks
+  - Rename \ to \ (avoid automatic variable overwrite)
+  - Rename Write-Log function to Write-LogMessage (avoid cmdlet override)
+  - Remove unused \ parameter
+  - Use approved PowerShell verbs in function names
+  - Add UTF-8 BOM encoding to files with non-ASCII characters
+  - Rename functions to use singular nouns
+
+- Update README.md:
+  - Change clone URL from Bitbucket to GitHub
+  - Reorganize and expand Scripts Overview section
+  - Add complete documentation for all patching scripts
+  - Add Best Practices section
+  - Add CI/CD & Automation section
+
+- Add GitHub Actions workflow for PowerShell script validation
+  - Automatic syntax checking
+  - PSScriptAnalyzer analysis
+  - Runs on push and pull requests
+
+- All scripts now pass PSScriptAnalyzer analysis with 0 warnings (by poslogica)
+- update docs
+add action (by poslogica)
+- Merged in development (pull request #10)
+
+update exclusions (by poslogic)
+- update exclusions (by poslogica)
+
+2025-08-29
+- Merged in development (pull request #9)
+
+Add index readme to windows patching script folder (by poslogic)
+- Add index readme to windows patching script folder (by poslogica)
+- Merged in development (pull request #8)
+
+Add improved 3rd party update script (by poslogic)
+- improve the wrapper script (by poslogica)
+- refactored improve winget upgrade powershell script (by poslogica)
+- refactor patch script (by poslogica)
+- update patching script (by poslogica)
+
+2025-07-05
+- Merged in development (pull request #7)
+
+update readme (by poslogic)
+- update readme
+add ps script that scans for duplicate files and log the results to a log file (by poslogica)
+
+2024-11-15
+- Merged in development (pull request #6)
+
+Development (by Fuad Bagus)
+- update doc (by fuadbagus)
+- Merged in Fuad-Bagus/resourcemd-edited-online-with-bitbucket-1731631382666 (pull request #5)
+
+resource.md edited online with Bitbucket (by Fuad Bagus)
+- resource.md edited online with Bitbucket (by Fuad Bagus)
+- Merged in development (pull request #4)
+
+Merged main into development (by Fuad Bagus)
+- Merged main into development (by Fuad Bagus)
+- Merged in development (pull request #3)
+
+add podman md (by Fuad Bagus)
+- add podman md (by fuadbagus)
+
+2024-11-09
+- Merged in development (pull request #2)
+
+Development (by Fuad Bagus)
+- workaround for now. path of winget changed (by fuadbagus)
+- temp work around (by fuadbagus)
+- update version info (by fuadbagus)
+
+2024-10-18
+- Merged in development (pull request #1)
+
+update readme (by Fuad Bagus)
+- update readme (by fuadbagus)
+- restructure script folder
+improve patching script
+add base README (by fuadbagus)
+- update readme (by fuadbagus)
+- init add (by fuadbagus)
+
+==================================================
