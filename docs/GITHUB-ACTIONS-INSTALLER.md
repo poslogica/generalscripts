@@ -202,10 +202,70 @@ Each build automatically increments the number.
 2. Event type must be `push` (not pull request)
 3. Check release tag `installer-{number}` already exists
 
+## Workflow Orchestration Chain
+
+This repository uses GitHub Actions workflows that are **chained together** for comprehensive automation:
+
+### 1️⃣ PowerShell Script Validation (Trigger)
+
+**File:** `.github/workflows/powershell-validation.yml`
+
+- Runs when code is pushed to `main`/`develop`
+- **Validates:**
+  - PSScriptAnalyzer static code analysis
+  - PowerShell syntax validation
+  - Pester test suite (150+ tests)
+  - Test results upload
+
+**Status:** Must **succeed** for dependent workflows to run
+
+### 2️⃣ Build and Publish Winget Updater Installer (Triggered)
+
+**File:** `.github/workflows/publish-installer.yml`
+
+- **Triggers after:** PowerShell Script Validation completes **successfully**
+- Builds the installer ZIP package
+- Publishes as GitHub Actions artifact (90-day retention)
+- Creates GitHub Release (on `main` branch)
+
+**Depends on:** PowerShell Script Validation success
+
+### 3️⃣ Generate Change Logs (Triggered)
+
+**File:** `.github/workflows/generate_change_logs.yml`
+
+- **Triggers after:** PowerShell Script Validation completes **successfully**
+- Fetches commit history from GitHub API
+- Generates `changelog.txt` and `changelog.md`
+- Commits and pushes updated changelogs to repository
+
+**Depends on:** PowerShell Script Validation success
+
+### Workflow Dependency Diagram
+
+```text
+Push to main
+    ↓
+PowerShell Script Validation
+    ├─→ Passes ✅
+    │   ├→ Build and Publish Installer
+    │   └→ Generate Change Logs
+    │
+    └─→ Fails ❌
+        └→ Dependent workflows don't run
+```
+
+### Key Points
+
+- **Sequential on validation:** Both installer and changelog workflows wait for validation to complete
+- **Independent execution:** Installer build and changelog generation run in parallel (not dependent on each other)
+- **Failure handling:** If validation fails, dependent workflows are skipped
+- **Manual override:** All workflows can be manually triggered via "Run workflow" button
+
 ## Security
 
 - **Secrets:** Uses default `GITHUB_TOKEN` (no extra configuration needed)
-- **Permissions:** Workflow runs with minimal required permissions
+- **Permissions:** Workflows run with minimal required permissions
 - **Artifact Access:** Same as repository visibility (public/private)
 
 ## Future Enhancements
@@ -213,7 +273,6 @@ Each build automatically increments the number.
 Possible improvements:
 
 - Sign ZIP packages with certificate
-- Add changelog automation
 - Generate checksums/hashes
 - Notify on build completion
 - Deploy to external storage (S3, blob storage, etc.)
