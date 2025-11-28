@@ -46,7 +46,7 @@ Describe "get-duplicate-files-with-progress Script Tests" {
 
         It "Should handle invalid path gracefully" {
             # Script should not throw even with invalid path, just exit with error
-            { & $scriptPath -Path "C:\NonExistent\InvalidPath\12345" -ErrorAction SilentlyContinue } | Should -Not -Throw
+            { & $scriptPath -Path "C:\NonExistent\InvalidPath\12345" -ErrorAction SilentlyContinue 2>$null } | Should -Not -Throw
         }
 
         It "Should handle path with special characters" {
