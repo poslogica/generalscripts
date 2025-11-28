@@ -2,6 +2,20 @@
 
 ## 2025-11-28
 
+- [`cdf97a2`](https://github.com/poslogica/generalscripts/commit/cdf97a279c37ccad13052fd968b2b54a65cfd61e) **docs: Add comprehensive comments to update-third-party-with-winget.tests.ps1**
+  *by poslogica*
+- [`358a063`](https://github.com/poslogica/generalscripts/commit/358a063676f012dd4c6790e2ffc2a37602c3ce5d) **docs: Update markdown files for accuracy - remove obsolete patch-software-windows references, fix test counts, correct script name typo**
+  *by poslogica*
+- [`8a6b5aa`](https://github.com/poslogica/generalscripts/commit/8a6b5aaaad4ab587a0209b9f929d9c07276d0b18) **docs: Add Documentation section to README with links to GitHub Actions and Version Management guides**
+  *by poslogica*
+- [`86c4018`](https://github.com/poslogica/generalscripts/commit/86c4018f355930edc511e06cadb33353df963777) **docs: Document GitHub Actions workflow orchestration chain**
+  *by poslogica*
+- [`e9ea34c`](https://github.com/poslogica/generalscripts/commit/e9ea34ce0b8dac0f5ceefc25a9edc70f27c878ff) **Merge branch 'main' of https://github.com/poslogica/generalscripts**
+  *by poslogica*
+- [`d1dadcf`](https://github.com/poslogica/generalscripts/commit/d1dadcf9d95154de4717d972551e310c2001512f) **ci: Make Build and Publish Winget Updater workflow trigger after PowerShell Script Validation succeeds**
+  *by poslogica*
+- [`acdbda6`](https://github.com/poslogica/generalscripts/commit/acdbda68446cad32691c86ff8d02a854bd03a9f1) **chore: update change logs [skip ci]**
+  *by github-actions[bot]*
 - [`081f91e`](https://github.com/poslogica/generalscripts/commit/081f91eef4efa209a9c02cef8ea06c936d173f4a) **docs: Add note about administrator privileges requirement to Update-WingetPackages.ps1**
   *by poslogica*
 - [`3669464`](https://github.com/poslogica/generalscripts/commit/366946403f7afc942f6c295a9d3917aefb3feed6) **chore: update change logs [skip ci]**
