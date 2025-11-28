@@ -2,6 +2,10 @@
 Purpose: Elevate if needed, then call Update-ThirdPartyWithWinget.ps1
 Defaults: -IncludeUnknown -Diagnostics -LogPath "<scriptdir>\logs\winget-YYYYMMDD-HHMMSS.log"
 Usage:    .\Update-WingetPackages.ps1 [-Scope machine] [-WhatIf] [-- any other flags...]
+Examples:
+  .\Update-WingetPackages.ps1
+  .\Update-WingetPackages.ps1 -Scope user -WhatIf
+  .\Update-WingetPackages.ps1 -Scope machine -- -StopOnError
 #>
 
 param(
