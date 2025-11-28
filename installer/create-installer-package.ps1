@@ -85,9 +85,14 @@ $tempDir = New-Item -ItemType Directory -Path (Join-Path $env:TEMP "winget-pkg-$
 $packageDir = New-Item -ItemType Directory -Path (Join-Path $tempDir 'winget-updater') -Force
 
 try {
-    # Copy installer files
+    # Copy installer files (from installer directory)
     Write-Host 'Packaging files...'
-    $installerFiles = @('install-winget-updater.ps1', 'install-winget-updater.bat', 'INSTALL.md')
+    $installerFiles = @(
+        'install-winget-updater.ps1',
+        'install-winget-updater.bat',
+        'INSTALL.md',
+        'uninstall-winget-updater.ps1'
+    )
     foreach ($file in $installerFiles) {
         $source = Join-Path $installerDir $file
         if (Test-Path $source) {
@@ -99,12 +104,11 @@ try {
         }
     }
 
-    # Copy script files
+    # Copy script files (from patching directory)
     $scriptFiles = @(
         'update-winget-packages.ps1',
         'update-winget-packages-create-start-menu-shortcut.ps1',
-        'winget-config.json',
-        'uninstall-winget-updater.ps1'
+        'winget-config.json'
     )
     foreach ($file in $scriptFiles) {
         $source = Join-Path $patchingDir $file

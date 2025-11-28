@@ -89,9 +89,8 @@ if ($PSCmdlet.ShouldProcess($InstallPath, 'Create directory')) {
     Write-Host "✓ Created: $InstallPath" -ForegroundColor Green
 }
 
-# Find source directory
-$sourceDir = if ($PSScriptRoot) { Split-Path -Parent $PSScriptRoot } else { Split-Path -Parent (Get-Location) }
-$patchingDir = Join-Path $sourceDir 'scripts\windows\patching'
+# Find source directory (same directory as installer script)
+$sourceDir = if ($PSScriptRoot) { $PSScriptRoot } else { (Get-Location).Path }
 
 # Copy files
 Write-Host "`nCopying script files..." -ForegroundColor Cyan
@@ -103,7 +102,7 @@ $filesToCopy = @(
 )
 
 foreach ($file in $filesToCopy) {
-    $sourcePath = Join-Path $patchingDir $file
+    $sourcePath = Join-Path $sourceDir $file
     if (Test-Path -Path $sourcePath) {
         if ($PSCmdlet.ShouldProcess($sourcePath, 'Copy file')) {
             Copy-Item -Path $sourcePath -Destination $InstallPath -Force
