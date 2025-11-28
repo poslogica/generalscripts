@@ -2,6 +2,12 @@
 
 ## 2025-11-28
 
+- [`6bcb4ea`](https://github.com/poslogica/generalscripts/commit/6bcb4ea86cf66f12e9466f07533a0109bf458b67) **docs: Add comprehensive comments to update-winget-packages-create-start-menu-shortcut.ps1**
+  *by poslogica*
+- [`694e413`](https://github.com/poslogica/generalscripts/commit/694e41321d00cbb73587788a674cffacb268a86b) **fix: Add write permissions and use GITHUB_TOKEN for version increment push**
+  *by poslogica*
+- [`b786348`](https://github.com/poslogica/generalscripts/commit/b7863486c4edd48167b1938bd6a4a368c89b151c) **chore: update change logs [skip ci]**
+  *by github-actions[bot]*
 - [`3511670`](https://github.com/poslogica/generalscripts/commit/3511670e4c44727549e24e6e9f34d74af16bf490) **docs: Add comprehensive comments to get-duplicate-files-with-progress.tests.ps1**
   *by poslogica*
 - [`492d093`](https://github.com/poslogica/generalscripts/commit/492d09338f4d669d2d4b860845bbd3f5cd300355) **chore: update change logs [skip ci]**
