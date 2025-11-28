@@ -8,4 +8,4 @@ $lnk.Arguments  = "-NoProfile -ExecutionPolicy Bypass -File `"$script`""
 $lnk.WorkingDirectory = $PSScriptRoot
 $lnk.IconLocation = "%SystemRoot%\System32\shell32.dll,167"
 $lnk.Save()
-Write-Host "Shortcut created: $lnkPath"
+Write-Output "Shortcut created: $lnkPath"

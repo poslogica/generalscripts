@@ -1,5 +1,3 @@
-$wingetVersion = "1.24.25180.0"
-$wingetReleaseFolder = "neutral_split.scale-150_8wekyb3d8bbwe"
 $logPath = "C:\tools\patching\logs\"
 $logFilename = "winget-$(Get-Date -f yyyy-MM-dd).log"
 $fullLogPathAndFile = "$logPath$logFilename"
@@ -25,17 +23,17 @@ $wingetPath = "winget.exe"
 #     Exit
 # }
 
-Write-Host "winget executable found at $wingetPath"
+Write-Output "winget executable found at $wingetPath"
 
 # Try to perform the upgrade and capture any errors
 try {
     # Start the upgrade process for all applications, including unknown ones, silently
     Start-Process -NoNewWindow -FilePath $wingetPath -ArgumentList "upgrade", "--all", "--include-unknown", "--accept-package-agreements", "--accept-source-agreements", "--silent" -Wait
 
-    Write-Host "Upgrade process completed successfully." -ForegroundColor Green
+    Write-Output "Upgrade process completed successfully."
 } catch {
     # Log any exceptions that occur
-    Write-Host "Error during the upgrade process: $_" -ForegroundColor Red
+    Write-Output "Error during the upgrade process: $_"
     Write-Information "Error: $_"
 }
 

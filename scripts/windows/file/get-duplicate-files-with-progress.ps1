@@ -79,4 +79,4 @@ foreach ($group in $duplicates) {
     }
 }
 
-Write-Host "`n✅ Done. Duplicate files written to: $outputFile"
+Write-Output "`n✅ Done. Duplicate files written to: $outputFile"
