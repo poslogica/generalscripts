@@ -1,6 +1,13 @@
 Change Logs - 2025-11-29
 ==================================================
 2025-11-29
+- feat: Add auto-update opt-out and improve transparency
+
+- Add AutoUpdate config section to winget-config.json
+- Update update-winget-updater.ps1 to respect Enabled setting
+- Update documentation with clear auto-update disclosure
+- Add update-winget-updater.ps1 to README.md (by poslogica)
+- chore: update change logs [skip ci] (by github-actions[bot])
 - Add auto-update feature using GitHub releases
 
 - New update-winget-updater.ps1 script checks for updates from GitHub releases

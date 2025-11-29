@@ -2,6 +2,10 @@
 
 ## 2025-11-29
 
+- [`fa44ecf`](https://github.com/poslogica/generalscripts/commit/fa44ecfc7a86125bebf145527f5c3a44093e593e) **feat: Add auto-update opt-out and improve transparency - Add AutoUpdate config section to winget-config.json - Update update-winget-updater.ps1 to respect Enabled setting - Update documentation with clear auto-update disclosure - Add update-winget-updater.ps1 to README.md**
+  *by poslogica*
+- [`dddd24a`](https://github.com/poslogica/generalscripts/commit/dddd24ac45e2dbc049e7fb3b4c12cf9e944c3e79) **chore: update change logs [skip ci]**
+  *by github-actions[bot]*
 - [`842dd95`](https://github.com/poslogica/generalscripts/commit/842dd9532ab03aa244a5137e64379b3e4cc54907) **Add auto-update feature using GitHub releases - New update-winget-updater.ps1 script checks for updates from GitHub releases - Compares installed VERSION against latest GitHub release tag - Downloads and extracts new version automatically - Backs up existing files before update - Supports -Force to skip confirmation, -WhatIf for preview - Installer now copies update script and creates VERSION file - Updated documentation with auto-update instructions**
   *by poslogica*
 - [`153c852`](https://github.com/poslogica/generalscripts/commit/153c852206eae7dbd707bb8cad248e2771e19db0) **chore: update change logs [skip ci]**
