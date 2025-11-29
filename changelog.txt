@@ -1,6 +1,17 @@
 Change Logs - 2025-11-29
 ==================================================
 2025-11-29
+- fix: correct case-sensitive script references
+
+- Change 'Update-ThirdPartyWithWinget.ps1' to 'update-third-party-with-winget.ps1'
+- Change 'Update-WingetPackages.ps1' to 'update-winget-packages.ps1'
+
+Windows file system is case-insensitive but the installer copies files with
+their original lowercase names. The references must match exactly for the
+scripts to find each other after installation.
+
+Fixes: 'cannot find main script at C:\Program Files\WingetUpdater\Update-ThirdPartyWithWinget.ps1' (by poslogica)
+- chore: update change logs [skip ci] (by github-actions[bot])
 - fix: improve winget output parsing for older versions
 
 - Check winget version before attempting JSON output (requires v1.4+)

@@ -2,6 +2,10 @@
 
 ## 2025-11-29
 
+- [`b725d1d`](https://github.com/poslogica/generalscripts/commit/b725d1d35b3b3047da75dfa3a83a780e21dcb241) **fix: correct case-sensitive script references - Change 'Update-ThirdPartyWithWinget.ps1' to 'update-third-party-with-winget.ps1' - Change 'Update-WingetPackages.ps1' to 'update-winget-packages.ps1' Windows file system is case-insensitive but the installer copies files with their original lowercase names. The references must match exactly for the scripts to find each other after installation. Fixes: 'cannot find main script at C:\Program Files\WingetUpdater\Update-ThirdPartyWithWinget.ps1'**
+  *by poslogica*
+- [`df8f854`](https://github.com/poslogica/generalscripts/commit/df8f85428cdfcdfaebdb037c2c7766665a79ca07) **chore: update change logs [skip ci]**
+  *by github-actions[bot]*
 - [`f591d0c`](https://github.com/poslogica/generalscripts/commit/f591d0cbf27c736cd79d794c723bda6a39964e5a) **fix: improve winget output parsing for older versions - Check winget version before attempting JSON output (requires v1.4+) - Skip JSON parsing attempts on older winget versions (like v1.12.x) - Add proper handling for 'no packages available' message - Improve error messages with suggestion to use -Diagnostics - Return empty array instead of throwing when no upgrades found Fixes error: 'Failed to parse winget output (JSON and table fallback)'**
   *by poslogica*
 - [`7736fa3`](https://github.com/poslogica/generalscripts/commit/7736fa3c3fb366b193fb0371b922a7b6d038546e) **chore: update change logs [skip ci]**
