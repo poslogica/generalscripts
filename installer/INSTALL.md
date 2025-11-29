@@ -101,13 +101,20 @@ Skip confirmation prompts and overwrite existing installation.
 
 ### Default Location
 
+**Scripts and Configuration:**
+
 ```text
 C:\Program Files\WingetUpdater\
 ├── update-winget-packages.ps1
 ├── update-winget-packages-create-start-menu-shortcut.ps1
 ├── winget-config.json
-├── uninstall-winget-updater.ps1
-└── logs\
+└── uninstall-winget-updater.ps1
+```
+
+**Log Files:**
+
+```text
+C:\ProgramData\WingetUpdater\logs\
 ```
 
 ## After Installation
@@ -130,8 +137,10 @@ C:\Program Files\WingetUpdater\winget-config.json
 
 ### View Logs
 
+Logs are stored in a user-writable location (separate from the installation directory):
+
 ```text
-C:\Program Files\WingetUpdater\logs\
+C:\ProgramData\WingetUpdater\logs\
 ```
 
 ### Uninstall
@@ -196,7 +205,7 @@ Install Windows Package Manager:
 ### Updates not applying
 
 1. Verify winget is working: `winget upgrade`
-2. Check logs: `C:\Program Files\WingetUpdater\logs\`
+2. Check logs: `C:\ProgramData\WingetUpdater\logs\`
 3. Review configuration: `winget-config.json`
 
 ## Support & Issues
