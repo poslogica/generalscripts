@@ -40,6 +40,8 @@
     - Requires PowerShell 7+ (pwsh.exe) - NOT Windows PowerShell 5.1
     - Windows 10/11 or Windows Server 2019+
     - Winget must be installed and available
+    - Scheduled task runs under SYSTEM account with highest privileges
+    - Logs are stored in the 'logs' subdirectory of the installation path
 
     .LINK
     https://github.com/poslogica/generalscripts

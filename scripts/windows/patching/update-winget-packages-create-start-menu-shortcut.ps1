@@ -21,12 +21,16 @@
     Creates a Start Menu shortcut for Update Winget Packages functionality.
 
 .NOTES
+    - Requires PowerShell 5.1+ (Windows PowerShell or PowerShell 7)
+    - Windows 10/11 or Windows Server 2019+
     - Creates the shortcut in the All Users Start Menu (requires elevation)
     - Shortcut name: "Update Winget Packages.lnk"
     - Location: $env:ProgramData\Microsoft\Windows\Start Menu\Programs\
     - Icon: Shell32.dll icon index 167 (system update icon)
     - Uses WScript.Shell COM object for shortcut creation
-    - Target PowerShell version: Windows PowerShell (System32)
+
+.LINK
+    https://github.com/poslogica/generalscripts
 #>
 
 # ----- COM Object Setup -----

@@ -29,6 +29,7 @@ A PowerShell script to update third-party software using **winget**, driven by a
 - Network access to configured winget sources (e.g., `winget`, `msstore`)
 
 Verify winget:
+
 ```powershell
 winget --version
 ```
@@ -37,7 +38,8 @@ winget --version
 
 ## Files
 
-```
+```txt
+
 update-third-party-with-winget.ps1   # main updater
 update-winget-packages.ps1         # optional wrapper (auto-elevate & logging)
 winget-config.json                # config (you create/maintain this)

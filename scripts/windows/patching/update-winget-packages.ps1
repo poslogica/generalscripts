@@ -1,15 +1,49 @@
-<# 
-Purpose: Elevate if needed, then call Update-ThirdPartyWithWinget.ps1
-Defaults: -IncludeUnknown -Diagnostics -LogPath "<scriptdir>\logs\winget-YYYYMMDD-HHMMSS.log"
-Usage:    .\Update-WingetPackages.ps1 [-Scope machine] [-WhatIf] [-- any other flags...]
-Examples:
-  .\Update-WingetPackages.ps1
-  .\Update-WingetPackages.ps1 -Scope user -WhatIf
-  .\Update-WingetPackages.ps1 -Scope machine -- -StopOnError
-Notes:
-- Requires administrator privileges for machine scope (auto-elevates)
-- Windows 10/11 or Windows Server 2019+
-- Winget must be installed and available
+<#
+.SYNOPSIS
+    Wrapper script that elevates if needed, then calls Update-ThirdPartyWithWinget.ps1
+
+.DESCRIPTION
+    This script provides a convenient wrapper around Update-ThirdPartyWithWinget.ps1 with
+    automatic elevation for machine-scope updates and sensible defaults enabled.
+    
+    Defaults: -IncludeUnknown -Diagnostics -LogPath "<scriptdir>\logs\winget-YYYYMMDD-HHMMSS.log"
+
+.PARAMETER Scope
+    Installation scope for winget updates. 'machine' (default) or 'user'.
+    Machine scope requires administrator privileges (auto-elevates if needed).
+
+.PARAMETER WhatIf
+    Shows what would be done without making changes.
+
+.PARAMETER IncludeUnknown
+    Include packages with unknown versions. Enabled by default in this wrapper.
+
+.PARAMETER Diagnostics
+    Enable diagnostic output. Enabled by default in this wrapper.
+
+.EXAMPLE
+    .\Update-WingetPackages.ps1
+    
+    Run with defaults (machine scope, auto-elevate, include unknown, diagnostics on)
+
+.EXAMPLE
+    .\Update-WingetPackages.ps1 -Scope user -WhatIf
+    
+    Preview user-scope updates without making changes
+
+.EXAMPLE
+    .\Update-WingetPackages.ps1 -Scope machine -- -StopOnError
+    
+    Run machine-scope updates with StopOnError passed to the main script
+
+.NOTES
+    - Requires PowerShell 5.1+ (Windows PowerShell or PowerShell 7)
+    - Windows 10/11 or Windows Server 2019+
+    - Winget must be installed and available
+    - Requires administrator privileges for machine scope (auto-elevates)
+
+.LINK
+    https://github.com/poslogica/generalscripts
 #>
 
 param(
