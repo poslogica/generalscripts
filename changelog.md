@@ -2,6 +2,12 @@
 
 ## 2025-11-29
 
+- [`543e5e1`](https://github.com/poslogica/generalscripts/commit/543e5e1a317eab03249d96be3d8ad74d0f10dd83) **Fix Write-Log function name to Write-LogMessage - Fixed 7 instances where Write-Log was used instead of Write-LogMessage - The function is defined as Write-LogMessage but was incorrectly called as Write-Log - Affected upgrade loop: WhatIf, Upgrading, Retry, and Success/Failed messages**
+  *by poslogica*
+- [`3463446`](https://github.com/poslogica/generalscripts/commit/34634461a5eec72d08915dc800abffb87da0bd35) **Update documentation with new log file location - INSTALL.md: Document logs stored in C:\ProgramData\WingetUpdater\logs - Separate scripts/config path from log files path in documentation - Update troubleshooting section with correct log path**
+  *by poslogica*
+- [`7c462a3`](https://github.com/poslogica/generalscripts/commit/7c462a3da6df4575e533a7ddd4300a7067d14de5) **chore: update change logs [skip ci]**
+  *by github-actions[bot]*
 - [`05c2dc3`](https://github.com/poslogica/generalscripts/commit/05c2dc3bfcea9eb9c89e23abcf7e8bbcfb8d656f) **Change log location to user-writable ProgramData directory - Update update-winget-packages.ps1 to write logs to C:\ProgramData\WingetUpdater\logs - Previous location (Program Files) required admin permissions for log writes - ProgramData is writable by all users by default - Update documentation to reflect new log path**
   *by poslogica*
 - [`1d68c0a`](https://github.com/poslogica/generalscripts/commit/1d68c0aa40fc5e6bdb7ea1f1341d8e2746afb17b) **chore: update change logs [skip ci]**
