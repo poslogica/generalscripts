@@ -140,7 +140,16 @@ function Get-WingetUpgradeTableParsed {
     $result = @()
     for ($j=$startIndex; $j -lt $Lines.Count; $j++) {
         $line = $Lines[$j]
-        if ([string]::IsNullOrWhiteSpace($line)) { continue }
+        
+        # Skip empty or whitespace-only lines (trim first to handle lines with only spaces)
+        $trimmedLine = $line.Trim()
+        if ([string]::IsNullOrEmpty($trimmedLine)) { continue }
+        
+        # Skip progress spinner lines (winget outputs -, \, |, / during progress)
+        if ($trimmedLine -match '^[-\\|/]$') { continue }
+        
+        # Skip lines that are too short to contain valid package data (after trimming)
+        if ($trimmedLine.Length -lt 20) { continue }
 
         # Stop when footnote/summary appears
         if ($line -match 'package\(s\)\s+have version numbers') { break }
@@ -373,7 +382,7 @@ if (-not $packages -or $packages.Count -eq 0) {
 # ---------------- Filter ----------------
 $whitelistActive = ($IncludeOnlyIds.Count -gt 0 -or $IncludeOnlyNames.Count -gt 0)
 
-$toUpgrade = foreach ($pkg in $packages) {
+$toUpgrade = @(foreach ($pkg in $packages) {
     $id     = FirstNotNullOrEmpty $pkg.Id $pkg.PackageIdentifier ($pkg.Package.Id)
     $name   = FirstNotNullOrEmpty $pkg.Name $pkg.PackageName     ($pkg.Package.Name)
     $source = FirstNotNullOrEmpty $pkg.Source $pkg.Repository
@@ -413,7 +422,7 @@ $toUpgrade = foreach ($pkg in $packages) {
         Available = FirstNotNullOrEmpty $pkg.Available $pkg.AvailableVersion
         Source    = $source
     }
-}
+}) | Where-Object { $_ -and $_.Id }
 
 if (-not $toUpgrade -or $toUpgrade.Count -eq 0) {
     if ($whitelistActive) {
