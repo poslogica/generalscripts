@@ -47,8 +47,8 @@ $lnkPath = "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Update Winget
 $ps = "$env:SystemRoot\System32\WindowsPowerShell\v1.0\powershell.exe"
 
 # ----- Target Script Configuration -----
-# Build path to the Update-WingetPackages.ps1 script in the same directory
-$script = (Join-Path $PSScriptRoot 'Update-WingetPackages.ps1')
+# Build path to the update-winget-packages.ps1 script in the same directory
+$script = (Join-Path $PSScriptRoot 'update-winget-packages.ps1')
 
 # ----- Shortcut Object Creation -----
 # Create the shortcut object that will be configured and saved

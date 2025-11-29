@@ -65,7 +65,7 @@ $Here = if ($PSScriptRoot) { $PSScriptRoot }
         else { (Get-Location).Path }
 
 # --- Resolve main script next to the wrapper ---
-$Main = Join-Path $Here 'Update-ThirdPartyWithWinget.ps1'
+$Main = Join-Path $Here 'update-third-party-with-winget.ps1'
 if (!(Test-Path -LiteralPath $Main)) {
   Write-Error ("Cannot find main script at: {0}" -f $Main)
   exit 1
