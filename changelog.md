@@ -2,6 +2,10 @@
 
 ## 2025-11-29
 
+- [`a67f4a0`](https://github.com/poslogica/generalscripts/commit/a67f4a0e1b87ff3291d082c14510abcc56867904) **Fix PowerShell 5.1 foreach/continue producing null entries - In PS 5.1, 'continue' inside foreach expression outputs null to result array - This caused empty package objects to appear in toUpgrade list - Fix: Add Where-Object filter to remove null/empty entries after foreach - Also improved table parser to skip spinner chars and short lines - Affects both table parsing validation and package filtering**
+  *by poslogica*
+- [`38e0080`](https://github.com/poslogica/generalscripts/commit/38e0080a5530f5087892cabd038ee1a7e55f91ee) **chore: update change logs [skip ci]**
+  *by github-actions[bot]*
 - [`b79017c`](https://github.com/poslogica/generalscripts/commit/b79017cf4b2d8ef1fe05bdc25a7268d446898dd4) **Fix Split-Path parameter compatibility for PowerShell 7 - Change Split-Path -LiteralPath to -Path when used with -Parent - PowerShell 7 has stricter parameter set validation - Affects ScriptDir resolution and log directory creation**
   *by poslogica*
 - [`6a5b308`](https://github.com/poslogica/generalscripts/commit/6a5b30871c4b5b19390973421d753915b38e5707) **chore: update change logs [skip ci]**

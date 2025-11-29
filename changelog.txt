@@ -1,6 +1,14 @@
 Change Logs - 2025-11-29
 ==================================================
 2025-11-29
+- Fix PowerShell 5.1 foreach/continue producing null entries
+
+- In PS 5.1, 'continue' inside foreach expression outputs null to result array
+- This caused empty package objects to appear in toUpgrade list
+- Fix: Add Where-Object filter to remove null/empty entries after foreach
+- Also improved table parser to skip spinner chars and short lines
+- Affects both table parsing validation and package filtering (by poslogica)
+- chore: update change logs [skip ci] (by github-actions[bot])
 - Fix Split-Path parameter compatibility for PowerShell 7
 
 - Change Split-Path -LiteralPath to -Path when used with -Parent
