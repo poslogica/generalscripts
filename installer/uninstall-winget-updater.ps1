@@ -79,6 +79,7 @@ $TaskName = 'Update-Winget-Packages'
 $TaskPath = '\Microsoft\Windows\Winget\'
 $ShortcutName = 'Update Winget Packages.lnk'
 $StartMenuPath = [Environment]::GetFolderPath('CommonPrograms')
+$ITAutomationFolder = 'IT Automation'
 
 # Set default backup path if not specified
 if ([string]::IsNullOrWhiteSpace($BackupPath)) {
@@ -123,13 +124,16 @@ $installExists = Test-Path $InstallPath
 $taskExists = $null -ne (Get-ScheduledTask -TaskName $TaskName -TaskPath $TaskPath -ErrorAction SilentlyContinue)
 $shortcutPath = Join-Path $StartMenuPath $ShortcutName
 $shortcutExists = Test-Path $shortcutPath
+$itAutomationPath = Join-Path $StartMenuPath $ITAutomationFolder
+$itAutomationExists = Test-Path $itAutomationPath
 
-if (-not $installExists -and -not $taskExists -and -not $shortcutExists) {
+if (-not $installExists -and -not $taskExists -and -not $shortcutExists -and -not $itAutomationExists) {
     Write-Status "No Winget Updater installation found." 'Warning'
     Write-Host "  Checked:"
     Write-Host "    - Path: $InstallPath (not found)"
     Write-Host "    - Task: $TaskPath$TaskName (not found)"
     Write-Host "    - Shortcut: $shortcutPath (not found)"
+    Write-Host "    - IT Automation folder: $itAutomationPath (not found)"
     exit 0
 }
 
@@ -137,7 +141,8 @@ if (-not $installExists -and -not $taskExists -and -not $shortcutExists) {
 Write-Host "`nComponents to remove:" -ForegroundColor White
 if ($installExists) { Write-Host "  • Installation directory: $InstallPath" }
 if ($taskExists) { Write-Host "  • Scheduled task: $TaskPath$TaskName" }
-if ($shortcutExists) { Write-Host "  • Start Menu shortcut: $ShortcutName" }
+if ($shortcutExists) { Write-Host "  • Start Menu shortcut: $ShortcutName (legacy)" }
+if ($itAutomationExists) { Write-Host "  • IT Automation folder: $itAutomationPath" }
 
 if ($KeepLogs -or $KeepConfig) {
     Write-Host "`nComponents to preserve (backup to $BackupPath):" -ForegroundColor White
@@ -210,18 +215,35 @@ if ($taskExists) {
 }
 
 # ============================================================================
-# Remove Start Menu Shortcut
+# Remove Start Menu Shortcut (legacy single shortcut)
 # ============================================================================
 if ($shortcutExists) {
-    Write-Status "Removing Start Menu shortcut..." 'Info'
+    Write-Status "Removing legacy Start Menu shortcut..." 'Info'
     
     if ($PSCmdlet.ShouldProcess($shortcutPath, "Remove shortcut")) {
         try {
             Remove-Item -Path $shortcutPath -Force
-            Write-Status "Start Menu shortcut removed." 'Success'
+            Write-Status "Legacy Start Menu shortcut removed." 'Success'
         }
         catch {
             Write-Status "Failed to remove shortcut: $_" 'Error'
+        }
+    }
+}
+
+# ============================================================================
+# Remove IT Automation Start Menu Folder
+# ============================================================================
+if ($itAutomationExists) {
+    Write-Status "Removing IT Automation Start Menu folder..." 'Info'
+    
+    if ($PSCmdlet.ShouldProcess($itAutomationPath, "Remove IT Automation folder")) {
+        try {
+            Remove-Item -Path $itAutomationPath -Recurse -Force
+            Write-Status "IT Automation folder removed." 'Success'
+        }
+        catch {
+            Write-Status "Failed to remove IT Automation folder: $_" 'Error'
         }
     }
 }

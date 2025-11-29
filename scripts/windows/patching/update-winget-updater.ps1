@@ -22,6 +22,10 @@
 .PARAMETER PreRelease
     Include pre-release versions when checking for updates.
 
+.PARAMETER Wait
+    Wait for user to press a key before exiting. Useful when running from
+    a shortcut or double-clicking the script so you can see the output.
+
 .EXAMPLE
     .\Update-WingetUpdater.ps1
     
@@ -52,10 +56,20 @@ param(
     [string]$InstallPath = "$env:ProgramFiles\WingetUpdater",
     [switch]$CheckOnly,
     [switch]$Force,
-    [switch]$PreRelease
+    [switch]$PreRelease,
+    [switch]$Wait
 )
 
 $ErrorActionPreference = 'Stop'
+
+# Helper function to wait for keypress before exit
+function Wait-ForKeypress {
+    if ($Wait) {
+        Write-Host ""
+        Write-Host "Press any key to exit..." -ForegroundColor Gray
+        $null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
+    }
+}
 
 # GitHub repository information
 $GitHubOwner = 'poslogica'
@@ -265,16 +279,21 @@ function Install-Update {
 
 # ============== Main Logic ==============
 
-# Script version (updated with each release)
-$ScriptVersion = '1.0.15'
+# Get script version from VERSION file (same as installed version)
+$ScriptVersion = if (Test-Path $VersionFile) { 
+    (Get-Content $VersionFile -Raw).Trim() -replace '^v', ''
+} else { 
+    'unknown' 
+}
 
-Write-Status "Winget Updater - Auto-Update Check (Script v$ScriptVersion)"
+Write-Status "Winget Updater - Auto-Update Check (v$ScriptVersion)"
 Write-Status "Install Path: $InstallPath"
 
 # Check if install directory exists
 if (-not (Test-Path $InstallPath)) {
     Write-Status "Winget Updater is not installed at $InstallPath" 'ERROR'
     Write-Status "Run the installer first, or specify the correct -InstallPath" 'INFO'
+    Wait-ForKeypress
     exit 1
 }
 
@@ -284,6 +303,7 @@ if (-not $autoUpdateConfig.Enabled -and -not $Force) {
     Write-Status "Auto-update is disabled in configuration" 'INFO'
     Write-Status "To enable: Edit winget-config.json and set AutoUpdate.Enabled = true" 'INFO'
     Write-Status "To override: Run with -Force parameter" 'INFO'
+    Wait-ForKeypress
     exit 0
 }
 
@@ -307,6 +327,7 @@ $latestRelease = Get-LatestGitHubRelease -IncludePreRelease:$PreRelease
 
 if (-not $latestRelease) {
     Write-Status "Could not determine latest version" 'ERROR'
+    Wait-ForKeypress
     exit 1
 }
 
@@ -318,11 +339,13 @@ $comparison = Compare-Versions -Current $currentVersion -Latest $latestVersion
 
 if ($comparison -eq 0 -and -not $Force) {
     Write-Status "You are running the latest version!" 'SUCCESS'
+    Wait-ForKeypress
     exit 0
 }
 
 if ($comparison -lt 0 -and -not $Force) {
     Write-Status "Installed version is newer than latest release (development build?)" 'WARN'
+    Wait-ForKeypress
     exit 0
 }
 
@@ -339,6 +362,7 @@ if ($CheckOnly) {
     Write-Host ""
     Write-Host "Release Notes:" -ForegroundColor Cyan
     Write-Host $latestRelease.body
+    Wait-ForKeypress
     exit 0
 }
 
@@ -349,6 +373,7 @@ if (-not $asset) {
     Write-Status "No installer package found in release assets" 'WARN'
     Write-Status "Release URL: $($latestRelease.html_url)" 'INFO'
     Write-Status "Please download and install manually" 'INFO'
+    Wait-ForKeypress
     exit 1
 }
 
@@ -357,12 +382,14 @@ Write-Status "Found update package: $($asset.name) ($([math]::Round($asset.size 
 # Confirm update
 if (-not $PSCmdlet.ShouldProcess("Winget Updater v$latestVersion", "Install update")) {
     Write-Status "Update cancelled" 'WARN'
+    Wait-ForKeypress
     exit 0
 }
 
 # Perform update
 $success = Install-Update -Release $latestRelease -Asset $asset
 
+Wait-ForKeypress
 if ($success) {
     exit 0
 } else {

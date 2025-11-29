@@ -7,14 +7,19 @@
     Tests verify COM object usage, shortcut path configuration, PowerShell invocation setup,
     icon configuration, and cross-platform compatibility.
     
+    The script creates an "IT Automation" folder in the Start Menu with multiple shortcuts:
+    - Update Winget Packages: Runs the winget package update script
+    - Check for Updater Updates: Checks for newer versions of IT Automation tools
+    
 .TESTS
     - Script Syntax and Structure: Validates PowerShell syntax and COM object usage
+    - Start Menu Folder Configuration: Tests IT Automation folder creation
     - Start Menu Shortcut Path Configuration: Tests ProgramData and shortcut naming
     - PowerShell Executable Configuration: Verifies System32 path to powershell.exe
-    - Target Script Reference: Checks Update-WingetPackages.ps1 reference
+    - Target Script Reference: Checks update-winget-packages.ps1 reference
     - Shortcut Object Creation: Tests WScript.Shell shortcut object setup
     - Shortcut Arguments Configuration: Validates execution policy and file parameters
-    - Shortcut Icon Configuration: Tests shell32.dll icon reference (index 167)
+    - Shortcut Icon Configuration: Tests shell32.dll icon references
     - Shortcut Persistence: Verifies Save() method is called
     - Output and Logging: Checks confirmation messages
     - Script Location and Organization: Confirms script location and references
@@ -68,6 +73,11 @@ Describe "update-winget-packages-create-start-menu-shortcut Script Tests" {
             $content | Should -Match '\$env:ProgramData'
         }
 
+        It "Should create IT Automation folder" {
+            $content = Get-Content -Path $scriptPath -Raw
+            $content | Should -Match 'IT Automation'
+        }
+
         It "Should name shortcut 'Update Winget Packages'" {
             $content = Get-Content -Path $scriptPath -Raw
             $content | Should -Match 'Update Winget Packages'
@@ -78,9 +88,9 @@ Describe "update-winget-packages-create-start-menu-shortcut Script Tests" {
             $content | Should -Match '\.lnk'
         }
 
-        It "Should store link path in variable" {
+        It "Should store link paths in variables" {
             $content = Get-Content -Path $scriptPath -Raw
-            $content | Should -Match '\$lnkPath'
+            $content | Should -Match '\$lnk\d+Path'
         }
     }
 
@@ -104,11 +114,11 @@ Describe "update-winget-packages-create-start-menu-shortcut Script Tests" {
     }
 
     # ----- Target Script Reference Tests -----
-    # Verifies Update-WingetPackages.ps1 reference and PSScriptRoot usage
+    # Verifies update-winget-packages.ps1 reference and PSScriptRoot usage
     Context "Target Script Reference" {
-        It "Should reference Update-WingetPackages.ps1" {
+        It "Should reference update-winget-packages.ps1" {
             $content = Get-Content -Path $scriptPath -Raw
-            $content | Should -Match 'Update-WingetPackages\.ps1'
+            $content | Should -Match 'update-winget-packages\.ps1'
         }
 
         It "Should use PSScriptRoot for script location" {
@@ -116,9 +126,9 @@ Describe "update-winget-packages-create-start-menu-shortcut Script Tests" {
             $content | Should -Match 'Join-Path.*\$PSScriptRoot'
         }
 
-        It "Should store script path in variable" {
+        It "Should store script paths in variables" {
             $content = Get-Content -Path $scriptPath -Raw
-            $content | Should -Match '\$script'
+            $content | Should -Match '\$script\d+'
         }
     }
 
@@ -130,24 +140,24 @@ Describe "update-winget-packages-create-start-menu-shortcut Script Tests" {
             $content | Should -Match 'CreateShortcut'
         }
 
-        It "Should store shortcut in variable" {
+        It "Should store shortcuts in variables" {
             $content = Get-Content -Path $scriptPath -Raw
-            $content | Should -Match '\$lnk'
+            $content | Should -Match '\$lnk\d+'
         }
 
         It "Should set shortcut TargetPath" {
             $content = Get-Content -Path $scriptPath -Raw
-            $content | Should -Match '\$lnk\.TargetPath'
+            $content | Should -Match '\$lnk\d+\.TargetPath'
         }
 
         It "Should set shortcut Arguments" {
             $content = Get-Content -Path $scriptPath -Raw
-            $content | Should -Match '\$lnk\.Arguments'
+            $content | Should -Match '\$lnk\d+\.Arguments'
         }
 
         It "Should set shortcut WorkingDirectory" {
             $content = Get-Content -Path $scriptPath -Raw
-            $content | Should -Match '\$lnk\.WorkingDirectory'
+            $content | Should -Match '\$lnk\d+\.WorkingDirectory'
         }
     }
 
@@ -176,11 +186,11 @@ Describe "update-winget-packages-create-start-menu-shortcut Script Tests" {
     }
 
     # ----- Shortcut Icon Configuration Tests -----
-    # Tests shell32.dll reference and icon index 167 (package/box icon)
+    # Tests shell32.dll reference and icon indices (167 for package, 13 for network)
     Context "Shortcut Icon Configuration" {
         It "Should set IconLocation property" {
             $content = Get-Content -Path $scriptPath -Raw
-            $content | Should -Match '\$lnk\.IconLocation'
+            $content | Should -Match '\$lnk\d+\.IconLocation'
         }
 
         It "Should reference shell32.dll for icon" {
@@ -188,7 +198,7 @@ Describe "update-winget-packages-create-start-menu-shortcut Script Tests" {
             $content | Should -Match 'shell32\.dll'
         }
 
-        It "Should use icon index 167 (package icon)" {
+        It "Should use icon index 167 for package shortcut" {
             $content = Get-Content -Path $scriptPath -Raw
             $content | Should -Match 'shell32\.dll,167'
         }
@@ -199,7 +209,7 @@ Describe "update-winget-packages-create-start-menu-shortcut Script Tests" {
     Context "Shortcut Persistence" {
         It "Should save shortcut to disk" {
             $content = Get-Content -Path $scriptPath -Raw
-            $content | Should -Match '\$lnk\.Save\(\)'
+            $content | Should -Match '\$lnk\d+\.Save\(\)'
         }
     }
 
@@ -214,7 +224,7 @@ Describe "update-winget-packages-create-start-menu-shortcut Script Tests" {
 
         It "Should include shortcut path in output" {
             $content = Get-Content -Path $scriptPath -Raw
-            $content | Should -Match 'Write-Output.*\$lnkPath'
+            $content | Should -Match 'Write-Output.*\$lnk\d+Path'
         }
     }
 
@@ -230,10 +240,10 @@ Describe "update-winget-packages-create-start-menu-shortcut Script Tests" {
             Split-Path -Path $scriptPath -Parent | Should -Match 'patching'
         }
 
-        It "Should reference Update-WingetPackages.ps1 in same directory" {
-            $mainScript = Join-Path -Path $scriptDir -ChildPath 'Update-WingetPackages.ps1'
+        It "Should reference update-winget-packages.ps1 in same directory" {
+            $mainScript = Join-Path -Path $scriptDir -ChildPath 'update-winget-packages.ps1'
             $content = Get-Content -Path $scriptPath -Raw
-            $content | Should -Match 'Update-WingetPackages\.ps1'
+            $content | Should -Match 'update-winget-packages\.ps1'
         }
     }
 
@@ -286,7 +296,7 @@ Describe "update-winget-packages-create-start-menu-shortcut Script Tests" {
         It "Should use Windows shell shortcut creation method" {
             $content = Get-Content -Path $scriptPath -Raw
             # CreateShortcut is the standard WScript.Shell method
-            $content | Should -Match 'CreateShortcut\(\$lnkPath\)'
+            $content | Should -Match 'CreateShortcut\(\$lnk\d+Path\)'
         }
     }
 
@@ -322,8 +332,8 @@ Describe "update-winget-packages-create-start-menu-shortcut Script Tests" {
     Context "Shortcut Functionality" {
         It "Should create executable shortcut" {
             $content = Get-Content -Path $scriptPath -Raw
-            # Has TargetPath (executable)
-            $content | Should -Match '\$lnk\.TargetPath\s*=\s*\$ps'
+            # Has TargetPath (executable) - now using $lnk1 for first shortcut
+            $content | Should -Match '\$lnk1\.TargetPath\s*=\s*\$ps'
             # Has Arguments
             $content | Should -Match 'Arguments'
         }
