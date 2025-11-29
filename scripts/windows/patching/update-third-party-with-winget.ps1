@@ -31,12 +31,16 @@ param(
     [string]$ConfigPath,
     [ValidateSet('user','machine')]
     [string]$Scope,                  # NOTE: no default; we won't pass --scope unless specified
+    [string]$LogPath,                # Path to log file for output
     [switch]$IncludeUnknown,
     [switch]$StopOnError,
     [switch]$Diagnostics
 )
 
 # ---------------- Utilities ----------------
+# Script-level variable to hold log file path
+$script:LogFile = $null
+
 function Write-LogMessage {
     param(
         [Parameter(Mandatory)][string]$Message,
@@ -45,6 +49,15 @@ function Write-LogMessage {
     $ts = (Get-Date).ToString('yyyy-MM-dd HH:mm:ss')
     $line = "[$ts][$Level] $Message"
     Write-Output $line
+    
+    # Also write to log file if specified
+    if ($script:LogFile) {
+        try {
+            $line | Out-File -LiteralPath $script:LogFile -Append -Encoding UTF8
+        } catch {
+            # Silently ignore log file errors to not break execution
+        }
+    }
 }
 
 function FirstNotNullOrEmpty {
@@ -245,6 +258,17 @@ function Get-WingetUpgradeList {
 $ScriptDir = if ($PSScriptRoot) { $PSScriptRoot }
 elseif ($MyInvocation.MyCommand.Path) { Split-Path -LiteralPath $MyInvocation.MyCommand.Path -Parent }
 else { (Get-Location).Path }
+
+# Initialize log file if LogPath is specified
+if (-not [string]::IsNullOrWhiteSpace($LogPath)) {
+    $script:LogFile = $LogPath
+    # Ensure log directory exists
+    $logDir = Split-Path -LiteralPath $LogPath -Parent
+    if ($logDir -and -not (Test-Path -LiteralPath $logDir)) {
+        New-Item -ItemType Directory -Path $logDir -Force | Out-Null
+    }
+    Write-LogMessage "Logging to: $LogPath" 'INFO'
+}
 
 if ([string]::IsNullOrWhiteSpace($ConfigPath)) {
     $ConfigPath = Join-Path -Path $ScriptDir -ChildPath 'winget-config.json'
