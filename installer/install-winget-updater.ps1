@@ -98,6 +98,7 @@ $sourceDir = if ($PSScriptRoot) { $PSScriptRoot } else { (Get-Location).Path }
 Write-Host "`nCopying script files..." -ForegroundColor Cyan
 $filesToCopy = @(
     'update-winget-packages.ps1',
+    'update-third-party-with-winget.ps1',
     'update-winget-packages-create-start-menu-shortcut.ps1',
     'winget-config.json',
     'uninstall-winget-updater.ps1'

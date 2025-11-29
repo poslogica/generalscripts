@@ -107,6 +107,7 @@ try {
     # Copy script files (from patching directory)
     $scriptFiles = @(
         'update-winget-packages.ps1',
+        'update-third-party-with-winget.ps1',
         'update-winget-packages-create-start-menu-shortcut.ps1',
         'winget-config.json'
     )
