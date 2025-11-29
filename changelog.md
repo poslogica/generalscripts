@@ -2,6 +2,10 @@
 
 ## 2025-11-29
 
+- [`1f06268`](https://github.com/poslogica/generalscripts/commit/1f06268824e079bc27ed77f5024abe97275c7dcc) **Improve table parser to filter out invalid/garbage lines - Add pattern to stop at 'N upgrades available' summary line - Require package ID to be at least 2 chars and contain alphanumeric - Require package name to be at least 2 chars - Require available version to exist (upgrade candidates must have a target version) - Prevents garbage like empty entries or summary text fragments from being queued**
+  *by poslogica*
+- [`f6d9382`](https://github.com/poslogica/generalscripts/commit/f6d938218a62c369cc6c00c9ea84fd22f1a45b0e) **chore: update change logs [skip ci]**
+  *by github-actions[bot]*
 - [`543e5e1`](https://github.com/poslogica/generalscripts/commit/543e5e1a317eab03249d96be3d8ad74d0f10dd83) **Fix Write-Log function name to Write-LogMessage - Fixed 7 instances where Write-Log was used instead of Write-LogMessage - The function is defined as Write-LogMessage but was incorrectly called as Write-Log - Affected upgrade loop: WhatIf, Upgrading, Retry, and Success/Failed messages**
   *by poslogica*
 - [`3463446`](https://github.com/poslogica/generalscripts/commit/34634461a5eec72d08915dc800abffb87da0bd35) **Update documentation with new log file location - INSTALL.md: Document logs stored in C:\ProgramData\WingetUpdater\logs - Separate scripts/config path from log files path in documentation - Update troubleshooting section with correct log path**

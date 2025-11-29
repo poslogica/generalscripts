@@ -1,6 +1,14 @@
 Change Logs - 2025-11-29
 ==================================================
 2025-11-29
+- Improve table parser to filter out invalid/garbage lines
+
+- Add pattern to stop at 'N upgrades available' summary line
+- Require package ID to be at least 2 chars and contain alphanumeric
+- Require package name to be at least 2 chars
+- Require available version to exist (upgrade candidates must have a target version)
+- Prevents garbage like empty entries or summary text fragments from being queued (by poslogica)
+- chore: update change logs [skip ci] (by github-actions[bot])
 - Fix Write-Log function name to Write-LogMessage
 
 - Fixed 7 instances where Write-Log was used instead of Write-LogMessage
