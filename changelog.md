@@ -2,6 +2,10 @@
 
 ## 2025-11-29
 
+- [`b79017c`](https://github.com/poslogica/generalscripts/commit/b79017cf4b2d8ef1fe05bdc25a7268d446898dd4) **Fix Split-Path parameter compatibility for PowerShell 7 - Change Split-Path -LiteralPath to -Path when used with -Parent - PowerShell 7 has stricter parameter set validation - Affects ScriptDir resolution and log directory creation**
+  *by poslogica*
+- [`6a5b308`](https://github.com/poslogica/generalscripts/commit/6a5b30871c4b5b19390973421d753915b38e5707) **chore: update change logs [skip ci]**
+  *by github-actions[bot]*
 - [`8307cc6`](https://github.com/poslogica/generalscripts/commit/8307cc66041bc8351d45ef550b64f95d24ffc4bf) **Fix JSON output detection for winget versions - Change version check from v1.4+ to v1.6+ (--output flag added later) - Add runtime detection for 'Argument name was not recognized' error - Properly fall back to table parsing when JSON flag is not supported - Fixes issue where winget v1.12 doesn't support --output json on upgrade command**
   *by poslogica*
 - [`9209a82`](https://github.com/poslogica/generalscripts/commit/9209a82e2c027a7cdabc270f8857614477c21b80) **chore: update change logs [skip ci]**

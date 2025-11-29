@@ -1,6 +1,12 @@
 Change Logs - 2025-11-29
 ==================================================
 2025-11-29
+- Fix Split-Path parameter compatibility for PowerShell 7
+
+- Change Split-Path -LiteralPath to -Path when used with -Parent
+- PowerShell 7 has stricter parameter set validation
+- Affects ScriptDir resolution and log directory creation (by poslogica)
+- chore: update change logs [skip ci] (by github-actions[bot])
 - Fix JSON output detection for winget versions
 
 - Change version check from v1.4+ to v1.6+ (--output flag added later)
