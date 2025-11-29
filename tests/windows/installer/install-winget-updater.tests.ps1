@@ -99,11 +99,6 @@ Describe 'install-winget-updater.ps1' {
             $param | Should -Not -BeNullOrEmpty
         }
         
-        It 'Should have PinToTaskbar parameter' {
-            $param = $script:Parameters | Where-Object { $_.Name.VariablePath.UserPath -eq 'PinToTaskbar' }
-            $param | Should -Not -BeNullOrEmpty
-        }
-        
         It 'Should have Force parameter' {
             $param = $script:Parameters | Where-Object { $_.Name.VariablePath.UserPath -eq 'Force' }
             $param | Should -Not -BeNullOrEmpty

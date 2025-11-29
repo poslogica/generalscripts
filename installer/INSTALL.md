@@ -65,14 +65,6 @@ Whether to create a Start Menu shortcut for manual execution.
 - **Default**: `$true`
 - **Example**: `-CreateStartMenuShortcut $false`
 
-### `-PinToTaskbar`
-
-Whether to pin the shortcut to the Windows taskbar.
-
-- **Default**: `$false`
-- **Example**: `-PinToTaskbar $true`
-- **Note**: May not work on all Windows versions due to security restrictions
-
 ### `-Force`
 
 Skip confirmation prompts and overwrite existing installation.

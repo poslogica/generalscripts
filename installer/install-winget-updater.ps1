@@ -25,10 +25,6 @@
     .PARAMETER CreateStartMenuShortcut
     If $true, creates a Start Menu shortcut for manual execution. Defaults to $true
 
-    .PARAMETER PinToTaskbar
-    If $true, attempts to pin the shortcut to the taskbar. Defaults to $false.
-    Note: May not work on all Windows versions due to security restrictions.
-
     .PARAMETER Force
     If $true, overwrites existing installation without prompting. Defaults to $false
 
@@ -67,9 +63,6 @@ param(
 
     [Parameter(Mandatory = $false)]
     [bool]$CreateStartMenuShortcut = $true,
-
-    [Parameter(Mandatory = $false)]
-    [bool]$PinToTaskbar = $false,
 
     [Parameter(Mandatory = $false)]
     [switch]$Force
@@ -200,44 +193,6 @@ if ($CreateStartMenuShortcut) {
         }
         catch {
             Write-Warning "Shortcut creation failed: $_"
-        }
-    }
-}
-
-# Pin to Taskbar (optional)
-if ($PinToTaskbar) {
-    Write-Host "`nPinning to taskbar..." -ForegroundColor Cyan
-    if ($PSCmdlet.ShouldProcess('Taskbar', 'Pin shortcut')) {
-        try {
-            $shortcutPath = "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Update Winget Packages.lnk"
-            if (Test-Path -Path $shortcutPath) {
-                # Method 1: Use Shell.Application verb (works on some Windows versions)
-                $shell = New-Object -ComObject Shell.Application
-                $folder = $shell.Namespace((Split-Path $shortcutPath -Parent))
-                $item = $folder.ParseName((Split-Path $shortcutPath -Leaf))
-                $verb = $item.Verbs() | Where-Object { $_.Name -match 'pin.*taskbar|An Taskleiste anheften' }
-                if ($verb) {
-                    $verb.DoIt()
-                    Write-Host '✓ Pinned to taskbar' -ForegroundColor Green
-                }
-                else {
-                    # Method 2: Copy to User Pinned TaskBar folder (fallback)
-                    $taskbarPath = "$env:APPDATA\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar"
-                    if (Test-Path -Path $taskbarPath) {
-                        Copy-Item -Path $shortcutPath -Destination $taskbarPath -Force
-                        Write-Host '✓ Added to taskbar folder (restart Explorer to see)' -ForegroundColor Yellow
-                    }
-                    else {
-                        Write-Warning 'Taskbar pinning not available on this Windows version'
-                    }
-                }
-            }
-            else {
-                Write-Warning 'Cannot pin to taskbar: Start Menu shortcut not found'
-            }
-        }
-        catch {
-            Write-Warning "Taskbar pinning failed: $_"
         }
     }
 }
