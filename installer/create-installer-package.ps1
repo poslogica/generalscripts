@@ -109,6 +109,7 @@ try {
         'update-winget-packages.ps1',
         'update-third-party-with-winget.ps1',
         'update-winget-packages-create-start-menu-shortcut.ps1',
+        'update-winget-updater.ps1',
         'winget-config.json'
     )
     foreach ($file in $scriptFiles) {
@@ -121,6 +122,10 @@ try {
             Write-Warning "  ! Missing: $file"
         }
     }
+
+    # Create VERSION file in package
+    $Version | Out-File -FilePath (Join-Path $packageDir 'VERSION') -Encoding UTF8 -NoNewline
+    Write-Host "  ✓ Added: VERSION ($Version)"
 
     # Create quick start README
     $readmeText = @"

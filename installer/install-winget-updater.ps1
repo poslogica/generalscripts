@@ -107,6 +107,7 @@ $filesToCopy = @(
     'update-winget-packages.ps1',
     'update-third-party-with-winget.ps1',
     'update-winget-packages-create-start-menu-shortcut.ps1',
+    'update-winget-updater.ps1',
     'winget-config.json',
     'uninstall-winget-updater.ps1'
 )
@@ -122,6 +123,36 @@ foreach ($file in $filesToCopy) {
     else {
         Write-Warning "File not found: $sourcePath"
     }
+}
+
+# Create VERSION file from VERSION file in source or git tag
+Write-Host "`nWriting version information..." -ForegroundColor Cyan
+$versionFile = Join-Path $InstallPath 'VERSION'
+$version = $null
+
+# Try to read VERSION file from source directory
+$sourceVersionFile = Join-Path $sourceDir 'VERSION'
+if (Test-Path $sourceVersionFile) {
+    $version = (Get-Content $sourceVersionFile -Raw).Trim()
+}
+
+# Fallback: try parent directory (for installer package structure)
+if (-not $version) {
+    $parentVersionFile = Join-Path (Split-Path $sourceDir -Parent) 'VERSION'
+    if (Test-Path $parentVersionFile) {
+        $version = (Get-Content $parentVersionFile -Raw).Trim()
+    }
+}
+
+# Fallback: use date-based version
+if (-not $version) {
+    $version = "0.0.0-$(Get-Date -Format 'yyyyMMdd')"
+    Write-Host "  Using fallback version: $version" -ForegroundColor Yellow
+}
+
+if ($PSCmdlet.ShouldProcess($versionFile, 'Write version')) {
+    $version | Out-File -FilePath $versionFile -Encoding UTF8 -NoNewline
+    Write-Host "✓ Version: $version" -ForegroundColor Green
 }
 
 # Create scheduled task

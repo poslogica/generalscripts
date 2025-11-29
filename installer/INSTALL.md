@@ -98,6 +98,7 @@ Skip confirmation prompts and overwrite existing installation.
 ✓ Start Menu shortcut for manual execution
 ✓ Comprehensive logging
 ✓ Easy uninstall
+✓ Auto-update capability (checks GitHub releases)
 
 ### Default Location
 
@@ -107,7 +108,9 @@ Skip confirmation prompts and overwrite existing installation.
 C:\Program Files\WingetUpdater\
 ├── update-winget-packages.ps1
 ├── update-winget-packages-create-start-menu-shortcut.ps1
+├── update-winget-updater.ps1
 ├── winget-config.json
+├── VERSION
 └── uninstall-winget-updater.ps1
 ```
 
@@ -154,6 +157,27 @@ C:\Program Files\WingetUpdater\uninstall-winget-updater.ps1 -KeepLogs -KeepConfi
 
 # Silent uninstall
 C:\Program Files\WingetUpdater\uninstall-winget-updater.ps1 -Force
+```
+
+### Update Winget Updater
+
+The updater includes a self-update feature that checks GitHub releases:
+
+```powershell
+# Check for updates only (doesn't install)
+C:\Program Files\WingetUpdater\update-winget-updater.ps1 -CheckOnly
+
+# Update to latest version
+C:\Program Files\WingetUpdater\update-winget-updater.ps1
+
+# Force update even if same version
+C:\Program Files\WingetUpdater\update-winget-updater.ps1 -Force
+
+# Include pre-release versions
+C:\Program Files\WingetUpdater\update-winget-updater.ps1 -PreRelease
+
+# Silent update
+C:\Program Files\WingetUpdater\update-winget-updater.ps1 -Silent
 ```
 
 Or manually:
