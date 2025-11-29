@@ -19,6 +19,11 @@ This directory contains PowerShell scripts for managing software updates and pat
   - Wrapper script with auto-elevation and logging
   - Simplified interface for basic package updates
 
+- **[update-winget-updater.ps1](./update-winget-updater.ps1)**
+  - Self-update script that checks GitHub releases for newer versions
+  - Supports `-CheckOnly`, `-Force`, and `-PreRelease` modes
+  - Uses GitHub API (public, no authentication required)
+
 - **[update-winget-packages-create-start-menu-shortcut.ps1](./update-winget-packages-create-start-menu-shortcut.ps1)**
   - Creates Start Menu shortcuts for quick access to winget update functionality
 

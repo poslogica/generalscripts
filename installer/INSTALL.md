@@ -98,7 +98,7 @@ Skip confirmation prompts and overwrite existing installation.
 ✓ Start Menu shortcut for manual execution
 ✓ Comprehensive logging
 ✓ Easy uninstall
-✓ Auto-update capability (checks GitHub releases)
+✓ **Auto-update capability** (checks GitHub releases - can be disabled)
 
 ### Default Location
 
@@ -161,24 +161,38 @@ C:\Program Files\WingetUpdater\uninstall-winget-updater.ps1 -Force
 
 ### Update Winget Updater
 
-The updater includes a self-update feature that checks GitHub releases:
+The updater includes a **self-update feature** that checks GitHub releases for newer versions.
+
+> ⚠️ **Privacy Notice**: The auto-update feature connects to `api.github.com` to check for new releases. No personal data is collected or transmitted. You can disable this feature (see below).
 
 ```powershell
 # Check for updates only (doesn't install)
-C:\Program Files\WingetUpdater\update-winget-updater.ps1 -CheckOnly
+& "C:\Program Files\WingetUpdater\update-winget-updater.ps1" -CheckOnly
 
 # Update to latest version
-C:\Program Files\WingetUpdater\update-winget-updater.ps1
+& "C:\Program Files\WingetUpdater\update-winget-updater.ps1"
 
 # Force update even if same version
-C:\Program Files\WingetUpdater\update-winget-updater.ps1 -Force
+& "C:\Program Files\WingetUpdater\update-winget-updater.ps1" -Force
 
 # Include pre-release versions
-C:\Program Files\WingetUpdater\update-winget-updater.ps1 -PreRelease
-
-# Silent update
-C:\Program Files\WingetUpdater\update-winget-updater.ps1 -Silent
+& "C:\Program Files\WingetUpdater\update-winget-updater.ps1" -PreRelease
 ```
+
+#### Disable Auto-Update
+
+To **opt out** of auto-updates, edit `winget-config.json` and set:
+
+```json
+{
+  "AutoUpdate": {
+    "Enabled": false
+  }
+}
+```
+
+When disabled, running the update script will show a message and exit without checking GitHub.
+You can still force an update with the `-Force` parameter.
 
 Or manually:
 

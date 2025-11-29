@@ -4,5 +4,11 @@
 
   "ExcludeIds":       [ "Anaconda.*", "Mega.MEGASync" ],
   "ExcludeNames":     [ "Anaconda3*", "MEGASync" ],
-  "ExcludeSources":   []
+  "ExcludeSources":   [],
+
+  "AutoUpdate": {
+    "Enabled": true,
+    "CheckOnRun": false,
+    "IncludePreRelease": false
+  }
 }

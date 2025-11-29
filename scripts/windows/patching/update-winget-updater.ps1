@@ -61,8 +61,43 @@ $GitHubOwner = 'poslogica'
 $GitHubRepo = 'generalscripts'
 $GitHubApiBase = "https://api.github.com/repos/$GitHubOwner/$GitHubRepo"
 
-# Version file in install directory
+# Version file and config in install directory
 $VersionFile = Join-Path $InstallPath 'VERSION'
+$ConfigFile = Join-Path $InstallPath 'winget-config.json'
+
+function Get-AutoUpdateConfig {
+    <#
+    .SYNOPSIS
+        Reads auto-update settings from winget-config.json
+    #>
+    $defaults = @{
+        Enabled = $true
+        CheckOnRun = $false
+        IncludePreRelease = $false
+    }
+    
+    if (Test-Path $ConfigFile) {
+        try {
+            $config = Get-Content $ConfigFile -Raw | ConvertFrom-Json
+            if ($config.AutoUpdate) {
+                if ($null -ne $config.AutoUpdate.Enabled) {
+                    $defaults.Enabled = $config.AutoUpdate.Enabled
+                }
+                if ($null -ne $config.AutoUpdate.CheckOnRun) {
+                    $defaults.CheckOnRun = $config.AutoUpdate.CheckOnRun
+                }
+                if ($null -ne $config.AutoUpdate.IncludePreRelease) {
+                    $defaults.IncludePreRelease = $config.AutoUpdate.IncludePreRelease
+                }
+            }
+        }
+        catch {
+            Write-Status "Warning: Could not read config file, using defaults" 'WARN'
+        }
+    }
+    
+    return $defaults
+}
 
 function Write-Status {
     param([string]$Message, [string]$Type = 'INFO')
@@ -237,6 +272,20 @@ if (-not (Test-Path $InstallPath)) {
     Write-Status "Winget Updater is not installed at $InstallPath" 'ERROR'
     Write-Status "Run the installer first, or specify the correct -InstallPath" 'INFO'
     exit 1
+}
+
+# Check auto-update configuration
+$autoUpdateConfig = Get-AutoUpdateConfig
+if (-not $autoUpdateConfig.Enabled -and -not $Force) {
+    Write-Status "Auto-update is disabled in configuration" 'INFO'
+    Write-Status "To enable: Edit winget-config.json and set AutoUpdate.Enabled = true" 'INFO'
+    Write-Status "To override: Run with -Force parameter" 'INFO'
+    exit 0
+}
+
+# Use config for PreRelease if not explicitly set via parameter
+if (-not $PSBoundParameters.ContainsKey('PreRelease') -and $autoUpdateConfig.IncludePreRelease) {
+    $PreRelease = [switch]$true
 }
 
 # Get current installed version

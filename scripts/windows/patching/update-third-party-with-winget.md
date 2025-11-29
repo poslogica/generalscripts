@@ -67,8 +67,28 @@ Wildcards are supported in *Id* and *Name* lists (PowerShell `-like` semantics).
 **Rules**
 - If any `IncludeOnly*` list has entries, only matching apps are considered.
 - Then exclusions are applied.
-- `ExcludeSources` filters by the package’s source (exact string).
+- `ExcludeSources` filters by the package's source (exact string).
 - Pinned apps (if winget reports as pinned) are skipped.
+
+### Auto-Update Settings (Optional)
+
+The Winget Updater includes a self-update feature. Add to your config to control it:
+
+```json
+{
+  "AutoUpdate": {
+    "Enabled": true,
+    "CheckOnRun": false,
+    "IncludePreRelease": false
+  }
+}
+```
+
+| Setting | Default | Description |
+|---------|---------|-------------|
+| `Enabled` | `true` | Set to `false` to disable auto-update functionality |
+| `CheckOnRun` | `false` | If `true`, checks for script updates on each run |
+| `IncludePreRelease` | `false` | If `true`, includes pre-release versions |
 
 ---
 

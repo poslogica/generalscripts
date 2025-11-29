@@ -316,6 +316,10 @@ https://github.com/poslogica/generalscripts
 Write-Host "`n=== Installation Complete ===" -ForegroundColor Green
 Write-Host "`nLocation: $InstallPath" -ForegroundColor Green
 Write-Host "Schedule: $ScheduleFrequency at $ScheduleTime" -ForegroundColor Green
+Write-Host "`n📦 Auto-Update Feature:" -ForegroundColor Cyan
+Write-Host "   This installation includes a self-update script that can check GitHub for newer versions."
+Write-Host "   • To check for updates:  & `"$InstallPath\update-winget-updater.ps1`" -CheckOnly"
+Write-Host "   • To disable auto-update: Edit winget-config.json and set AutoUpdate.Enabled = false"
 Write-Host "`nNext Steps:" -ForegroundColor Cyan
 Write-Host "1. Review: $InstallPath\winget-config.json"
 Write-Host "2. Logs: $InstallPath\logs"
