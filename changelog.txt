@@ -1,6 +1,13 @@
 Change Logs - 2025-11-29
 ==================================================
 2025-11-29
+- feat: Add Documentation URL shortcut to IT Automation menu
+
+- Add third shortcut to Start Menu that opens project documentation
+- Creates Documentation.url file pointing to GitHub README
+- Uses Windows Internet Shortcut format for browser integration
+- Update script description to document all three shortcuts (by poslogica)
+- chore: update change logs [skip ci] (by github-actions[bot])
 - refactor: Remove PinToTaskbar feature
 
 The taskbar pinning feature was unreliable across Windows versions

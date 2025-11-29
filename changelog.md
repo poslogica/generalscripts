@@ -2,6 +2,10 @@
 
 ## 2025-11-29
 
+- [`264f3cd`](https://github.com/poslogica/generalscripts/commit/264f3cd00437b622b850b92edff6d84707f9a287) **feat: Add Documentation URL shortcut to IT Automation menu - Add third shortcut to Start Menu that opens project documentation - Creates Documentation.url file pointing to GitHub README - Uses Windows Internet Shortcut format for browser integration - Update script description to document all three shortcuts**
+  *by poslogica*
+- [`d4e29e9`](https://github.com/poslogica/generalscripts/commit/d4e29e91e3bdf5cf021da9705927fc72f9d1208e) **chore: update change logs [skip ci]**
+  *by github-actions[bot]*
 - [`c000971`](https://github.com/poslogica/generalscripts/commit/c000971bd3e50ab23438ea21c9100632a43ddbcb) **refactor: Remove PinToTaskbar feature The taskbar pinning feature was unreliable across Windows versions and added unnecessary complexity. Removed from: - install-winget-updater.ps1 (parameter and code) - INSTALL.md (documentation) - Tests (parameter check)**
   *by poslogica*
 - [`9609a71`](https://github.com/poslogica/generalscripts/commit/9609a71c49845a6ebb6dc0972ebce7edfe0f1cec) **chore: update change logs [skip ci]**
