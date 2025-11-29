@@ -1,6 +1,8 @@
 Change Logs - 2025-11-29
 ==================================================
 2025-11-29
+- docs: Add GitHub API rate limit note to update-winget-updater.ps1 (by poslogica)
+- chore: update change logs [skip ci] (by github-actions[bot])
 - feat: Add auto-update opt-out and improve transparency
 
 - Add AutoUpdate config section to winget-config.json

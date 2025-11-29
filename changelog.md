@@ -2,6 +2,10 @@
 
 ## 2025-11-29
 
+- [`8073c4a`](https://github.com/poslogica/generalscripts/commit/8073c4aa76db3ec54a8f6cbf689dda2f602bf228) **docs: Add GitHub API rate limit note to update-winget-updater.ps1**
+  *by poslogica*
+- [`441ed81`](https://github.com/poslogica/generalscripts/commit/441ed8103adec1cee9df13dca38113ab4439ab92) **chore: update change logs [skip ci]**
+  *by github-actions[bot]*
 - [`fa44ecf`](https://github.com/poslogica/generalscripts/commit/fa44ecfc7a86125bebf145527f5c3a44093e593e) **feat: Add auto-update opt-out and improve transparency - Add AutoUpdate config section to winget-config.json - Update update-winget-updater.ps1 to respect Enabled setting - Update documentation with clear auto-update disclosure - Add update-winget-updater.ps1 to README.md**
   *by poslogica*
 - [`dddd24a`](https://github.com/poslogica/generalscripts/commit/dddd24ac45e2dbc049e7fb3b4c12cf9e944c3e79) **chore: update change logs [skip ci]**
