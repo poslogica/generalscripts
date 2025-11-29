@@ -1,6 +1,16 @@
 Change Logs - 2025-11-29
 ==================================================
 2025-11-29
+- fix: improve winget output parsing for older versions
+
+- Check winget version before attempting JSON output (requires v1.4+)
+- Skip JSON parsing attempts on older winget versions (like v1.12.x)
+- Add proper handling for 'no packages available' message
+- Improve error messages with suggestion to use -Diagnostics
+- Return empty array instead of throwing when no upgrades found
+
+Fixes error: 'Failed to parse winget output (JSON and table fallback)' (by poslogica)
+- chore: update change logs [skip ci] (by github-actions[bot])
 - fix: update test to match new help documentation format
 
 The update-winget-packages.ps1 script was updated to use proper .SYNOPSIS format

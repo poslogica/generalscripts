@@ -2,6 +2,10 @@
 
 ## 2025-11-29
 
+- [`f591d0c`](https://github.com/poslogica/generalscripts/commit/f591d0cbf27c736cd79d794c723bda6a39964e5a) **fix: improve winget output parsing for older versions - Check winget version before attempting JSON output (requires v1.4+) - Skip JSON parsing attempts on older winget versions (like v1.12.x) - Add proper handling for 'no packages available' message - Improve error messages with suggestion to use -Diagnostics - Return empty array instead of throwing when no upgrades found Fixes error: 'Failed to parse winget output (JSON and table fallback)'**
+  *by poslogica*
+- [`7736fa3`](https://github.com/poslogica/generalscripts/commit/7736fa3c3fb366b193fb0371b922a7b6d038546e) **chore: update change logs [skip ci]**
+  *by github-actions[bot]*
 - [`8d45aff`](https://github.com/poslogica/generalscripts/commit/8d45aff2140282b6f0260ae4aa52262b33c6147b) **fix: update test to match new help documentation format The update-winget-packages.ps1 script was updated to use proper .SYNOPSIS format instead of informal 'Purpose:' comment. Updated test to match.**
   *by poslogica*
 - [`431d3f4`](https://github.com/poslogica/generalscripts/commit/431d3f443f73a441594bb6b12616e43509271432) **feat: add PinToTaskbar parameter to installer - Add -PinToTaskbar parameter (defaults to false, opt-in) - Use Shell.Application verb method for pinning (primary) - Fallback to copying shortcut to TaskBar folder - Add test for new parameter - Update INSTALL.md documentation Note: Windows 10 1809+ and Windows 11 may restrict programmatic pinning**
