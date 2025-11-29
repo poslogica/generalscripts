@@ -1,7 +1,23 @@
-# Change Logs - 2025-11-28
+# Change Logs - 2025-11-29
+
+## 2025-11-29
+
+- [`8d45aff`](https://github.com/poslogica/generalscripts/commit/8d45aff2140282b6f0260ae4aa52262b33c6147b) **fix: update test to match new help documentation format The update-winget-packages.ps1 script was updated to use proper .SYNOPSIS format instead of informal 'Purpose:' comment. Updated test to match.**
+  *by poslogica*
+- [`431d3f4`](https://github.com/poslogica/generalscripts/commit/431d3f443f73a441594bb6b12616e43509271432) **feat: add PinToTaskbar parameter to installer - Add -PinToTaskbar parameter (defaults to false, opt-in) - Use Shell.Application verb method for pinning (primary) - Fallback to copying shortcut to TaskBar folder - Add test for new parameter - Update INSTALL.md documentation Note: Windows 10 1809+ and Windows 11 may restrict programmatic pinning**
+  *by poslogica*
+- [`72338a5`](https://github.com/poslogica/generalscripts/commit/72338a53c36dcd5fe87c758076d7f60f94698c4d) **fix: add missing update-third-party-with-winget.ps1 to installer package - Add to install-winget-updater.ps1 file copy list - Add to create-installer-package.ps1 script files list This script is required by update-winget-packages.ps1 which calls it as the main update engine. Users were getting errors about missing thirdparty scripts.**
+  *by poslogica*
+- [`d4d2aae`](https://github.com/poslogica/generalscripts/commit/d4d2aae4634fd97e2e3ee3d5d5cf74c052e9dfbe) **docs: standardize PowerShell comment-based help format across scripts - Fix update-winget-packages.ps1: Convert informal comments to proper .SYNOPSIS/.DESCRIPTION/.PARAMETER/.EXAMPLE/.NOTES/.LINK format - Fix update-third-party-with-winget.ps1: Change 'Notes:' to proper .NOTES section, add .LINK - Fix update-winget-packages-create-start-menu-shortcut.ps1: Update .NOTES with correct requirements, add .LINK - Clarify PowerShell 5.1+ requirement for patching scripts (not pwsh-specific)**
+  *by poslogica*
+- [`c381a23`](https://github.com/poslogica/generalscripts/commit/c381a23f5ff7ad77d981b605158ce058362607ab) **docs: clarify PowerShell 7 (pwsh) requirement for installer - Update install-winget-updater.bat to check for pwsh and show error with download link if missing - Change batch file to use pwsh.exe instead of powershell.exe - Update .NOTES in install-winget-updater.ps1 to specify pwsh requirement - Update installer/README.md and INSTALL.md with clear warnings about pwsh - Update main README.md requirements section Fixes issue where end users ran installer with Windows PowerShell 5.1 instead of PowerShell 7**
+  *by poslogica*
+
 
 ## 2025-11-28
 
+- [`442f3c1`](https://github.com/poslogica/generalscripts/commit/442f3c1964dcb6c185a16d3b6e761112ea66e289) **chore: update change logs [skip ci]**
+  *by github-actions[bot]*
 - [`203a707`](https://github.com/poslogica/generalscripts/commit/203a7074bf91ee2e2e7a3035b997c2ff167d7b53) **test: Add comprehensive tests for installer scripts New test files (104 tests total): - install-winget-updater.tests.ps1 (35 tests) - uninstall-winget-updater.tests.ps1 (35 tests) - create-installer-package.tests.ps1 (34 tests) Tests cover: - Script file validation and syntax - Parameter definitions and validation - Script structure and required functionality - Output and error handling Also: - Update run-tests.ps1 to include installer scripts in coverage - Update README.md with new test counts (254 total)**
   *by poslogica*
 - [`3a66cf6`](https://github.com/poslogica/generalscripts/commit/3a66cf6b61ec74f57810aeb0ac032f26ded4004b) **docs: Fix markdown files for accuracy and consistency README.md: - Remove broken link to deleted patch-software-windows.ps1 - Standardize test count to 150 across all references VERSION-MANAGEMENT.md: - Update to reflect GitHub tag-based versioning (no longer VERSION file) - Add instructions for manual version bumps via releases - Update troubleshooting for new versioning approach GITHUB-ACTIONS-INSTALLER.md: - Update workflow triggers (now uses workflow_run, not push) - Add uninstall-winget-updater.ps1 to ZIP contents - Update release naming to semantic versioning format - Fix artifact naming pattern installer/README.md: - Update uninstall feature description - Update version and date scripts/windows/patching/README.md: - Fix shortcut script test count (46, not 48)**
