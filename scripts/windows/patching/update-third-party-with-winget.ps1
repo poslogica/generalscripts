@@ -157,52 +157,67 @@ function Get-WingetUpgradeTableParsed {
 }
 
 # Run winget and return upgrades (array of objects).
-# 1) Try:   winget list --upgrade-available --output json
-# 2) Try:   winget upgrade --output json (sanitize)
-# 3) Parse: winget upgrade (table)
+# 1) Try:   winget upgrade --output json (newer winget v1.4+)
+# 2) Try:   winget list --upgrade-available --output json
+# 3) Parse: winget upgrade (table fallback for older winget versions)
 function Get-WingetUpgradeList {
     param([switch]$IncludeUnknown, [string]$DiagPath)
 
-    # Attempt 1: cleaner JSON
-    $argsList = @('list','--upgrade-available','--accept-source-agreements','--disable-interactivity','--output','json')
-    $rawList  = & winget @argsList 2>&1
-    $rawListText = ($rawList | Out-String)
-    if ($DiagPath) { $rawListText | Out-File -LiteralPath (Join-Path $DiagPath 'winget-list-upgrade-raw.json.txt') -Encoding UTF8 }
-
+    # Check winget version to decide strategy
+    $wingetVersion = $null
     try {
-        $parsed = $rawListText | ConvertFrom-Json
-        if ($parsed) { return $parsed }
-    } catch {
-        Write-LogMessage "Failed to parse initial JSON list: $($_.Exception.Message)" 'DEBUG'
-    }
+        $versionOutput = & winget --version 2>&1
+        if ($versionOutput -match 'v?(\d+)\.(\d+)') {
+            $wingetVersion = [version]"$($Matches[1]).$($Matches[2]).0"
+        }
+    } catch { }
+    
+    $supportsJson = $wingetVersion -and $wingetVersion -ge [version]"1.4.0"
+    
+    if ($supportsJson) {
+        # Attempt 1: cleaner JSON from list command
+        $argsList = @('list','--upgrade-available','--accept-source-agreements','--disable-interactivity','--output','json')
+        $rawList  = & winget @argsList 2>&1
+        $rawListText = ($rawList | Out-String)
+        if ($DiagPath) { $rawListText | Out-File -LiteralPath (Join-Path $DiagPath 'winget-list-upgrade-raw.json.txt') -Encoding UTF8 }
 
-    # Attempt 2: upgrade JSON (sanitize if needed)
-    $argsUpgJson = @('upgrade','--accept-source-agreements','--disable-interactivity','--output','json')
-    if ($IncludeUnknown) { $argsUpgJson += '--include-unknown' }
-
-    $raw = & winget @argsUpgJson 2>&1
-    $rawText = ($raw | Out-String)
-    if ($DiagPath) { $rawText | Out-File -LiteralPath (Join-Path $DiagPath 'winget-upgrade-raw-json.txt') -Encoding UTF8 }
-
-    try {
-        $parsed = $rawText | ConvertFrom-Json
-        if ($parsed) { return $parsed }
-    } catch {
-        Write-LogMessage "Failed to parse upgrade JSON: $($_.Exception.Message)" 'DEBUG'
-    }
-
-    $json = Get-FirstJsonChunk -Text $rawText
-    if ($json) {
-        if ($DiagPath) { $json | Out-File -LiteralPath (Join-Path $DiagPath 'winget-upgrade-sanitized.json') -Encoding UTF8 }
         try {
-            $parsed = $json | ConvertFrom-Json
+            $parsed = $rawListText | ConvertFrom-Json
             if ($parsed) { return $parsed }
         } catch {
-            Write-LogMessage "Failed to parse sanitized JSON: $($_.Exception.Message)" 'DEBUG'
+            Write-LogMessage "Failed to parse initial JSON list: $($_.Exception.Message)" 'DEBUG'
         }
+
+        # Attempt 2: upgrade JSON (sanitize if needed)
+        $argsUpgJson = @('upgrade','--accept-source-agreements','--disable-interactivity','--output','json')
+        if ($IncludeUnknown) { $argsUpgJson += '--include-unknown' }
+
+        $raw = & winget @argsUpgJson 2>&1
+        $rawText = ($raw | Out-String)
+        if ($DiagPath) { $rawText | Out-File -LiteralPath (Join-Path $DiagPath 'winget-upgrade-raw-json.txt') -Encoding UTF8 }
+
+        try {
+            $parsed = $rawText | ConvertFrom-Json
+            if ($parsed) { return $parsed }
+        } catch {
+            Write-LogMessage "Failed to parse upgrade JSON: $($_.Exception.Message)" 'DEBUG'
+        }
+
+        $json = Get-FirstJsonChunk -Text $rawText
+        if ($json) {
+            if ($DiagPath) { $json | Out-File -LiteralPath (Join-Path $DiagPath 'winget-upgrade-sanitized.json') -Encoding UTF8 }
+            try {
+                $parsed = $json | ConvertFrom-Json
+                if ($parsed) { return $parsed }
+            } catch {
+                Write-LogMessage "Failed to parse sanitized JSON: $($_.Exception.Message)" 'DEBUG'
+            }
+        }
+    } else {
+        Write-LogMessage "Winget version $wingetVersion does not support JSON output, using table parsing" 'DEBUG'
     }
 
-    # Attempt 3: table parsing
+    # Attempt 3: table parsing (fallback for older winget or when JSON fails)
     $argsUpgTbl = @('upgrade','--accept-source-agreements','--disable-interactivity')
     if ($IncludeUnknown) { $argsUpgTbl += '--include-unknown' }
 
@@ -210,11 +225,20 @@ function Get-WingetUpgradeList {
     $tblText = ($rawTbl | Out-String)
     if ($DiagPath) { $tblText | Out-File -LiteralPath (Join-Path $DiagPath 'winget-upgrade-raw-table.txt') -Encoding UTF8 }
 
+    # Check for "No packages have available updates" message
+    if ($tblText -match 'No (installed )?packages? (have|found)' -or $tblText -match 'No applicable upgrade found') {
+        Write-LogMessage "No packages have available updates." 'INFO'
+        return @()
+    }
+
     $lines = $tblText -split '\r?\n'
     $parsedTable = Get-WingetUpgradeTableParsed -Lines $lines
-    if ($parsedTable -and $parsedTable.Count -gt 0) { return $parsedTable }
+    if ($null -ne $parsedTable) { return $parsedTable }
 
-    throw "Failed to parse winget output (JSON and table fallback)."
+    # If we get here with no parseable output, show diagnostic info
+    Write-LogMessage "Could not parse winget output. Raw output:" 'WARN'
+    Write-LogMessage $tblText 'DEBUG'
+    throw "Failed to parse winget output (JSON and table fallback). Run with -Diagnostics for more info."
 }
 
 # ---------------- Bootstrap ----------------
