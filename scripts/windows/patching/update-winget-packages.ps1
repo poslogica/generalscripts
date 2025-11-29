@@ -6,7 +6,7 @@
     This script provides a convenient wrapper around Update-ThirdPartyWithWinget.ps1 with
     automatic elevation for machine-scope updates and sensible defaults enabled.
     
-    Defaults: -IncludeUnknown -Diagnostics -LogPath "<scriptdir>\logs\winget-YYYYMMDD-HHMMSS.log"
+    Defaults: -IncludeUnknown -Diagnostics -LogPath "$env:ProgramData\WingetUpdater\logs\winget-YYYYMMDD-HHMMSS.log"
 
 .PARAMETER Scope
     Installation scope for winget updates. 'machine' (default) or 'user'.
@@ -105,7 +105,8 @@ if ($Scope -eq 'machine' -and -not (Test-Admin)) {
 
 # --- Build defaulted arguments for the main script ---
 $ts = Get-Date -Format 'yyyyMMdd-HHmmss'
-$logDir = Join-Path $Here 'logs'
+# Use ProgramData for logs - writable by all users without elevation
+$logDir = Join-Path $env:ProgramData 'WingetUpdater\logs'
 if (!(Test-Path -LiteralPath $logDir)) { New-Item -ItemType Directory -Path $logDir -Force | Out-Null }
 $logPath = Join-Path $logDir ("winget-{0}.log" -f $ts)
 
