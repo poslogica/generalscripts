@@ -1,6 +1,16 @@
 Change Logs - 2025-11-29
 ==================================================
 2025-11-29
+- Add auto-update feature using GitHub releases
+
+- New update-winget-updater.ps1 script checks for updates from GitHub releases
+- Compares installed VERSION against latest GitHub release tag
+- Downloads and extracts new version automatically
+- Backs up existing files before update
+- Supports -Force to skip confirmation, -WhatIf for preview
+- Installer now copies update script and creates VERSION file
+- Updated documentation with auto-update instructions (by poslogica)
+- chore: update change logs [skip ci] (by github-actions[bot])
 - Fix PowerShell 5.1 foreach/continue producing null entries
 
 - In PS 5.1, 'continue' inside foreach expression outputs null to result array
