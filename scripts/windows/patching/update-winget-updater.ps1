@@ -265,7 +265,10 @@ function Install-Update {
 
 # ============== Main Logic ==============
 
-Write-Status "Winget Updater - Auto-Update Check"
+# Script version (updated with each release)
+$ScriptVersion = '1.0.15'
+
+Write-Status "Winget Updater - Auto-Update Check (Script v$ScriptVersion)"
 Write-Status "Install Path: $InstallPath"
 
 # Check if install directory exists
