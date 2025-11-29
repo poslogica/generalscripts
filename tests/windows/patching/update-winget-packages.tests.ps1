@@ -44,7 +44,7 @@ Describe "update-winget-packages Script Tests" {
         It "Should have help documentation" {
             $content = Get-Content -Path $scriptPath -Raw
             $content | Should -Match '<#'
-            $content | Should -Match 'Purpose:'
+            $content | Should -Match '\.SYNOPSIS'
         }
     }
 
