@@ -145,6 +145,7 @@ function Get-WingetUpgradeTableParsed {
         # Stop when footnote/summary appears
         if ($line -match 'package\(s\)\s+have version numbers') { break }
         if ($line -match 'No packages have available updates') { break }
+        if ($line -match '^\d+\s+upgrade[s]?\s+available') { break }  # "2 upgrades available" summary line
 
         $name      = Slice $line $idxName      $idxId
         $id        = Slice $line $idxId        $idxVersion
@@ -152,8 +153,16 @@ function Get-WingetUpgradeTableParsed {
         $available = Slice $line $idxAvailable $idxSource
         $source    = Slice $line $idxSource    ($line.Length)
 
-        # Basic sanity: id should look like an identifier (no spaces)
-        if (-not $id -or $id -match '\s') { continue }
+        # Validate: id must exist, have no spaces, and be a reasonable package ID (at least 2 chars, contains alphanumeric)
+        if (-not $id -or $id.Length -lt 2) { continue }
+        if ($id -match '\s') { continue }
+        if ($id -notmatch '[A-Za-z0-9]') { continue }
+        
+        # Validate: name must exist and be non-trivial
+        if (-not $name -or $name.Length -lt 2) { continue }
+        
+        # Validate: available version should exist for upgrade candidates
+        if (-not $available -or $available.Length -lt 1) { continue }
 
         if ($version -eq '-')   { $version = $null }
         if ($available -eq '-') { $available = $null }
