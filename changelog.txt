@@ -1,6 +1,16 @@
 Change Logs - 2025-11-29
 ==================================================
 2025-11-29
+- feat: Add IT Automation Start Menu folder and -Wait parameter
+
+- Create 'IT Automation' folder in Start Menu with multiple shortcuts:
+  - Update Winget Packages: Main package update function
+  - Check for Updater Updates: Runs auto-update check with -Wait
+- Add -Wait parameter to update-winget-updater.ps1 for interactive use
+- Read version from VERSION file instead of hardcoded value
+- Update uninstall script to clean up IT Automation folder
+- Update tests for new multi-shortcut design (260 tests passing) (by poslogica)
+- chore: update change logs [skip ci] (by github-actions[bot])
 - feat: Display script version in update-winget-updater.ps1 output
 
 Users can now see which version of the update script they are running,

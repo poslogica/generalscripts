@@ -2,6 +2,10 @@
 
 ## 2025-11-29
 
+- [`13221d0`](https://github.com/poslogica/generalscripts/commit/13221d010bc62c6eda5aae77c54173c3da9c8ecf) **feat: Add IT Automation Start Menu folder and -Wait parameter - Create 'IT Automation' folder in Start Menu with multiple shortcuts: - Update Winget Packages: Main package update function - Check for Updater Updates: Runs auto-update check with -Wait - Add -Wait parameter to update-winget-updater.ps1 for interactive use - Read version from VERSION file instead of hardcoded value - Update uninstall script to clean up IT Automation folder - Update tests for new multi-shortcut design (260 tests passing)**
+  *by poslogica*
+- [`14f6a1c`](https://github.com/poslogica/generalscripts/commit/14f6a1c8cb1ef9f97ecfe7d19a75479535e62368) **chore: update change logs [skip ci]**
+  *by github-actions[bot]*
 - [`941e7f5`](https://github.com/poslogica/generalscripts/commit/941e7f50e039537cf16d11c9064915631ea7fa2a) **feat: Display script version in update-winget-updater.ps1 output Users can now see which version of the update script they are running, making it easier to verify updates were applied successfully.**
   *by poslogica*
 - [`5287594`](https://github.com/poslogica/generalscripts/commit/5287594b75865ba4b89b342c286d8c15f5e6bf82) **chore: update change logs [skip ci]**
