@@ -2,6 +2,10 @@
 
 ## 2025-11-29
 
+- [`8307cc6`](https://github.com/poslogica/generalscripts/commit/8307cc66041bc8351d45ef550b64f95d24ffc4bf) **Fix JSON output detection for winget versions - Change version check from v1.4+ to v1.6+ (--output flag added later) - Add runtime detection for 'Argument name was not recognized' error - Properly fall back to table parsing when JSON flag is not supported - Fixes issue where winget v1.12 doesn't support --output json on upgrade command**
+  *by poslogica*
+- [`9209a82`](https://github.com/poslogica/generalscripts/commit/9209a82e2c027a7cdabc270f8857614477c21b80) **chore: update change logs [skip ci]**
+  *by github-actions[bot]*
 - [`1f06268`](https://github.com/poslogica/generalscripts/commit/1f06268824e079bc27ed77f5024abe97275c7dcc) **Improve table parser to filter out invalid/garbage lines - Add pattern to stop at 'N upgrades available' summary line - Require package ID to be at least 2 chars and contain alphanumeric - Require package name to be at least 2 chars - Require available version to exist (upgrade candidates must have a target version) - Prevents garbage like empty entries or summary text fragments from being queued**
   *by poslogica*
 - [`f6d9382`](https://github.com/poslogica/generalscripts/commit/f6d938218a62c369cc6c00c9ea84fd22f1a45b0e) **chore: update change logs [skip ci]**

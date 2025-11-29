@@ -1,6 +1,13 @@
 Change Logs - 2025-11-29
 ==================================================
 2025-11-29
+- Fix JSON output detection for winget versions
+
+- Change version check from v1.4+ to v1.6+ (--output flag added later)
+- Add runtime detection for 'Argument name was not recognized' error
+- Properly fall back to table parsing when JSON flag is not supported
+- Fixes issue where winget v1.12 doesn't support --output json on upgrade command (by poslogica)
+- chore: update change logs [skip ci] (by github-actions[bot])
 - Improve table parser to filter out invalid/garbage lines
 
 - Add pattern to stop at 'N upgrades available' summary line
