@@ -1,6 +1,14 @@
 Change Logs - 2025-11-29
 ==================================================
 2025-11-29
+- refactor: Remove PinToTaskbar feature
+
+The taskbar pinning feature was unreliable across Windows versions
+and added unnecessary complexity. Removed from:
+- install-winget-updater.ps1 (parameter and code)
+- INSTALL.md (documentation)
+- Tests (parameter check) (by poslogica)
+- chore: update change logs [skip ci] (by github-actions[bot])
 - feat: Add IT Automation Start Menu folder and -Wait parameter
 
 - Create 'IT Automation' folder in Start Menu with multiple shortcuts:

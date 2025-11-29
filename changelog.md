@@ -2,6 +2,10 @@
 
 ## 2025-11-29
 
+- [`c000971`](https://github.com/poslogica/generalscripts/commit/c000971bd3e50ab23438ea21c9100632a43ddbcb) **refactor: Remove PinToTaskbar feature The taskbar pinning feature was unreliable across Windows versions and added unnecessary complexity. Removed from: - install-winget-updater.ps1 (parameter and code) - INSTALL.md (documentation) - Tests (parameter check)**
+  *by poslogica*
+- [`9609a71`](https://github.com/poslogica/generalscripts/commit/9609a71c49845a6ebb6dc0972ebce7edfe0f1cec) **chore: update change logs [skip ci]**
+  *by github-actions[bot]*
 - [`13221d0`](https://github.com/poslogica/generalscripts/commit/13221d010bc62c6eda5aae77c54173c3da9c8ecf) **feat: Add IT Automation Start Menu folder and -Wait parameter - Create 'IT Automation' folder in Start Menu with multiple shortcuts: - Update Winget Packages: Main package update function - Check for Updater Updates: Runs auto-update check with -Wait - Add -Wait parameter to update-winget-updater.ps1 for interactive use - Read version from VERSION file instead of hardcoded value - Update uninstall script to clean up IT Automation folder - Update tests for new multi-shortcut design (260 tests passing)**
   *by poslogica*
 - [`14f6a1c`](https://github.com/poslogica/generalscripts/commit/14f6a1c8cb1ef9f97ecfe7d19a75479535e62368) **chore: update change logs [skip ci]**
