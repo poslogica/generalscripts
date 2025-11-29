@@ -433,11 +433,11 @@ function Invoke-WingetUpgrade {
 foreach ($pkg in $toUpgrade) {
     $label = "$($pkg.Name) [$($pkg.Id)]"
     if (-not $PSCmdlet.ShouldProcess($label, "Upgrade to $($pkg.Available)")) {
-        Write-Log "WhatIf: would upgrade $label" 'INFO'
+        Write-LogMessage "WhatIf: would upgrade $label" 'INFO'
         continue
     }
 
-    Write-Log "Upgrading $label ..." 'INFO'
+    Write-LogMessage "Upgrading $label ..." 'INFO'
 
     # Try 1: no scope (let winget figure it out)
     $exit = Invoke-WingetUpgrade -Pkg $pkg -ScopeTry ''
@@ -445,24 +445,24 @@ foreach ($pkg in $toUpgrade) {
     # Common “not found”/scope mismatch codes: -1978335212, sometimes 259
     if ($exit -eq -1978335212 -or $exit -eq 259) {
         if ($Scope) {
-            Write-Log ("Retrying with --scope {0}: {1}" -f $Scope, $label) 'DEBUG'
+            Write-LogMessage ("Retrying with --scope {0}: {1}" -f $Scope, $label) 'DEBUG'
             $exit = Invoke-WingetUpgrade -Pkg $pkg -ScopeTry $Scope
         } else {
-            Write-Log ("Retrying with --scope {0}: {1}" -f 'machine', $label) 'DEBUG'
+            Write-LogMessage ("Retrying with --scope {0}: {1}" -f 'machine', $label) 'DEBUG'
             $exit = Invoke-WingetUpgrade -Pkg $pkg -ScopeTry 'machine'
             if ($exit -eq -1978335212 -or $exit -eq 259) {
-                Write-Log ("Retrying with --scope {0}: {1}" -f 'user', $label) 'DEBUG'
+                Write-LogMessage ("Retrying with --scope {0}: {1}" -f 'user', $label) 'DEBUG'
                 $exit = Invoke-WingetUpgrade -Pkg $pkg -ScopeTry 'user'
             }
         }
     }
 
     if ($exit -ne 0) {
-        Write-Log ("Failed ({0}): {1}" -f $exit, $label) 'ERROR'
+        Write-LogMessage ("Failed ({0}): {1}" -f $exit, $label) 'ERROR'
         $fail += $label
         if ($StopOnError) { break }
     } else {
-        Write-Log "Success: $label" 'INFO'
+        Write-LogMessage "Success: $label" 'INFO'
     }
 }
 
