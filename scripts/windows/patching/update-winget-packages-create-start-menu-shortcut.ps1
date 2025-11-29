@@ -10,6 +10,7 @@
     Current shortcuts created:
     - Update Winget Packages: Runs the winget package update script
     - Check for Updates: Checks for newer versions of the IT Automation tools
+    - Documentation: Opens the project documentation (GitHub README) in default browser
     
     Each shortcut is configured with:
     - PowerShell executable as the target application
@@ -82,6 +83,18 @@ if (Test-Path $script2) {
     $lnk2.Save()
     Write-Output "Shortcut created: $lnk2Path"
 }
+
+# ----- Shortcut 3: Documentation / Help -----
+# Create a URL shortcut (.url) that opens the GitHub README in the default browser
+$urlPath = Join-Path $menuFolder 'Documentation.url'
+$urlContent = @"
+[InternetShortcut]
+URL=https://github.com/poslogica/generalscripts#readme
+IconIndex=0
+IconFile=%SystemRoot%\System32\shell32.dll
+"@
+Set-Content -Path $urlPath -Value $urlContent -Encoding ASCII
+Write-Output "URL shortcut created: $urlPath"
 
 Write-Output "IT Automation shortcuts created successfully!"
 
