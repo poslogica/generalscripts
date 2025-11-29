@@ -10,16 +10,18 @@
 4. Select **Run as administrator**
 5. Follow the prompts
 
-### Option 2: PowerShell Script
+### Option 2: PowerShell 7 Script
 
 1. Extract the ZIP file
-2. Open PowerShell as Administrator
+2. Open **PowerShell 7** (`pwsh`) as Administrator
 3. Run:
 
 ```powershell
 cd "path\to\extracted\files"
-.\install-winget-updater.ps1
+pwsh .\install-winget-updater.ps1
 ```
+
+> ⚠️ **Do not use Windows PowerShell** (`powershell.exe`) - use `pwsh.exe`
 
 ### Option 3: PowerShell with Custom Settings
 
@@ -147,9 +149,12 @@ Or manually:
 ## Requirements
 
 - **Windows**: 10/11 or Server 2019+
-- **PowerShell**: 5.1 or later (5.1 built-in, 7.x optional)
+- **PowerShell 7+** (pwsh.exe): **Required** - [Download PowerShell 7](https://github.com/PowerShell/PowerShell/releases)
 - **Winget**: Must be installed
 - **Administrator**: Required for installation and some operations
+
+> ⚠️ **Important**: This installer requires **PowerShell 7** (`pwsh.exe`), not Windows PowerShell (`powershell.exe`).
+> Windows PowerShell 5.1 is NOT supported for the installer.
 
 ## Troubleshooting
 

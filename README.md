@@ -24,7 +24,7 @@ This repository contains a collection of scripts designed to help IT professiona
 ### Required
 
 - **Windows 10/11** or **Windows Server 2019+**
-- **PowerShell 5.1+** (included with Windows; PowerShell 7.x also supported)
+- **PowerShell 7+** (pwsh.exe) - Required for installer; 5.1+ for main scripts
 - **Winget** (Windows Package Manager) - for patching scripts
 - Administrator privileges (for elevation-required tasks)
 

@@ -37,9 +37,9 @@
 
     .NOTES
     - Requires administrator privileges (enforced with #Requires)
+    - Requires PowerShell 7+ (pwsh.exe) - NOT Windows PowerShell 5.1
     - Windows 10/11 or Windows Server 2019+
     - Winget must be installed and available
-    - PowerShell 5.1+ required
 
     .LINK
     https://github.com/poslogica/generalscripts

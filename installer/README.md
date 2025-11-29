@@ -17,12 +17,14 @@ This directory contains the installer and distribution package creation tools fo
 2. Extract the ZIP file
 3. Right-click `install-winget-updater.bat` → **Run as administrator**
 
-### Option 2: PowerShell Installation
+### Option 2: PowerShell 7 Installation
 
 ```powershell
-# As Administrator
-.\install-winget-updater.ps1
+# Open PowerShell 7 (pwsh) as Administrator
+pwsh -Command "& '.\install-winget-updater.ps1'"
 ```
+
+> **Note**: Use `pwsh.exe`, not `powershell.exe`
 
 ## For Developers/Maintainers
 
@@ -65,9 +67,12 @@ See `INSTALL.md` for complete documentation and examples.
 ## System Requirements
 
 - **Windows**: 10/11 or Server 2019+
-- **PowerShell**: 5.1+ (native on Windows; 7.x supported)
+- **PowerShell 7+** (pwsh): Required - [Download here](https://github.com/PowerShell/PowerShell/releases)
 - **Winget**: Must be installed (included with modern Windows)
 - **Administrator**: Required for installation
+
+> ⚠️ **Important**: Run the installer using **PowerShell 7** (`pwsh.exe`), not Windows PowerShell (`powershell.exe`).
+> The scheduled task also uses `pwsh.exe` for execution.
 
 ## Support
 
