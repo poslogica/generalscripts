@@ -41,6 +41,7 @@
     - Requires internet access to GitHub
     - Requires PowerShell 5.1+ (Windows PowerShell or PowerShell 7)
     - May require administrator privileges to update files in Program Files
+    - GitHub API rate limits may apply.
 
 .LINK
     https://github.com/poslogica/generalscripts
