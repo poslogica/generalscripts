@@ -1,6 +1,11 @@
 Change Logs - 2025-11-29
 ==================================================
 2025-11-29
+- feat: Display script version in update-winget-updater.ps1 output
+
+Users can now see which version of the update script they are running,
+making it easier to verify updates were applied successfully. (by poslogica)
+- chore: update change logs [skip ci] (by github-actions[bot])
 - docs: Add GitHub API rate limit note to update-winget-updater.ps1 (by poslogica)
 - chore: update change logs [skip ci] (by github-actions[bot])
 - feat: Add auto-update opt-out and improve transparency

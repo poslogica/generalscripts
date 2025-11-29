@@ -2,6 +2,10 @@
 
 ## 2025-11-29
 
+- [`941e7f5`](https://github.com/poslogica/generalscripts/commit/941e7f50e039537cf16d11c9064915631ea7fa2a) **feat: Display script version in update-winget-updater.ps1 output Users can now see which version of the update script they are running, making it easier to verify updates were applied successfully.**
+  *by poslogica*
+- [`5287594`](https://github.com/poslogica/generalscripts/commit/5287594b75865ba4b89b342c286d8c15f5e6bf82) **chore: update change logs [skip ci]**
+  *by github-actions[bot]*
 - [`8073c4a`](https://github.com/poslogica/generalscripts/commit/8073c4aa76db3ec54a8f6cbf689dda2f602bf228) **docs: Add GitHub API rate limit note to update-winget-updater.ps1**
   *by poslogica*
 - [`441ed81`](https://github.com/poslogica/generalscripts/commit/441ed8103adec1cee9df13dca38113ab4439ab92) **chore: update change logs [skip ci]**
