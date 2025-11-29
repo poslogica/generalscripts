@@ -2,6 +2,10 @@
 
 ## 2025-11-29
 
+- [`057b1d2`](https://github.com/poslogica/generalscripts/commit/057b1d22e950dcb87cdbd0aa0ae379f7a94b6099) **fix: add missing LogPath parameter to update-third-party-with-winget.ps1 - Add -LogPath parameter to accept log file path from wrapper script - Initialize script-level \ variable - Update Write-LogMessage to write to both console and log file - Create log directory if it doesn't exist Fixes: 'A parameter cannot be found that matches parameter name LogPath'**
+  *by poslogica*
+- [`d39f0f2`](https://github.com/poslogica/generalscripts/commit/d39f0f297d2b73ff88f22809c53c1404ebf83ee4) **chore: update change logs [skip ci]**
+  *by github-actions[bot]*
 - [`b725d1d`](https://github.com/poslogica/generalscripts/commit/b725d1d35b3b3047da75dfa3a83a780e21dcb241) **fix: correct case-sensitive script references - Change 'Update-ThirdPartyWithWinget.ps1' to 'update-third-party-with-winget.ps1' - Change 'Update-WingetPackages.ps1' to 'update-winget-packages.ps1' Windows file system is case-insensitive but the installer copies files with their original lowercase names. The references must match exactly for the scripts to find each other after installation. Fixes: 'cannot find main script at C:\Program Files\WingetUpdater\Update-ThirdPartyWithWinget.ps1'**
   *by poslogica*
 - [`df8f854`](https://github.com/poslogica/generalscripts/commit/df8f85428cdfcdfaebdb037c2c7766665a79ca07) **chore: update change logs [skip ci]**

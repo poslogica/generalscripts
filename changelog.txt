@@ -1,6 +1,15 @@
 Change Logs - 2025-11-29
 ==================================================
 2025-11-29
+- fix: add missing LogPath parameter to update-third-party-with-winget.ps1
+
+- Add -LogPath parameter to accept log file path from wrapper script
+- Initialize script-level \ variable
+- Update Write-LogMessage to write to both console and log file
+- Create log directory if it doesn't exist
+
+Fixes: 'A parameter cannot be found that matches parameter name LogPath' (by poslogica)
+- chore: update change logs [skip ci] (by github-actions[bot])
 - fix: correct case-sensitive script references
 
 - Change 'Update-ThirdPartyWithWinget.ps1' to 'update-third-party-with-winget.ps1'
