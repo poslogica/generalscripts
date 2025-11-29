@@ -2,6 +2,10 @@
 
 ## 2025-11-29
 
+- [`05c2dc3`](https://github.com/poslogica/generalscripts/commit/05c2dc3bfcea9eb9c89e23abcf7e8bbcfb8d656f) **Change log location to user-writable ProgramData directory - Update update-winget-packages.ps1 to write logs to C:\ProgramData\WingetUpdater\logs - Previous location (Program Files) required admin permissions for log writes - ProgramData is writable by all users by default - Update documentation to reflect new log path**
+  *by poslogica*
+- [`1d68c0a`](https://github.com/poslogica/generalscripts/commit/1d68c0aa40fc5e6bdb7ea1f1341d8e2746afb17b) **chore: update change logs [skip ci]**
+  *by github-actions[bot]*
 - [`057b1d2`](https://github.com/poslogica/generalscripts/commit/057b1d22e950dcb87cdbd0aa0ae379f7a94b6099) **fix: add missing LogPath parameter to update-third-party-with-winget.ps1 - Add -LogPath parameter to accept log file path from wrapper script - Initialize script-level \ variable - Update Write-LogMessage to write to both console and log file - Create log directory if it doesn't exist Fixes: 'A parameter cannot be found that matches parameter name LogPath'**
   *by poslogica*
 - [`d39f0f2`](https://github.com/poslogica/generalscripts/commit/d39f0f297d2b73ff88f22809c53c1404ebf83ee4) **chore: update change logs [skip ci]**

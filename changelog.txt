@@ -1,6 +1,13 @@
 Change Logs - 2025-11-29
 ==================================================
 2025-11-29
+- Change log location to user-writable ProgramData directory
+
+- Update update-winget-packages.ps1 to write logs to C:\ProgramData\WingetUpdater\logs
+- Previous location (Program Files) required admin permissions for log writes
+- ProgramData is writable by all users by default
+- Update documentation to reflect new log path (by poslogica)
+- chore: update change logs [skip ci] (by github-actions[bot])
 - fix: add missing LogPath parameter to update-third-party-with-winget.ps1
 
 - Add -LogPath parameter to accept log file path from wrapper script
