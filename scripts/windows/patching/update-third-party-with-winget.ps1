@@ -273,14 +273,14 @@ function Get-WingetUpgradeList {
 
 # ---------------- Bootstrap ----------------
 $ScriptDir = if ($PSScriptRoot) { $PSScriptRoot }
-elseif ($MyInvocation.MyCommand.Path) { Split-Path -LiteralPath $MyInvocation.MyCommand.Path -Parent }
+elseif ($MyInvocation.MyCommand.Path) { Split-Path -Path $MyInvocation.MyCommand.Path -Parent }
 else { (Get-Location).Path }
 
 # Initialize log file if LogPath is specified
 if (-not [string]::IsNullOrWhiteSpace($LogPath)) {
     $script:LogFile = $LogPath
     # Ensure log directory exists
-    $logDir = Split-Path -LiteralPath $LogPath -Parent
+    $logDir = Split-Path -Path $LogPath -Parent
     if ($logDir -and -not (Test-Path -LiteralPath $logDir)) {
         New-Item -ItemType Directory -Path $logDir -Force | Out-Null
     }
