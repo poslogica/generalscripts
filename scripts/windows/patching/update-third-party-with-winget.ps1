@@ -204,7 +204,7 @@ function Get-WingetUpgradeList {
         }
     } catch { }
     
-    # JSON output requires winget v1.6+ (--output flag was added later than originally thought)
+    # JSON output requires winget v1.6+ (--output flag support)
     $supportsJson = $wingetVersion -and $wingetVersion -ge [version]"1.6.0"
     
     if ($supportsJson) {
