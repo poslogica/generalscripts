@@ -152,7 +152,8 @@ if ($PSCmdlet.ShouldProcess($versionFile, 'Write version')) {
 Write-Host "`nConfiguring scheduled task..." -ForegroundColor Cyan
 if ($PSCmdlet.ShouldProcess('Update-Winget-Packages', 'Create task')) {
     $mainScriptPath = Join-Path $InstallPath 'update-winget-packages.ps1'
-    $taskExists = Get-ScheduledTask -TaskName 'Update-Winget-Packages' -ErrorAction SilentlyContinue
+    $taskPath = '\Microsoft\Windows\Winget\'
+    $taskExists = Get-ScheduledTask -TaskName 'Update-Winget-Packages' -TaskPath $taskPath -ErrorAction SilentlyContinue
 
     if ($taskExists -and -not $Force) {
         $response = Read-Host 'Task exists. Overwrite? (Y/N)'
@@ -162,7 +163,7 @@ if ($PSCmdlet.ShouldProcess('Update-Winget-Packages', 'Create task')) {
     }
     else {
         if ($taskExists) {
-            Unregister-ScheduledTask -TaskName 'Update-Winget-Packages' -Confirm:$false
+            Unregister-ScheduledTask -TaskName 'Update-Winget-Packages' -TaskPath $taskPath -Confirm:$false
         }
 
         $action = New-ScheduledTaskAction -Execute 'pwsh.exe' -Argument "-NoProfile -ExecutionPolicy Bypass -File `"$mainScriptPath`""
@@ -176,7 +177,7 @@ if ($PSCmdlet.ShouldProcess('Update-Winget-Packages', 'Create task')) {
         $settings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -StartWhenAvailable -RunOnlyIfNetworkAvailable
         $task = New-ScheduledTask -Action $action -Trigger $trigger -Principal $principal -Settings $settings -Description 'Automated Windows Package Manager Updates'
 
-        Register-ScheduledTask -TaskName 'Update-Winget-Packages' -InputObject $task -Force | Out-Null
+        Register-ScheduledTask -TaskName 'Update-Winget-Packages' -TaskPath $taskPath -InputObject $task -Force | Out-Null
         Write-Host "✓ Created task: Update-Winget-Packages ($ScheduleFrequency at $ScheduleTime)" -ForegroundColor Green
     }
 }
@@ -207,17 +208,17 @@ if ($PSCmdlet.ShouldProcess('uninstall.ps1', 'Create')) {
 <#.SYNOPSIS Uninstalls the Winget Updater suite.#>
 
 Write-Host 'Removing scheduled task...'
-$task = Get-ScheduledTask -TaskName 'Update-Winget-Packages' -ErrorAction SilentlyContinue
+$task = Get-ScheduledTask -TaskName 'Update-Winget-Packages' -TaskPath '\Microsoft\Windows\Winget\' -ErrorAction SilentlyContinue
 if ($task) {
-    Unregister-ScheduledTask -TaskName 'Update-Winget-Packages' -Confirm:$false
+    Unregister-ScheduledTask -TaskName 'Update-Winget-Packages' -TaskPath '\Microsoft\Windows\Winget\' -Confirm:$false
     Write-Host '✓ Removed task'
 }
 
-Write-Host 'Removing Start Menu shortcut...'
-$shortcutPath = "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Update Winget Packages.lnk"
-if (Test-Path -Path $shortcutPath) {
-    Remove-Item -Path $shortcutPath -Force
-    Write-Host '✓ Removed shortcut'
+Write-Host 'Removing Start Menu shortcuts...'
+$itAutoFolder = "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\IT Automation"
+if (Test-Path -Path $itAutoFolder) {
+    Remove-Item -Path $itAutoFolder -Recurse -Force
+    Write-Host '✓ Removed IT Automation folder and all shortcuts'
 }
 
 Write-Host 'Removing installation directory...'

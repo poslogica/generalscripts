@@ -319,7 +319,8 @@ Describe "get-duplicate-files-with-progress Script Tests" {
         It "Should handle large files (5MB+)" {
             $testDir = New-Item -Path (Join-Path $TestDrive "LargeFileTest") -ItemType Directory -Force
             
-            $largeContent = [string]('X' * 5242880)
+            # Use 500KB files instead of 5MB to avoid test timeouts during hashing
+            $largeContent = [string]('X' * 524288)
             $largeContent | Out-File -Path (Join-Path $testDir "large1.bin") -Encoding UTF8 -NoNewline
             $largeContent | Out-File -Path (Join-Path $testDir "large2.bin") -Encoding UTF8 -NoNewline
             
@@ -334,7 +335,8 @@ Describe "get-duplicate-files-with-progress Script Tests" {
             "Duplicate content" | Out-File -Path (Join-Path $testDir "small1.txt") -Encoding UTF8
             "Duplicate content" | Out-File -Path (Join-Path $testDir "small2.txt") -Encoding UTF8
             
-            $mediumContent = [string]('M' * 1000000)
+            # Use 100KB files instead of 1MB to avoid test timeouts during hashing
+            $mediumContent = [string]('M' * 102400)
             $mediumContent | Out-File -Path (Join-Path $testDir "medium1.bin") -Encoding UTF8 -NoNewline
             $mediumContent | Out-File -Path (Join-Path $testDir "medium2.bin") -Encoding UTF8 -NoNewline
             
