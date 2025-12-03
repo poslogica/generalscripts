@@ -1,7 +1,15 @@
-# Change Logs - 2025-11-29
+# Change Logs - 2025-12-03
+
+## 2025-12-03
+
+- [`dd67f31`](https://github.com/poslogica/generalscripts/commit/dd67f31a9e0259714fbd0d6649f6a299070515de) **perf: Optimize duplicate file tests to prevent timeouts - Reduce large file test size from 5MB to 500KB - Reduce medium file test size from 1MB to 100KB - Prevents SHA256 hashing from causing test suite to freeze - Test suite now completes in 3.7s instead of hanging - Maintains full test coverage with smaller file sizes**
+  *by poslogica*
+
 
 ## 2025-11-29
 
+- [`1c89476`](https://github.com/poslogica/generalscripts/commit/1c894767a2319eb8dc99ccbbdd2304b8daa2f90f) **chore: update change logs [skip ci]**
+  *by github-actions[bot]*
 - [`264f3cd`](https://github.com/poslogica/generalscripts/commit/264f3cd00437b622b850b92edff6d84707f9a287) **feat: Add Documentation URL shortcut to IT Automation menu - Add third shortcut to Start Menu that opens project documentation - Creates Documentation.url file pointing to GitHub README - Uses Windows Internet Shortcut format for browser integration - Update script description to document all three shortcuts**
   *by poslogica*
 - [`d4e29e9`](https://github.com/poslogica/generalscripts/commit/d4e29e91e3bdf5cf021da9705927fc72f9d1208e) **chore: update change logs [skip ci]**

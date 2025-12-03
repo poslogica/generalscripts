@@ -1,6 +1,16 @@
-Change Logs - 2025-11-29
+Change Logs - 2025-12-03
 ==================================================
+2025-12-03
+- perf: Optimize duplicate file tests to prevent timeouts
+
+- Reduce large file test size from 5MB to 500KB
+- Reduce medium file test size from 1MB to 100KB
+- Prevents SHA256 hashing from causing test suite to freeze
+- Test suite now completes in 3.7s instead of hanging
+- Maintains full test coverage with smaller file sizes (by poslogica)
+
 2025-11-29
+- chore: update change logs [skip ci] (by github-actions[bot])
 - feat: Add Documentation URL shortcut to IT Automation menu
 
 - Add third shortcut to Start Menu that opens project documentation
