@@ -289,11 +289,14 @@ else { (Get-Location).Path }
 if (-not [string]::IsNullOrWhiteSpace($LogPath)) {
     $script:LogFile = $LogPath
     # Ensure log directory exists
-    $logDir = Split-Path -Path $LogPath -Parent
-    if ($logDir -and -not (Test-Path -LiteralPath $logDir)) {
-        New-Item -ItemType Directory -Path $logDir -Force | Out-Null
+    $script:LogDir = Split-Path -Path $LogPath -Parent
+    if ($script:LogDir -and -not (Test-Path -LiteralPath $script:LogDir)) {
+        New-Item -ItemType Directory -Path $script:LogDir -Force | Out-Null
     }
     Write-LogMessage "Logging to: $LogPath" 'INFO'
+} else {
+    # Set default log directory for diagnostics
+    $script:LogDir = $null
 }
 
 if ([string]::IsNullOrWhiteSpace($ConfigPath)) {
@@ -352,13 +355,13 @@ if ($config.PSObject.Properties.Name -contains 'ExcludeSources')    { $ExcludeSo
 
 # ---------------- Discover ----------------
 Write-LogMessage "Querying upgradable packages..."
-$diagPath = if ($Diagnostics) { $ScriptDir } else { $null }
+$diagPath = if ($Diagnostics) { $script:LogDir } else { $null }
 
 try {
     $data = Get-WingetUpgradeList -IncludeUnknown:$IncludeUnknown -DiagPath $diagPath
 } catch {
     Write-LogMessage $_.Exception.Message 'ERROR'
-    if ($Diagnostics) { Write-LogMessage ("Diagnostics saved to: {0} (files starting with winget-*)" -f $ScriptDir) 'INFO' }
+    if ($Diagnostics) { Write-LogMessage ("Diagnostics saved to: {0} (files starting with winget-*)" -f $script:LogDir) 'INFO' }
     exit 1
 }
 

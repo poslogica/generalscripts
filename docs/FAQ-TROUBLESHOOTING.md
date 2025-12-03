@@ -462,7 +462,7 @@ Run the script with `-Diagnostics` flag when:
 
 **What Gets Saved:**
 
-Diagnostic files are created in `C:\Program Files\WingetUpdater` directory:
+Diagnostic files are created in `C:\ProgramData\WingetUpdater` directory (same as logs):
 
 | File | Contains |
 |------|----------|
@@ -480,11 +480,11 @@ Diagnostic files are created in `C:\Program Files\WingetUpdater` directory:
 # Step 2: Check if packages failed
 # If exit code = 2, some packages failed
 
-# Step 3: Review diagnostic files
-Get-ChildItem "C:\Program Files\WingetUpdater\winget-*.txt" -o LastWriteTime -Descending | Select-Object -First 1
+# Step 3: Review diagnostic files in logs directory
+Get-ChildItem "C:\ProgramData\WingetUpdater\logs\winget-*.txt" -o LastWriteTime -Descending | Select-Object -First 1
 
 # Step 4: Examine the latest raw output
-Get-Content "C:\Program Files\WingetUpdater\winget-upgrade-raw-json.txt" | ConvertFrom-Json
+Get-Content "C:\ProgramData\WingetUpdater\logs\winget-upgrade-raw-json.txt" | ConvertFrom-Json
 
 # Step 5: Look for issues
 # - Package version conflicts
