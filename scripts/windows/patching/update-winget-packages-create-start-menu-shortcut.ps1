@@ -9,6 +9,7 @@
     
     Current shortcuts created:
     - Update Winget Packages: Runs the winget package update script
+    - Update Winget Packages (Diagnostics): Runs winget update with diagnostic output
     - Check for Updates: Checks for newer versions of the IT Automation tools
     - Documentation: Opens the project documentation (GitHub README) in default browser
     - View Logs: Opens the WingetUpdater logs folder
@@ -69,6 +70,18 @@ $lnk1.IconLocation = "%SystemRoot%\System32\shell32.dll,167"
 $lnk1.Description = "Update third-party software using Windows Package Manager (winget)"
 $lnk1.Save()
 Write-Output "Shortcut created: $lnk1Path"
+
+# ----- Shortcut 1b: Update Winget Packages with Diagnostics -----
+$lnk1bPath = Join-Path $menuFolder 'Update Winget Packages (Diagnostics).lnk'
+
+$lnk1b = $ws.CreateShortcut($lnk1bPath)
+$lnk1b.TargetPath = $ps
+$lnk1b.Arguments = "-NoProfile -ExecutionPolicy Bypass -File `"$script1`" -Diagnostics"
+$lnk1b.WorkingDirectory = $PSScriptRoot
+$lnk1b.IconLocation = "%SystemRoot%\System32\shell32.dll,79"
+$lnk1b.Description = "Update winget packages with diagnostic output (for troubleshooting)"
+$lnk1b.Save()
+Write-Output "Shortcut created: $lnk1bPath"
 
 # ----- Shortcut 2: Check for Updates -----
 $script2 = Join-Path $PSScriptRoot 'update-winget-updater.ps1'
