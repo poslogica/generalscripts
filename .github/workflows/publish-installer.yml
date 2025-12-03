@@ -175,9 +175,42 @@ jobs:
           if (git diff --cached --quiet) {
             Write-Host "✓ README already up to date" -ForegroundColor Green
           } else {
+            # Fetch latest to handle any concurrent pushes
+            git fetch origin main
+            
+            # Rebase on remote to avoid conflicts
+            git rebase origin/main
+            
+            # Create commit with changes
             git commit -m "docs: Update README with latest version v$version [skip ci]"
-            git push origin HEAD:main
-            Write-Host "✓ README updated and pushed" -ForegroundColor Green
+            
+            # Push with retry logic (up to 3 attempts)
+            $maxRetries = 3
+            $retryCount = 0
+            $pushed = $false
+            
+            while ($retryCount -lt $maxRetries -and -not $pushed) {
+              $retryCount++
+              Write-Host "Push attempt $retryCount of $maxRetries..."
+              
+              git push origin HEAD:main
+              
+              if ($LASTEXITCODE -eq 0) {
+                Write-Host "✓ README updated and pushed successfully" -ForegroundColor Green
+                $pushed = $true
+              } else {
+                if ($retryCount -lt $maxRetries) {
+                  Write-Host "⚠ Push failed, retrying after fetch..." -ForegroundColor Yellow
+                  Start-Sleep -Seconds 2
+                  git fetch origin main
+                  git rebase origin/main
+                }
+              }
+            }
+            
+            if (-not $pushed) {
+              Write-Warning "Failed to push README update after $maxRetries attempts, but release was successful"
+            }
           }
 
       - name: Publish Installer Artifact
