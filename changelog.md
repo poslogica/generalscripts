@@ -2,6 +2,32 @@
 
 ## 2025-12-03
 
+- [`77f90dc`](https://github.com/poslogica/generalscripts/commit/77f90dc93fb0af72fb353a0a6b6b82ea19b2dc21) **docs: Clarify comment about winget JSON output version requirement - Simplified comment about --output flag support - Remove vague 'later than originally thought' language - Keep comment concise and factual**
+  *by poslogica*
+- [`992fa0a`](https://github.com/poslogica/generalscripts/commit/992fa0a09bd4e24869b620d4adc87990c66fe91d) **fix: Correct error messages in batch wrapper installer - Clarify that PowerShell 7+ (pwsh.exe) is required, not Windows PowerShell - Remove misleading 'not recommended' suggestion for Windows PowerShell - Add alternative installation methods (Windows Store, Winget) - Improve user guidance when PowerShell is not found**
+  *by poslogica*
+- [`3ab8ce8`](https://github.com/poslogica/generalscripts/commit/3ab8ce802927f859fefc49d9a35b0054e620b997) **ci: Auto-update README version on new release - Added 'Update README with Latest Version' step to publish workflow - Automatically updates README when new version is released - Uses regex to find and replace version line - Runs after GitHub Release creation - Git commits and pushes update with [skip ci] flag - Keeps version always in sync with latest release**
+  *by poslogica*
+- [`a8d6cbe`](https://github.com/poslogica/generalscripts/commit/a8d6cbe9cfdcd6333a04fe899456a010e7b1c6c7) **docs: Update README with latest version info**
+  *by poslogica*
+- [`a2d7644`](https://github.com/poslogica/generalscripts/commit/a2d76442b354b56bfb547426587c2c8483439c95) **fix: Disable problematic markdown lint rules - Disable MD007 (list indentation) - too strict for multi-level lists - Disable MD031 (blanks around code blocks) - conflicts with content - Disable MD032 (blanks around lists) - too restrictive - Disable MD041 (first line heading) - LICENSE file doesn't need heading - Keep only essential rules: MD003 (consistent style) - Workflow now validates without false positives**
+  *by poslogica*
+- [`575c0fa`](https://github.com/poslogica/generalscripts/commit/575c0faa4c9573e9b5bb888b58165ac7cdbd1cf5) **fix: Simplify markdown lint workflow to reduce failures - Reduced linting scope to key documentation files only - Simplified .markdownlint.json configuration - Disabled overly strict rules that cause false positives - Uses consistent style rules instead of blanket disables - Prevents workflow failures on legitimate markdown patterns**
+  *by poslogica*
+- [`480c3cd`](https://github.com/poslogica/generalscripts/commit/480c3cd5b6d6e794d154a57d22cd8ff8224c0849) **ci: Add markdown quality check workflow - New GitHub Actions workflow for markdown linting - Triggers only on markdown file changes (**.md) - Separate from PowerShell validation (cost-efficient) - Runs on lightweight Ubuntu runner - Added .markdownlint.json configuration file - Disables overly strict rules for documentation flexibility - Improves documentation quality on push and PR**
+  *by poslogica*
+- [`a2f9d85`](https://github.com/poslogica/generalscripts/commit/a2f9d858870c12f063e987c6ff49355cb73c4586) **docs: Clarify PowerShell 7+ requirement for installer - Installer requires pwsh.exe (PowerShell 7+), not Windows PowerShell 5.1 - Updated README installation section with explicit pwsh command - Enhanced FAQ with comprehensive pwsh.exe solutions - Emphasize batch wrapper as easiest solution for users without pwsh - Add multiple installation methods (batch, winget, Windows Store) - Clarify why installer needs PowerShell 7+ features - Added PATH configuration option for manual setup**
+  *by poslogica*
+- [`16b8ca2`](https://github.com/poslogica/generalscripts/commit/16b8ca2ca4933424e962ac74ee20e37ac5a0655c) **docs: Add FAQ and AUTO-UPDATE guide to main README documentation section - Added FAQ-TROUBLESHOOTING.md link with key topics covered - Added AUTO-UPDATE-GUIDE.md link with feature overview - Reorganized documentation section for better visibility - Improves discoverability of user support and feature documentation**
+  *by poslogica*
+- [`05632c8`](https://github.com/poslogica/generalscripts/commit/05632c84192d6e21faa9e46d9d37a715012d77f0) **fix: Add execution policy solutions and batch wrapper installer - Enhanced FAQ-TROUBLESHOOTING.md with comprehensive execution policy solutions - Added 4 options: batch wrapper (easiest), bypass, unblock, policy change - Batch wrapper (install-winget-updater.bat) - allows double-click installation - Automatically handles PowerShell execution policy bypassing - Includes error handling for missing PowerShell - Non-technical users can now install without PowerShell commands - Solves 'SecurityError: File cannot be loaded' issue for Windows users**
+  *by poslogica*
+- [`a2f5c6c`](https://github.com/poslogica/generalscripts/commit/a2f5c6ca5bab794e79e0989f1c178105f85c6771) **docs: Add critical documentation for production use - Add MIT LICENSE file for legal clarity and open-source usage rights - Add FAQ-TROUBLESHOOTING.md with 20+ common issues and solutions - Add AUTO-UPDATE-GUIDE.md with comprehensive feature documentation - Troubleshooting covers installation, tasks, updates, Start Menu, general Q&A - Auto-update guide includes: overview, configuration, manual control, schedules - All 259 tests pass**
+  *by poslogica*
+- [`164bfce`](https://github.com/poslogica/generalscripts/commit/164bfce19f0ec1ba52821cd4d6345017b9e46525) **docs: Add CONTRIBUTING.md with commit message conventions - Document Conventional Commits format (feat, fix, docs, perf, etc.) - Provide examples of proper commit messages - Outline code quality standards for PowerShell scripts - Include testing requirements and PR process - Explain semantic versioning approach - Add sections for types, scopes, and best practices**
+  *by poslogica*
+- [`3557a86`](https://github.com/poslogica/generalscripts/commit/3557a86255388b892b74cb746cca5b678723d564) **chore: update change logs [skip ci]**
+  *by github-actions[bot]*
 - [`997fbeb`](https://github.com/poslogica/generalscripts/commit/997fbeb27510a8a0d11ed57c11d3797a15b2cf9c) **feat: Add View Logs shortcut to IT Automation menu - Add fourth shortcut to Start Menu for logs folder access - Creates shortcut to C:\ProgramData\WingetUpdater\logs - Uses folder icon for visual distinction - Automatically creates logs directory if missing - Update script description to document all four shortcuts**
   *by poslogica*
 - [`4952e10`](https://github.com/poslogica/generalscripts/commit/4952e10ee8faf313b2dc65ce00ff7785919b26be) **chore: update change logs [skip ci]**

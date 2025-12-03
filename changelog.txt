@@ -1,6 +1,91 @@
 Change Logs - 2025-12-03
 ==================================================
 2025-12-03
+- docs: Clarify comment about winget JSON output version requirement
+
+- Simplified comment about --output flag support
+- Remove vague 'later than originally thought' language
+- Keep comment concise and factual (by poslogica)
+- fix: Correct error messages in batch wrapper installer
+
+- Clarify that PowerShell 7+ (pwsh.exe) is required, not Windows PowerShell
+- Remove misleading 'not recommended' suggestion for Windows PowerShell
+- Add alternative installation methods (Windows Store, Winget)
+- Improve user guidance when PowerShell is not found (by poslogica)
+- ci: Auto-update README version on new release
+
+- Added 'Update README with Latest Version' step to publish workflow
+- Automatically updates README when new version is released
+- Uses regex to find and replace version line
+- Runs after GitHub Release creation
+- Git commits and pushes update with [skip ci] flag
+- Keeps version always in sync with latest release (by poslogica)
+- docs: Update README with latest version info (by poslogica)
+- fix: Disable problematic markdown lint rules
+
+- Disable MD007 (list indentation) - too strict for multi-level lists
+- Disable MD031 (blanks around code blocks) - conflicts with content
+- Disable MD032 (blanks around lists) - too restrictive
+- Disable MD041 (first line heading) - LICENSE file doesn't need heading
+- Keep only essential rules: MD003 (consistent style)
+- Workflow now validates without false positives (by poslogica)
+- fix: Simplify markdown lint workflow to reduce failures
+
+- Reduced linting scope to key documentation files only
+- Simplified .markdownlint.json configuration
+- Disabled overly strict rules that cause false positives
+- Uses consistent style rules instead of blanket disables
+- Prevents workflow failures on legitimate markdown patterns (by poslogica)
+- ci: Add markdown quality check workflow
+
+- New GitHub Actions workflow for markdown linting
+- Triggers only on markdown file changes (**.md)
+- Separate from PowerShell validation (cost-efficient)
+- Runs on lightweight Ubuntu runner
+- Added .markdownlint.json configuration file
+- Disables overly strict rules for documentation flexibility
+- Improves documentation quality on push and PR (by poslogica)
+- docs: Clarify PowerShell 7+ requirement for installer
+
+- Installer requires pwsh.exe (PowerShell 7+), not Windows PowerShell 5.1
+- Updated README installation section with explicit pwsh command
+- Enhanced FAQ with comprehensive pwsh.exe solutions
+- Emphasize batch wrapper as easiest solution for users without pwsh
+- Add multiple installation methods (batch, winget, Windows Store)
+- Clarify why installer needs PowerShell 7+ features
+- Added PATH configuration option for manual setup (by poslogica)
+- docs: Add FAQ and AUTO-UPDATE guide to main README documentation section
+
+- Added FAQ-TROUBLESHOOTING.md link with key topics covered
+- Added AUTO-UPDATE-GUIDE.md link with feature overview
+- Reorganized documentation section for better visibility
+- Improves discoverability of user support and feature documentation (by poslogica)
+- fix: Add execution policy solutions and batch wrapper installer
+
+- Enhanced FAQ-TROUBLESHOOTING.md with comprehensive execution policy solutions
+- Added 4 options: batch wrapper (easiest), bypass, unblock, policy change
+- Batch wrapper (install-winget-updater.bat) - allows double-click installation
+- Automatically handles PowerShell execution policy bypassing
+- Includes error handling for missing PowerShell
+- Non-technical users can now install without PowerShell commands
+- Solves 'SecurityError: File cannot be loaded' issue for Windows users (by poslogica)
+- docs: Add critical documentation for production use
+
+- Add MIT LICENSE file for legal clarity and open-source usage rights
+- Add FAQ-TROUBLESHOOTING.md with 20+ common issues and solutions
+- Add AUTO-UPDATE-GUIDE.md with comprehensive feature documentation
+- Troubleshooting covers installation, tasks, updates, Start Menu, general Q&A
+- Auto-update guide includes: overview, configuration, manual control, schedules
+- All 259 tests pass (by poslogica)
+- docs: Add CONTRIBUTING.md with commit message conventions
+
+- Document Conventional Commits format (feat, fix, docs, perf, etc.)
+- Provide examples of proper commit messages
+- Outline code quality standards for PowerShell scripts
+- Include testing requirements and PR process
+- Explain semantic versioning approach
+- Add sections for types, scopes, and best practices (by poslogica)
+- chore: update change logs [skip ci] (by github-actions[bot])
 - feat: Add View Logs shortcut to IT Automation menu
 
 - Add fourth shortcut to Start Menu for logs folder access
