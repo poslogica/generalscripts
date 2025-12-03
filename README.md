@@ -212,6 +212,20 @@ Comprehensive documentation is available in the `/docs` directory:
 
 ### Key Documents
 
+- **[FAQ-TROUBLESHOOTING.md](docs/FAQ-TROUBLESHOOTING.md)** - Frequently asked questions and solutions for common issues
+  - Installation troubleshooting (execution policy, PowerShell, winget)
+  - Scheduled task issues and verification
+  - Auto-update configuration and issues
+  - Start Menu shortcuts troubleshooting
+  - General questions and best practices
+
+- **[AUTO-UPDATE-GUIDE.md](docs/AUTO-UPDATE-GUIDE.md)** - Comprehensive guide to the auto-update feature
+  - Quick start and configuration options
+  - Manual control of updates
+  - Schedule management and customization
+  - GitHub API rate limiting details
+  - Rollback procedures and troubleshooting
+
 - **[GITHUB-ACTIONS-INSTALLER.md](docs/GITHUB-ACTIONS-INSTALLER.md)** - Complete guide to the automated installer build and publishing workflow
   - Explains workflow triggers and dependencies
   - Shows how to access built installers
