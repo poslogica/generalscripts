@@ -66,13 +66,45 @@ The term 'pwsh.exe' is not recognized as the name of a cmdlet, function, script 
 
 ### Q: "Execution policy prevents script from running"
 
-**Error Message:**
+**Error Messages:**
 ```
 File cannot be loaded because running scripts is disabled on this system.
 ```
 
-**Solution:**
+OR
 
+```
+SecurityError: File ... cannot be loaded. The file ... is not digitally signed.
+You cannot run this script on the current system.
+```
+
+**Solutions (Recommended Order):**
+
+**Option 1: Use Batch Wrapper (Easiest - Recommended)**
+- Use `install-winget-updater.bat` instead of PowerShell script
+- Double-click and run—no commands needed
+- Automatically handles execution policy bypass
+
+**Option 2: Bypass Policy for This Script**
+```powershell
+powershell -ExecutionPolicy Bypass -File ".\install-winget-updater.ps1"
+```
+- Safest approach: bypasses policy only for this one execution
+- No permanent system changes
+- Works even with restrictive policies
+
+**Option 3: Unblock Downloaded File**
+```powershell
+Unblock-File -Path ".\install-winget-updater.ps1"
+```
+Then run normally:
+```powershell
+.\install-winget-updater.ps1
+```
+- Removes "downloaded from internet" security flag
+- Clean one-time fix
+
+**Option 4: Change Execution Policy (Permanent)**
 ```powershell
 # Set for current user
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
@@ -80,6 +112,8 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 # Or set for local machine (requires admin)
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope LocalMachine
 ```
+- Allows all local scripts to run
+- More permissive approach
 
 ---
 
