@@ -39,28 +39,34 @@ Visit: https://learn.microsoft.com/en-us/windows/package-manager/winget/
 
 ---
 
-### Q: "The term 'pwsh.exe' is not recognized"
+### Q: "The term 'pwsh.exe' is not recognized" or installer requires pwsh
 
 **Error Message:**
 ```
 The term 'pwsh.exe' is not recognized as the name of a cmdlet, function, script file, or executable program.
 ```
 
-**Solutions:**
+**Why This Happens:**
+The installer requires **PowerShell 7+** (pwsh.exe), not Windows PowerShell 5.1. This is a design requirement because modern features used in the installer are only available in PowerShell 7+.
 
-1. **Install PowerShell 7+:**
+**Solutions (Recommended Order):**
+
+**Option 1: Use Batch Wrapper (Easiest)**
+- Run `install-winget-updater.bat` instead
+- Automatically handles PowerShell 7+ detection and installation
+- Best for non-technical users
+
+**Option 2: Install PowerShell 7+**
    - Download from: https://github.com/PowerShell/PowerShell/releases
    - Or via Winget: `winget install Microsoft.PowerShell`
+   - Or via Windows Store: Search for "PowerShell"
+   - Then run: `pwsh -ExecutionPolicy Bypass -File ".\install-winget-updater.ps1"`
 
-2. **Use Windows PowerShell temporarily** (not recommended):
-   ```powershell
-   powershell.exe .\install-winget-updater.ps1
-   ```
-
-3. **Add PowerShell to PATH:**
+**Option 3: Add PowerShell 7 to PATH (Manual)**
    - Open Environment Variables (Win+X → Environment Variables)
    - Add `C:\Program Files\PowerShell\7` to PATH
    - Restart terminal
+   - Then run installer normally
 
 ---
 

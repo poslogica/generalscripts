@@ -51,9 +51,11 @@ For automated Windows Package Manager updates, the **Winget Updater** suite can 
 #### Option 2: PowerShell Installation
 
 ```powershell
-# As Administrator
-.\install-winget-updater.ps1 -ScheduleFrequency Weekly -ScheduleTime "02:00"
+# As Administrator (use PowerShell 7+, not Windows PowerShell)
+pwsh -ExecutionPolicy Bypass -File ".\install-winget-updater.ps1" -ScheduleFrequency Weekly -ScheduleTime "02:00"
 ```
+
+**Important:** The installer requires **PowerShell 7+** (pwsh.exe), not Windows PowerShell 5.1. If you don't have PowerShell 7 installed, use Option 1 (batch file) which handles this automatically.
 
 #### Option 3: Clone and Explore
 
