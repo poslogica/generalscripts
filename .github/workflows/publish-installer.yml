@@ -142,6 +142,44 @@ jobs:
             exit 1
           }
 
+      - name: Update README with Latest Version
+        shell: pwsh
+        run: |
+          $version = "${{ steps.version.outputs.version }}"
+          $readmePath = "./README.md"
+          
+          Write-Host "Updating README with version $version..." -ForegroundColor Cyan
+          
+          # Read README content
+          $content = Get-Content $readmePath -Raw
+          
+          # Update the version line (replace existing or add if missing)
+          $pattern = '\*\*Latest Update\*\*:\s+v[\d.]+\s+with improved documentation and user guides\.'
+          $replacement = "**Latest Update**: v$version with improved documentation and user guides."
+          
+          if ($content -match $pattern) {
+            $content = $content -replace $pattern, $replacement
+            Write-Host "✓ Updated existing version reference" -ForegroundColor Green
+          } else {
+            Write-Host "⚠ Version reference not found in README, skipping update" -ForegroundColor Yellow
+          }
+          
+          # Write updated content back
+          Set-Content -Path $readmePath -Value $content
+          
+          # Commit and push if there are changes
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add $readmePath
+          
+          if (git diff --cached --quiet) {
+            Write-Host "✓ README already up to date" -ForegroundColor Green
+          } else {
+            git commit -m "docs: Update README with latest version v$version [skip ci]"
+            git push origin HEAD:main
+            Write-Host "✓ README updated and pushed" -ForegroundColor Green
+          }
+
       - name: Publish Installer Artifact
         uses: actions/upload-artifact@v4
         with:
