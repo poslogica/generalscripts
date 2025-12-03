@@ -441,6 +441,91 @@ Remove-Item "C:\Program Files\WingetUpdater" -Recurse -Force
 
 ---
 
+### Q: "What are diagnostic files and when do I need them?"
+
+**Answer:**
+
+Diagnostic files help troubleshoot package update failures. They contain the raw output from winget commands.
+
+**When to Use:**
+
+Run the script with `-Diagnostics` flag when:
+- Packages fail to update
+- You're debugging parse errors
+- You need to analyze winget behavior
+- You're reporting issues to support
+
+```powershell
+# Enable diagnostics
+& "C:\Program Files\WingetUpdater\update-winget-packages.ps1" -Diagnostics
+```
+
+**What Gets Saved:**
+
+Diagnostic files are created in `C:\Program Files\WingetUpdater` directory:
+
+| File | Contains |
+|------|----------|
+| `winget-list-upgrade-raw.json.txt` | Raw JSON output from `winget list --upgrade-available` |
+| `winget-upgrade-raw-json.txt` | Raw JSON output from `winget upgrade` command |
+| `winget-upgrade-sanitized.json` | Cleaned-up JSON if parsing failed on raw output |
+| `winget-upgrade-raw-table.txt` | Fallback table-format output (for older winget versions) |
+
+**Example Workflow:**
+
+```powershell
+# Step 1: Run with diagnostics
+& "C:\Program Files\WingetUpdater\update-winget-packages.ps1" -Diagnostics
+
+# Step 2: Check if packages failed
+# If exit code = 2, some packages failed
+
+# Step 3: Review diagnostic files
+Get-ChildItem "C:\Program Files\WingetUpdater\winget-*.txt" -o LastWriteTime -Descending | Select-Object -First 1
+
+# Step 4: Examine the latest raw output
+Get-Content "C:\Program Files\WingetUpdater\winget-upgrade-raw-json.txt" | ConvertFrom-Json
+
+# Step 5: Look for issues
+# - Package version conflicts
+# - Source errors
+# - Parse failures
+```
+
+**Common Diagnostic Findings:**
+
+- **Version Conflict**: Package already installed at requested version
+- **Source Error**: "msstore" vs "winget" source conflicts
+- **Parse Failure**: Winget output format changed (rare)
+- **Rate Limit**: GitHub API rate limit hit (GitHub sources)
+
+**Example Diagnostic Output:**
+
+```json
+{
+  "Upgrades": [
+    {
+      "Id": "Git.Git",
+      "Current": "2.42.0",
+      "Available": "2.43.0",
+      "Source": "winget",
+      "Status": "Available"
+    }
+  ],
+  "UnavailablePackages": []
+}
+```
+
+**What to Do Next:**
+
+1. **Check the Available Version**: Is it what you expected?
+2. **Verify Package Source**: Is it from the right source?
+3. **Review Logs**: Check `winget-*.log` for error messages
+4. **Search GitHub Issues**: Others may have solved it
+5. **Report with Diagnostics**: Include the diagnostic files in your issue report
+
+---
+
 ## Still Have Issues?
 
 ### Get More Help
