@@ -2,6 +2,10 @@
 
 ## 2025-12-03
 
+- [`997fbeb`](https://github.com/poslogica/generalscripts/commit/997fbeb27510a8a0d11ed57c11d3797a15b2cf9c) **feat: Add View Logs shortcut to IT Automation menu - Add fourth shortcut to Start Menu for logs folder access - Creates shortcut to C:\ProgramData\WingetUpdater\logs - Uses folder icon for visual distinction - Automatically creates logs directory if missing - Update script description to document all four shortcuts**
+  *by poslogica*
+- [`4952e10`](https://github.com/poslogica/generalscripts/commit/4952e10ee8faf313b2dc65ce00ff7785919b26be) **chore: update change logs [skip ci]**
+  *by github-actions[bot]*
 - [`dd67f31`](https://github.com/poslogica/generalscripts/commit/dd67f31a9e0259714fbd0d6649f6a299070515de) **perf: Optimize duplicate file tests to prevent timeouts - Reduce large file test size from 5MB to 500KB - Reduce medium file test size from 1MB to 100KB - Prevents SHA256 hashing from causing test suite to freeze - Test suite now completes in 3.7s instead of hanging - Maintains full test coverage with smaller file sizes**
   *by poslogica*
 

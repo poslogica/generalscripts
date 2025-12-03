@@ -1,6 +1,14 @@
 Change Logs - 2025-12-03
 ==================================================
 2025-12-03
+- feat: Add View Logs shortcut to IT Automation menu
+
+- Add fourth shortcut to Start Menu for logs folder access
+- Creates shortcut to C:\ProgramData\WingetUpdater\logs
+- Uses folder icon for visual distinction
+- Automatically creates logs directory if missing
+- Update script description to document all four shortcuts (by poslogica)
+- chore: update change logs [skip ci] (by github-actions[bot])
 - perf: Optimize duplicate file tests to prevent timeouts
 
 - Reduce large file test size from 5MB to 500KB
