@@ -11,6 +11,7 @@
     - Update Winget Packages: Runs the winget package update script
     - Check for Updates: Checks for newer versions of the IT Automation tools
     - Documentation: Opens the project documentation (GitHub README) in default browser
+    - View Logs: Opens the WingetUpdater logs folder
     
     Each shortcut is configured with:
     - PowerShell executable as the target application
@@ -95,6 +96,21 @@ IconFile=%SystemRoot%\System32\shell32.dll
 "@
 Set-Content -Path $urlPath -Value $urlContent -Encoding ASCII
 Write-Output "URL shortcut created: $urlPath"
+
+# ----- Shortcut 4: Logs Folder -----
+# Create a shortcut to the logs directory for easy access to update logs
+$logsFolder = "$env:ProgramData\WingetUpdater\logs"
+if (-not (Test-Path $logsFolder)) {
+    New-Item -ItemType Directory -Path $logsFolder -Force | Out-Null
+}
+
+$lnk4Path = Join-Path $menuFolder 'View Logs.lnk'
+$lnk4 = $ws.CreateShortcut($lnk4Path)
+$lnk4.TargetPath = $logsFolder
+$lnk4.Description = "Open the WingetUpdater logs folder"
+$lnk4.IconLocation = "%SystemRoot%\System32\shell32.dll,4"
+$lnk4.Save()
+Write-Output "Shortcut created: $lnk4Path"
 
 Write-Output "IT Automation shortcuts created successfully!"
 
