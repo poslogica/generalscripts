@@ -2,6 +2,16 @@
 
 ## 2025-12-03
 
+- [`24e302f`](https://github.com/poslogica/generalscripts/commit/24e302f7db94300bdf1df4e7373726afde265384) **refactor: save diagnostic files to logs directory instead of script directory**
+  *by poslogica*
+- [`6d6553f`](https://github.com/poslogica/generalscripts/commit/6d6553f0419dd2d366f21b916c163df5609d696e) **docs: Add comprehensive diagnostics documentation to FAQ - Explain what diagnostic files are and when to use them - Document all four diagnostic files and their purpose - Provide step-by-step workflow for debugging failures - Show example diagnostic output (JSON format) - List common diagnostic findings and solutions - Help users troubleshoot parse errors and conflicts - Include commands to view and analyze diagnostic files**
+  *by poslogica*
+- [`906196b`](https://github.com/poslogica/generalscripts/commit/906196b66f7ab313b710d5b15fe3cbec287c7b0b) **docs: Update README with latest version v1.0.23 [skip ci]**
+  *by github-actions[bot]*
+- [`b92ae6d`](https://github.com/poslogica/generalscripts/commit/b92ae6d438f3fd6e6886b4fc1c2d66af53a0b1c9) **fix: Add retry logic and rebase to handle concurrent pushes in README update - Workflow was failing due to push conflicts when other commits were pushed - Added git fetch before rebase to sync with remote - Rebase changes on origin/main to avoid merge conflicts - Added retry logic (up to 3 attempts) with exponential backoff - If README push fails, release is still successful (non-blocking) - Prevents workflow from failing on concurrent git operations**
+  *by poslogica*
+- [`185b550`](https://github.com/poslogica/generalscripts/commit/185b5501c07bd234db08038eb7716a51b548f055) **chore: update change logs [skip ci]**
+  *by github-actions[bot]*
 - [`77f90dc`](https://github.com/poslogica/generalscripts/commit/77f90dc93fb0af72fb353a0a6b6b82ea19b2dc21) **docs: Clarify comment about winget JSON output version requirement - Simplified comment about --output flag support - Remove vague 'later than originally thought' language - Keep comment concise and factual**
   *by poslogica*
 - [`992fa0a`](https://github.com/poslogica/generalscripts/commit/992fa0a09bd4e24869b620d4adc87990c66fe91d) **fix: Correct error messages in batch wrapper installer - Clarify that PowerShell 7+ (pwsh.exe) is required, not Windows PowerShell - Remove misleading 'not recommended' suggestion for Windows PowerShell - Add alternative installation methods (Windows Store, Winget) - Improve user guidance when PowerShell is not found**

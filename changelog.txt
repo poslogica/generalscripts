@@ -1,6 +1,26 @@
 Change Logs - 2025-12-03
 ==================================================
 2025-12-03
+- refactor: save diagnostic files to logs directory instead of script directory (by poslogica)
+- docs: Add comprehensive diagnostics documentation to FAQ
+
+- Explain what diagnostic files are and when to use them
+- Document all four diagnostic files and their purpose
+- Provide step-by-step workflow for debugging failures
+- Show example diagnostic output (JSON format)
+- List common diagnostic findings and solutions
+- Help users troubleshoot parse errors and conflicts
+- Include commands to view and analyze diagnostic files (by poslogica)
+- docs: Update README with latest version v1.0.23 [skip ci] (by github-actions[bot])
+- fix: Add retry logic and rebase to handle concurrent pushes in README update
+
+- Workflow was failing due to push conflicts when other commits were pushed
+- Added git fetch before rebase to sync with remote
+- Rebase changes on origin/main to avoid merge conflicts
+- Added retry logic (up to 3 attempts) with exponential backoff
+- If README push fails, release is still successful (non-blocking)
+- Prevents workflow from failing on concurrent git operations (by poslogica)
+- chore: update change logs [skip ci] (by github-actions[bot])
 - docs: Clarify comment about winget JSON output version requirement
 
 - Simplified comment about --output flag support
