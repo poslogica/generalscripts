@@ -1,6 +1,9 @@
 Change Logs - 2025-12-03
 ==================================================
 2025-12-03
+- feat: add 'Update Winget Packages (Diagnostics)' shortcut to IT Automation menu (by poslogica)
+- docs: Update README with latest version v1.0.24 [skip ci] (by github-actions[bot])
+- chore: update change logs [skip ci] (by github-actions[bot])
 - refactor: save diagnostic files to logs directory instead of script directory (by poslogica)
 - docs: Add comprehensive diagnostics documentation to FAQ
 

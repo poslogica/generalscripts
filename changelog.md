@@ -2,6 +2,12 @@
 
 ## 2025-12-03
 
+- [`a79d685`](https://github.com/poslogica/generalscripts/commit/a79d685e6d48aebbe956ccaca38768c2991bc918) **feat: add 'Update Winget Packages (Diagnostics)' shortcut to IT Automation menu**
+  *by poslogica*
+- [`3dfdfa3`](https://github.com/poslogica/generalscripts/commit/3dfdfa30e03b64ec0b8cf3e36c2ef2729553d4fd) **docs: Update README with latest version v1.0.24 [skip ci]**
+  *by github-actions[bot]*
+- [`c9e1029`](https://github.com/poslogica/generalscripts/commit/c9e102908131121a8b70a56ee7bdd8ab51b487a8) **chore: update change logs [skip ci]**
+  *by github-actions[bot]*
 - [`24e302f`](https://github.com/poslogica/generalscripts/commit/24e302f7db94300bdf1df4e7373726afde265384) **refactor: save diagnostic files to logs directory instead of script directory**
   *by poslogica*
 - [`6d6553f`](https://github.com/poslogica/generalscripts/commit/6d6553f0419dd2d366f21b916c163df5609d696e) **docs: Add comprehensive diagnostics documentation to FAQ - Explain what diagnostic files are and when to use them - Document all four diagnostic files and their purpose - Provide step-by-step workflow for debugging failures - Show example diagnostic output (JSON format) - List common diagnostic findings and solutions - Help users troubleshoot parse errors and conflicts - Include commands to view and analyze diagnostic files**
