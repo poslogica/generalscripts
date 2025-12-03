@@ -13,9 +13,12 @@ if errorlevel 1 (
     echo.
     echo ERROR: PowerShell is not available or not in PATH
     echo.
+    echo This installer requires PowerShell 7+ (pwsh.exe)
+    echo.
     echo Solutions:
     echo 1. Install PowerShell 7+ from: https://github.com/PowerShell/PowerShell/releases
-    echo 2. Or use Windows PowerShell (not recommended for this installer)
+    echo 2. Or install from Windows Store: Search for "PowerShell"
+    echo 3. Or via Winget: winget install Microsoft.PowerShell
     echo.
     pause
     exit /b 1
