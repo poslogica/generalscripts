@@ -2,7 +2,7 @@
 
 > A collection of production-ready PowerShell scripts for IT automation, system administration, and Windows package management.
 
-**Latest Update**: v1.0.21 with improved documentation and user guides.
+**Latest Update**: v1.0.23 with improved documentation and user guides.
 
 ## Overview
 
@@ -284,3 +284,4 @@ We welcome contributions to enhance the functionality and scope of these scripts
 ## License
 
 This repository is licensed under the [MIT License](LICENSE).
+
