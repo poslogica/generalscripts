@@ -2,6 +2,8 @@
 
 > A collection of production-ready PowerShell scripts for IT automation, system administration, and Windows package management.
 
+**Latest Update**: v1.0.21 with improved documentation and user guides.
+
 ## Overview
 
 This repository contains a collection of scripts designed to help IT professionals automate routine tasks. These scripts are written to save time, increase efficiency, and reduce the chances of human error when managing IT operations. All scripts are tested with comprehensive Pester test suites and code coverage analysis.
